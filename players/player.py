@@ -20,6 +20,12 @@ class Player:
 
     def __repr__(self): 
         return f"Player(pid: {self._pid})"
+    
+    def __str__(self): 
+        if self.bio:
+            return f"{self.bio.first_name} {self.bio.last_name}, playerId: {self._pid}" 
+        else: 
+            return f"Player(pid: {self._pid})"
 
     def _fetch_player(self) -> dict: 
         if self._raw is None: 
