@@ -6,7 +6,7 @@ from typing import Optional
 from datetime import datetime
 
 from ..resources.api_web import players
-from .player_bio import Bio
+from .bio.player_bio import Bio
 
 
 
