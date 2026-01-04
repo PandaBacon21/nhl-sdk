@@ -1,3 +1,7 @@
+"""
+DRAFT DATA CLASS
+"""
+
 
 from typing import Any
 

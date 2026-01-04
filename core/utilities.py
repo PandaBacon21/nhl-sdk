@@ -1,8 +1,12 @@
-
-
+"""
+UTILITY CLASSES AND FUNCTIONS
+"""
 
 
 class LocalizedString:
+    """
+    Localized String Class for locale handling
+    """
     def __init__(self, data: dict | None):
         self._data = dict(data or {})
 
@@ -23,3 +27,11 @@ class LocalizedString:
         if len(self._data.keys()) > 1:
             return set(self._data.keys()) - {"default"}
         return set(self._data.keys())
+
+
+def _to_bool(value: int | bool | None) -> bool | None:
+    """Normalize API boolean values (0/1, True/False) to Python bool
+    """
+    if value is None:
+        return None
+    return bool(value)

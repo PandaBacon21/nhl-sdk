@@ -21,7 +21,6 @@ def _get_standings() -> dict:
     # print(standings)
     return standings
 
-
 def _get_standings_date(date: str) -> dict:
     """ 
     Retrieve the standings for a specific date
@@ -55,7 +54,6 @@ def _get_team_stats(team: str) -> dict:
     # print(team_stats)
     return team_stats
 
-
 def _get_game_types_per_season(team: str) -> dict: 
     """
     Returns an overview of the stats for each season for a specific club
@@ -66,7 +64,6 @@ def _get_game_types_per_season(team: str) -> dict:
     game_types: dict = _call_api_get(endpoint=endpoint)
     # print(game_types)
     return game_types
-
 
 def _get_team_stats_season(team: str, season: int, g_type: int) -> dict: 
     """
@@ -80,7 +77,6 @@ def _get_team_stats_season(team: str, season: int, g_type: int) -> dict:
     # print(team_stats)
     return team_stats
 
-
 def _get_team_scoreboard(team: str) -> dict: 
     """
     Retrieve the scoreboard for a specific team as of the current moment
@@ -90,7 +86,6 @@ def _get_team_scoreboard(team: str) -> dict:
     scoreboard: dict = _call_api_get(endpoint=endpoint)
     # print(scoreboard)
     return scoreboard
-
 
 # ==========================================================================
 # ROSTER
@@ -106,7 +101,6 @@ def _get_team_roster(team: str) -> dict:
     # print(roster)
     return roster
 
-
 def _get_team_roster_season(team: str, season: int) -> dict: 
     """
     Retrieve the roster for a specific team and season
@@ -117,7 +111,6 @@ def _get_team_roster_season(team: str, season: int) -> dict:
     roster: dict[str, Any] = _call_api_get(endpoint=endpoint)
     # print(roster)
     return roster
-
 
 def _get_roster_season_by_team(team: str) -> dict: 
     """
@@ -153,7 +146,6 @@ def _get_schedule_season_now(team: str) -> dict:
     # print(schedule)
     return schedule
 
-
 def _get_schedule_season(team: str, season: int) -> dict: 
     '''
     Retrieve the season schedule for a specific team and season
@@ -165,7 +157,6 @@ def _get_schedule_season(team: str, season: int) -> dict:
     # print(schedule)
     return schedule
     
-
 def _get_schedule_month_now(team: str) -> dict: 
     """
     Retrieve the monthly schedule for a specific team as of the current moment
@@ -176,7 +167,6 @@ def _get_schedule_month_now(team: str) -> dict:
     # print(schedule)
     return schedule
     
-
 def _get_schedule_month(team: str, month: str) -> dict: 
     """
     Retrieve the monthly schedule for a specific team and month
@@ -187,7 +177,6 @@ def _get_schedule_month(team: str, month: str) -> dict:
     schedule: dict = _call_api_get(endpoint=endpoint)
     # print(schedule)
     return schedule
-    
 
 def _get_schedule_week_now(team: str) -> dict: 
     """
@@ -198,7 +187,6 @@ def _get_schedule_week_now(team: str) -> dict:
     schedule: dict = _call_api_get(endpoint=endpoint)
     # print(schedule)
     return schedule
-    
 
 def _get_schedule_week(team: str, week: str) -> dict: 
     """
@@ -211,25 +199,3 @@ def _get_schedule_week(team: str, week: str) -> dict:
     # print(schedule)
     return schedule
 
-
-def main() -> None:
-    _get_standings()
-    _get_standings_date(date="2025-11-15")
-    _get_standings_per_season()
-    _get_team_stats(team="COL")
-    _get_game_types_per_season(team="COL")
-    _get_team_stats_season(team="COL", season=20242025, g_type=2)
-    _get_team_scoreboard(team="COL")
-    _get_team_roster(team="COL")
-    _get_team_roster_season(team="COL", season=20242025)
-    _get_roster_season_by_team(team="COL")
-    _get_team_prospects(team="COL")
-    _get_schedule_season_now(team="COL")
-    _get_schedule_season(team="COL", season=20242025)
-    _get_schedule_month_now(team="COL")
-    _get_schedule_month(team="COL", month="2025-10")
-    _get_schedule_week_now(team="COL")
-    _get_schedule_week(team="COL", week="2025-11-28")
-
-if __name__ == "__main__":
-    main()

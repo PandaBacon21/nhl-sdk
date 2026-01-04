@@ -1,3 +1,7 @@
+"""
+AWARD DATA CLASS
+"""
+
 
 from ..localized_string import LocalizedString
 

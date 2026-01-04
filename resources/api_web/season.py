@@ -2,8 +2,6 @@
 FUNCTIONS FOR RETRIEVING SEASON DATA FROM API-WEB.NHLE.COM/
 """
 
-from typing import Optional
-
 from nhl_stats.core.config import V
 from ...core.transport import _call_api_get
 
@@ -19,9 +17,3 @@ def _get_seasons() -> dict:
     season: dict = _call_api_get(endpoint=endpoint)
     # print(season)
     return season
-
-def main() -> None: 
-    _get_seasons()
-
-if __name__ == "__main__":
-    main()

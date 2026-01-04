@@ -1,3 +1,7 @@
+"""
+BADGE DATA CLASS
+"""
+
 
 from ..localized_string import LocalizedString
 

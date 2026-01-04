@@ -32,7 +32,6 @@ def _get_meta(players: Optional[str] = None, teams: Optional[str] = None, season
     # print(meta)
     return meta
 
-
 def _get_game_info(game_id:int) -> dict: 
     """
     Retrieve information for a specific game
@@ -140,18 +139,3 @@ def _get_openapi() -> dict:
     # print(openapi)
     return openapi
 
-# Update this to tests
-def main() -> None: 
-    _get_meta(teams="COL")
-    _get_game_info(game_id=2023020204)
-    _get_location()
-    _get_playoff_series_meta(year=2024, series_letter="f")
-    _get_postal_lookup(postal_code="80027")
-    _get_goal_replay(game_id=2025020506, event_number=1)
-    _get_play_replay(game_id=2025020506, event_number=1)
-    _get_game_rail(game_id=2025020506)
-    _get_wsc(game_id=2025020506)
-    _get_openapi()
-
-if __name__ == "__main__": 
-    main()

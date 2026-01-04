@@ -9,7 +9,6 @@ from ...core.transport import _call_api_get
 # SCHEDULE
 # ==========================================================================
 
-    
 def _get_schedule_now() -> dict: 
     """
     Retrieve the current schedule
@@ -18,7 +17,6 @@ def _get_schedule_now() -> dict:
     schedule: dict = _call_api_get(endpoint=endpoint)
     # print(schedule)
     return schedule
-
 
 def _get_schedule(date: str) -> dict: 
     """
@@ -29,7 +27,6 @@ def _get_schedule(date: str) -> dict:
     schedule: dict = _call_api_get(endpoint=endpoint)
     return schedule
 
-
 def _get_schedule_calendar_now() -> dict:
     """
     Retrieve the schedule calendar as of the current moment
@@ -38,7 +35,6 @@ def _get_schedule_calendar_now() -> dict:
     schedule_cal: dict = _call_api_get(endpoint=endpoint)
     # print(schedule_cal)
     return schedule_cal 
-
 
 def _get_schedule_calendar(date: str) -> dict:
     """
@@ -50,13 +46,3 @@ def _get_schedule_calendar(date: str) -> dict:
     # print(schedule_cal)
     return schedule_cal
 
-
-# Update this to tests
-def main() -> None: 
-    _get_schedule_now()
-    _get_schedule(date="2025-11-28")
-    _get_schedule_calendar_now()
-    _get_schedule_calendar(date="2025-11-28")
-
-if __name__ == "__main__":
-    main()

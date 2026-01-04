@@ -1,13 +1,12 @@
 """
-Player Object
+PLAYER CLASS
 """
 
 from typing import Optional
 from datetime import datetime
 
-from ..resources.api_web import players
-from .bio.player_bio import Bio
-
+from ..resources.api_web import _get_player_info
+from .bio import Bio
 
 
 class Player: 
@@ -29,7 +28,7 @@ class Player:
 
     def _fetch_player(self) -> dict: 
         if self._raw is None: 
-            res = players._get_player_info(pid=self._pid)
+            res = _get_player_info(pid=self._pid)
             if not res["ok"]:
                 raise RuntimeError(res.get("error", f"Failed to fetch player: {self._pid}"))
             self._raw = res["data"]
@@ -42,7 +41,6 @@ class Player:
         print(f"Clearing Player {self._pid} data")
         self._raw = None
         print(f"Player {self._pid} data cleared")
-
 
     def refresh(self) -> None:  
         self._clear()

@@ -1,4 +1,6 @@
-
+"""
+WEIGHT DATA CLASS
+"""
 
 class Weight: 
     def __init__(self, data: dict):

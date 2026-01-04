@@ -1,11 +1,7 @@
 """
-PLAYER BIO OBJECT
+PLAYER BIO DATA CLASS
 """
 
-from __future__ import annotations
-from typing import Any
-
-from ..localized_string import LocalizedString
 from ..team import Team
 from .weight import Weight
 from .height import Height
@@ -14,7 +10,7 @@ from .legacy import Legacy
 from .media import Media
 from .draft import Draft
 
-from ...core.to_bool import _to_bool
+from ...core.utilities import LocalizedString, _to_bool
 
 class Bio:
     def __init__(self, data: dict): 

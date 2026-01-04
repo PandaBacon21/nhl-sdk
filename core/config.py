@@ -1,3 +1,7 @@
+"""
+BASE CONFIG FILE
+"""
+
 import os
 from dotenv import load_dotenv
 

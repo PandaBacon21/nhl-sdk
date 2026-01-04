@@ -1,9 +1,11 @@
 
 
+# Under constructions
 class Stat: 
     def __init__(self): 
         self.player = None
     
+# Under constructions
 class SkaterLeaders: 
     def __init__(self): 
         self.goals = None
@@ -15,6 +17,7 @@ class SkaterLeaders:
         self.faceoff_leaders = None
         self.toi = None
 
+# Under constructions
 class GoalieLeaders:
     def __init__(self): 
         self.wins = None

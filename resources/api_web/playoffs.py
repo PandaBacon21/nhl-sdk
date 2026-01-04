@@ -48,12 +48,3 @@ def _get_bracket(year: int) -> dict:
     bracket: dict = _call_api_get(endpoint=endpoint)
     # print(bracket)
     return bracket
-
-def main() -> None: 
-    _get_carousel(season=20242025)
-    _get_series_schedule(season=20242025, series_letter="A")
-    _get_bracket(year=2025)
-
-
-if __name__ == "__main__": 
-    main()

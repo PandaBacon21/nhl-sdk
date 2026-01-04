@@ -1,8 +1,8 @@
 """
-Teams Space
+TEAMS SPACE
 """
 
-from resources.api_web import teams
+from ..resources.api_web import teams
 
 
 class Teams: 

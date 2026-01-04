@@ -58,16 +58,3 @@ def _get_picks(season: int, round: str) -> dict:
     picks: dict = _call_api_get(endpoint=endpoint)
     # print(picks)
     return picks
-
-
-# Update this to tests
-def main() -> None: 
-    _get_rankings_now()
-    _get_rankings(season=2024, category="1")
-    _get_tracker_now()
-    _get_picks_now()
-    _get_picks(season=2024, round="1")
-
-
-if __name__ == "__main__":
-    main()

@@ -1,8 +1,11 @@
+"""
+LEGACY DATACLASS
+"""
 
 from .award import Award
 from .badge import Badge
 
-from ...core.to_bool import _to_bool
+from ...core.utilities import _to_bool
 
 class Legacy: 
     def __init__(self, data: dict):

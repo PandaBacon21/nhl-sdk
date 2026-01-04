@@ -1,4 +1,6 @@
-
+"""
+MEDIA DATA CLASS
+"""
 
 class Media:
     def __init__(self, data: dict):

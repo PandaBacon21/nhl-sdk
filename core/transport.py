@@ -1,5 +1,5 @@
 """
-Internal functions for NHL API calls
+INTERNAL FUNCTIONS FOR DIRECT API CALLS
 """
 
 from typing import Optional

@@ -7,9 +7,6 @@ from typing import Optional
 from nhl_stats.core.config import V
 from ...core.transport import _call_api_get
 
-# test:
-player_id = 8477492 #manually checking Nathan MacKinnon for testing
-
 # ==========================================================================
 # PLAYER INFORMATION
 # ==========================================================================
@@ -106,18 +103,3 @@ def _get_goalie_leaders(categories: Optional[str] = None, limit: Optional[int] =
     endpoint = f"{V}/goalie-stats-leaders/current"
     goalie_lead: dict = _call_api_get(endpoint=endpoint, params=params)
     return goalie_lead
-
-
-# Update this to tests
-def main() -> None:
-    _get_game_log(pid=player_id, season=20252026, g_type=2)
-    _get_player_info(player_id)
-    _get_game_log_now(pid=player_id)
-    _get_player_spotlight()
-    _get_skater_leaders()
-    _get_skater_leaders_by_season(season=20252026, g_type=2)
-    _get_goalie_leaders()
-
-
-if __name__ == "__main__":
-    main()

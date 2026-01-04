@@ -16,7 +16,6 @@ def _get_daily_scores_now() -> dict:
     endpoint = f"{V}/score/now"
     scores: dict = _call_api_get(endpoint=endpoint)
     return scores
-    
 
 def _get_daily_scores(date: str) -> dict: 
     """
@@ -26,7 +25,6 @@ def _get_daily_scores(date: str) -> dict:
     endpoint = f"{V}/score/{date}"
     scores: dict = _call_api_get(endpoint=endpoint)
     return scores
-    
 
 def _get_scoreboard_now() -> dict: 
     """
@@ -60,7 +58,6 @@ def _get_play_by_play(game_id: int) -> dict:
     endpoint = f"{V}/gamecenter/{game_id}/play-by-play"
     play_by_play: dict = _call_api_get(endpoint=endpoint)
     return play_by_play
-    
 
 def _get_game_landing(game_id: int) -> dict: 
     """
@@ -70,7 +67,6 @@ def _get_game_landing(game_id: int) -> dict:
     endpoint = f"/{V}/gamecenter/{game_id}/landing"
     landing: dict = _call_api_get(endpoint=endpoint)
     return landing
-    
 
 def _get_boxscore(game_id: int) -> dict: 
     """
@@ -81,7 +77,6 @@ def _get_boxscore(game_id: int) -> dict:
     boxscore: dict = _call_api_get(endpoint=endpoint)
     return boxscore
     
-
 def _get_game_story(game_id: int) -> dict:
     """
     Retrieve game story information for a specific game
@@ -102,7 +97,6 @@ def _get_tv_schedule_now() -> dict:
     endpoint = f"{V}/network/tv-schedule/now"
     schedule: dict= _call_api_get(endpoint=endpoint)
     return schedule
-    
 
 def _get_tv_schedule(date: str) -> dict:
     """
@@ -139,7 +133,6 @@ def _get_playoff_carousel(season: int) -> dict:
     carousel: dict = _call_api_get(endpoint=endpoint)
     return carousel
 
-
 def _get_playoff_series(season: int, series_letter: str) -> dict:
     """
     Retrieve the schedule for a specific playoff series
@@ -150,7 +143,6 @@ def _get_playoff_series(season: int, series_letter: str) -> dict:
     series: dict = _call_api_get(endpoint=endpoint)
     return series
     
-
 def _get_playoff_bracket(year: int) -> dict:
     """
     Retrieve the schedule for a specific playoff series
@@ -160,24 +152,3 @@ def _get_playoff_bracket(year: int) -> dict:
     bracket: dict = _call_api_get(endpoint=endpoint)
     return bracket
 
-
-# Update this to tests
-def main() -> None: 
-    _get_daily_scores_now()
-    _get_daily_scores(date="2025-11-28")
-    _get_scoreboard_now()
-    _get_streams()
-    _get_play_by_play(game_id=2025020417)
-    _get_game_landing(game_id=2025020417)
-    _get_boxscore(game_id=2025020417)
-    _get_game_story(game_id=2025020417)
-    _get_tv_schedule_now()
-    _get_tv_schedule(date="2025-11-28")
-    _get_odds(country_code="USA")
-    _get_playoff_carousel(20242025)
-    _get_playoff_series(season=20242025, series_letter="A")
-    _get_playoff_bracket(year=2024)
-
-
-if __name__ == "__main__":
-    main()
