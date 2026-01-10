@@ -5,6 +5,13 @@ NHL CLIENT
 from .services import Players, Teams
 
 class NhlClient:
+    """
+    Main NHL Client
+
+    This is the main interface for NHL SDK. 
+    Exposes Players and Teams collections (will expand to League, Edge, etc over time)
+
+    """
     def __init__(self): 
         self.players = Players
         self.teams = Teams
@@ -16,12 +23,12 @@ def main() -> None:
     nhl = NhlClient()
     players = nhl.players()
 
-    # player = players.get(pid=8477492) # MacKinnon
+    player = players.get(pid=8477492) # MacKinnon
     # player = players.get(pid=8478550) # Panarin
-    player = players.get(pid=8451101) # Sakic
+    # player = players.get(pid=8451101) # Sakic
 
     """BIO TESTING"""
-    # print(player)
+    print(player)
     print(f"Player first name: {player.bio.first_name}")
     print(f"Player last name: {player.bio.last_name}")
     print(f"Current Team: {player.bio.team}")
@@ -79,6 +86,8 @@ def main() -> None:
             print(f"Goals: {season.stats.goals}")
             print(f"PowerPlay Points: {season.stats.pp_points}")
             print("")
+
+
 
 
 if __name__ == "__main__": 

@@ -3,7 +3,27 @@ SEASON STATS
 """
 
 class SeasonStats:
+    """
+    Statistical totals for a player in a single season.
+
+    Provides season-level metrics for performance analysis, including
+    goals, assists, penalties, and time on ice.
+
+    Not all data is available for each season. Younger years, minor leagues, and special events (Olympics, Winter Classic, 4 Nations, etc 
+    may have limited features due to the stats available from the API)
+    
+    Instances of this class are accessed via `Season.stats`.
+    """
     def __init__(self, data: dict): 
+        """
+        Initialize a SeasonStats record.
+
+        Parameters
+        ----------
+        data : dict
+            Raw season data containing statistical fields as returned in Player data
+            by the NHL API.
+        """
         self.assists: int | None = data.get("assists")
         self.avg_toi: str | None = data.get("avgToi")
         self.faceoff_win_pctg: float | None = data.get("faceoffWinningPctg")
@@ -22,6 +42,14 @@ class SeasonStats:
         self.shots: int | None = data.get("shots")
 
     def to_dict(self) -> dict:
+        """
+        Convert the SeasonStats object to a plain dictionary.
+
+        Returns
+        -------
+        dict
+            Dictionary mapping all stat names to their current values.
+        """
         return {
             "assists": self.assists,
             "avg_toi": self.avg_toi,

@@ -1,5 +1,5 @@
 """
-PLAYERS SPACE
+PLAYERS COLLECTION
 """
 
 from typing import Optional, Literal
@@ -8,11 +8,29 @@ from datetime import datetime
 from ..models.player import Player
 
 class Players: 
+    """
+    Players Collection
+
+    This is the primary interface for player related data. 
+
+    This interface exposes methods for retrieving individual Player
+    objects and access player-related aggregates such as stat leaders.
+
+    """
     PlayerType = Literal["skater", "goalie"]
     StatType = Literal["goals", "goalsSh", "goalsPp", "assists", "points", "plusMinus", "faceOffLeaders", "penaltyMins", "toi"]
     
     def get(self, pid: int) -> "Player": 
-        """Get player info for a specific player"""
+        """
+        Return a Player object for the given NHL player ID.
+
+        The returned Player lazily fetches and caches data from the NHL API
+        and provides structured access to biographical and statistical data.
+        Parameters
+        ----------
+        data : int
+            Unique player Id
+        """
         return Player(player_id=pid)
 
 
