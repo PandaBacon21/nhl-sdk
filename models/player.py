@@ -2,11 +2,12 @@
 PLAYER CLASS
 """
 
-from typing import Optional
+from typing import Optional, Annotated
 from datetime import datetime
 
 from ..resources.api_web import _get_player_info
 from .bio import Bio
+from .stats import Stats
 
 
 class Player: 
@@ -48,9 +49,14 @@ class Player:
         self._fetch_player()    
 
     @property
-    def bio(self) -> "Bio":
+    def bio(self) -> Bio:
         data = self._fetch_player()
         return Bio(data=data)
+    
+    @property
+    def stats(self) -> Stats:
+        data = self._fetch_player()
+        return Stats(data=data)
     
     # raw get_player_info() api response
     def raw(self) -> dict: 

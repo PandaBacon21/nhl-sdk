@@ -7,3 +7,4 @@ class Media:
         self.slug: str | None = data.get("playerSlug")
         self.headshot: str | None = data.get("headshot")
         self.hero_image: str | None = data.get("heroImage")
+        self.slug: str | None = data.get("playerSlug")

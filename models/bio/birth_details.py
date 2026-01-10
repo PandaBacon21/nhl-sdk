@@ -2,7 +2,7 @@
 BIRTH DETAILS DATA CLASS
 """
 
-from ..localized_string import LocalizedString
+from ...core.utilities import LocalizedString
 
 
 class BirthDetails: 
