@@ -21,7 +21,6 @@ def _get_player_info(pid: int) -> dict:
     """
     endpoint = f"{V}/player/{pid}/landing"
     player_info: dict = _call_api_get(endpoint=endpoint)
-    # print(player_info)
     return player_info
 
 

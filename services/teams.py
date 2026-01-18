@@ -2,8 +2,12 @@
 TEAMS COLLECTION
 """
 
+from __future__ import annotations
+from typing import TYPE_CHECKING
 from ..resources.api_web import teams
 
+if TYPE_CHECKING: 
+    from nhl_stats.client import NhlClient
 
 class Teams: 
     """
@@ -11,5 +15,6 @@ class Teams:
 
     This is the primary interface for Team related data. 
     """
-    def __init__(self, team_code: str): 
-        self.code = team_code
+    def __init__(self, client: "NhlClient"): 
+        self._client = client
+        

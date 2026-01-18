@@ -2,10 +2,13 @@
 PLAYERS COLLECTION
 """
 
-from typing import Optional, Literal
-from datetime import datetime
+from __future__ import annotations
+from typing import Optional, Literal, TYPE_CHECKING
 
 from ..models.player import Player
+
+if TYPE_CHECKING:
+    from nhl_stats.client import NhlClient
 
 class Players: 
     """
@@ -17,6 +20,9 @@ class Players:
     objects and access player-related aggregates such as stat leaders.
 
     """
+    def __init__(self, client:"NhlClient"):
+        self._client = client
+
     PlayerType = Literal["skater", "goalie"]
     StatType = Literal["goals", "goalsSh", "goalsPp", "assists", "points", "plusMinus", "faceOffLeaders", "penaltyMins", "toi"]
     
@@ -31,7 +37,7 @@ class Players:
         data : int
             Unique player Id
         """
-        return Player(player_id=pid)
+        return Player(player_id=pid, client=self._client)
 
 
     # def get_stat_leaders(self, player_type: PlayerType, category: StatType | None = None, season: Optional[int] = None, 
