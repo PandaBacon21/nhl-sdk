@@ -6,7 +6,9 @@ from .players import _get_game_log, _get_game_log_now, _get_goalie_leaders, _get
 from .playoffs import _get_bracket, _get_carousel, _get_series_schedule
 from .season import _get_seasons
 from .teams import _get_game_types_per_season, _get_roster_season_by_team, _get_schedule_month, _get_schedule_month_now, _get_schedule_season, _get_schedule_season_now, _get_schedule_week, _get_schedule_week_now, _get_standings, _get_standings_date, _get_standings_per_season, _get_team_prospects, _get_team_roster, _get_team_roster_season, _get_team_scoreboard, _get_team_stats, _get_team_stats_season
-
+from .edge.goalies import _call_api_get, _get_cat_goalie_details, _get_goalie_5v5, _get_goalie_comparison, _get_goalie_details, _get_goalie_landing, _get_goalie_save_pctg_10, _get_goalie_shot_location_10, _get_goalies_5v5_10, _get_save_pctg, _get_shot_location
+from .edge.skaters import _call_api_get, _get_cat_skater_details, _get_shot_location, _get_shot_speed, _get_skater_comparison, _get_skater_details, _get_skater_distance_10, _get_skater_landing, _get_skater_shot_location_10, _get_skater_shot_speed_10, _get_skater_zone_time_10, _get_skating_distance, _get_skating_speed, _get_skating_speed_10, _get_zone_time
+from .edge.team import _call_api_get, _get_shot_location, _get_shot_speed, _get_skating_speed, _get_team_comparison, _get_team_details, _get_team_distance, _get_team_shot_location_10, _get_team_shot_speed_10, _get_team_skating_distance_10, _get_team_skating_speed_10, _get_team_zone_time_10, _get_zone_time
 
 __all__ = [
     # draft
@@ -85,4 +87,49 @@ __all__ = [
     "_get_team_scoreboard",
     "_get_team_stats",
     "_get_team_stats_season",
+
+    # goalies
+    "_call_api_get", 
+    "_get_cat_goalie_details", 
+    "_get_goalie_5v5", 
+    "_get_goalie_comparison", 
+    "_get_goalie_details", 
+    "_get_goalie_landing", 
+    "_get_goalie_save_pctg_10", 
+    "_get_goalie_shot_location_10", 
+    "_get_goalies_5v5_10", 
+    "_get_save_pctg", 
+    "_get_shot_location",
+
+    # skaters
+    "_call_api_get", 
+    "_get_cat_skater_details", 
+    "_get_shot_location", 
+    "_get_shot_speed", 
+    "_get_skater_comparison", 
+    "_get_skater_details", 
+    "_get_skater_distance_10", 
+    "_get_skater_landing", 
+    "_get_skater_shot_location_10", 
+    "_get_skater_shot_speed_10", 
+    "_get_skater_zone_time_10",
+    "_get_skating_distance", 
+    "_get_skating_speed", 
+    "_get_skating_speed_10", 
+    "_get_zone_time",
+
+    # teams
+    "_call_api_get", 
+    "_get_shot_location", 
+    "_get_shot_speed", 
+    "_get_skating_speed", 
+    "_get_team_comparison", 
+    "_get_team_details", 
+    "_get_team_distance", 
+    "_get_team_shot_location_10", 
+    "_get_team_shot_speed_10", 
+    "_get_team_skating_distance_10", 
+    "_get_team_skating_speed_10", 
+    "_get_team_zone_time_10", 
+    "_get_zone_time",
 ]
