@@ -16,8 +16,6 @@ class SeasonTeam:
     """
     def __init__(self, data: dict): 
         """
-        Initialize a SeasonStats record.
-
         Parameters
         ----------
         data : dict

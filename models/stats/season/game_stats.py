@@ -2,7 +2,7 @@
 LAST 5 GAME STATS
 """
 
-class Game:
+class FeaturedGame:
     def __init__(self, data: dict):
         self.assists: int | None = data.get("assists")
         self.game_date: str | None = data.get("gameDate")

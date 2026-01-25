@@ -75,7 +75,28 @@ def main() -> None:
     # print(player.raw())
     # player.refresh()
     # print(player.bio.first_name)
-    # print(player.bio.last_name)
+    # # print(player.bio.last_name)
+
+    game_log = player.stats.game_log()
+    game_log_2 = player.stats.game_log(season=20232024, game_type=2)
+    # print(game_log)
+    print(f"Game Log - Season: {game_log.season_id}")
+    print(f"Game Type: {game_log_2.game_type}")
+    game = game_log.games[0]
+    game_2 = game_log_2.games[0]
+    print(f"Game ID - Log 2: {game_2.game_id}")
+    print(f"Game ID - Log 1: {game.game_id}")
+    # print(game.to_dict())
+    for game in game_log.games:
+        print(f"Opponent: {game.opponent_abbrev}, Goals: {game.goals}")
+    print("")
+    print("Seasons with Playoffs:")
+    for season in game_log.seasons: 
+        if season.playoffs: 
+            print(season.season)
+
+
+
 
 
 if __name__ == "__main__": 

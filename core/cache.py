@@ -11,7 +11,7 @@ class CacheItem:
         self.ttl = ttl
         self.created_at = datetime.now(timezone.utc)
     
-    def is_expired(self) -> bool: 
+    def _is_expired(self) -> bool: 
         if self.ttl is None: 
             return False
         return datetime.now(timezone.utc) > self.created_at + timedelta(seconds=self.ttl)
@@ -25,7 +25,7 @@ class Cache:
         if item is None: 
             return None
         
-        if item.is_expired():
+        if item._is_expired():
             print(f"{key} is expired")
             del self.store[key]
             return None

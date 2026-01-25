@@ -24,22 +24,24 @@ def _get_player_info(pid: int) -> dict:
     return player_info
 
 
-def _get_game_log(pid: int, season: int, g_type: int) -> dict:
+def _get_game_log(pid: int, season: Optional[int] = None, g_type: Optional[int] = None) -> dict:
     """
     Retrieve the game log for a specific player, season, and game type.
     """
-    endpoint = f"{V}/player/{pid}/game-log/{season}/{g_type}"
+    endpoint = f"{V}/player/{pid}/game-log/now"
+    if season and g_type:
+        endpoint = f"{V}/player/{pid}/game-log/{season}/{g_type}"
     game_log: dict = _call_api_get(endpoint=endpoint)
     return game_log
 
 
-def _get_game_log_now(pid: int) -> dict:
-    """
-    Retrieve the game log for a specific player as of the current moment.
-    """
-    endpoint = f"{V}/player/{pid}/game-log/now"
-    game_log_now = _call_api_get(endpoint=endpoint)
-    return game_log_now
+# def _get_game_log_now(pid: int) -> dict:
+#     """
+#     Retrieve the game log for a specific player as of the current moment.
+#     """
+#     endpoint = f"{V}/player/{pid}/game-log/now"
+#     game_log_now = _call_api_get(endpoint=endpoint)
+#     return game_log_now
     
 
 def _get_player_spotlight() -> dict:

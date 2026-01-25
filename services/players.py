@@ -29,9 +29,7 @@ class Players:
     def get(self, pid: int) -> "Player": 
         """
         Return a Player object for the given NHL player ID.
-
-        The returned Player lazily fetches and caches data from the NHL API
-        and provides structured access to biographical and statistical data.
+        
         Parameters
         ----------
         data : int

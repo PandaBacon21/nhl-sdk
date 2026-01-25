@@ -1,3 +1,3 @@
 from .season import Season
-
-__all__ = ["Season"]
+from .game_stats import FeaturedGame
+__all__ = ["Season", "FeaturedGame"]

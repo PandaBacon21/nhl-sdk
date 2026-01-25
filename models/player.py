@@ -36,8 +36,8 @@ class Player:
         """
         self._client = client
         self._pid: int = player_id
-        self._cache_key: str = f"player:{self._pid}:landing"
-        self._cache_version: datetime | None = None
+        self._landing_key: str = f"player:{self._pid}:landing"
+        self._cache_version: dict[str, datetime]= {}
         self._bio: Bio | None = None
         self._stats: Stats | None = None
 
@@ -51,20 +51,20 @@ class Player:
             return f"Player Id: {self._pid}. Bio not yet fetched."
 
     def _fetch_player_landing(self) -> CacheItem:
-        cached = self._check_cache(self._cache_key)
+        cached = self._check_cache(self._landing_key)
         if cached is not None:
             return cached
         
         res = _get_player_info(pid=self._pid)
         if not res["ok"]:
-            raise RuntimeError(res.get("error", f"Failed to fetch player: {self._pid}"))      
-        cache_item = self._client.cache.set(self._cache_key, res["data"], ttl=60 * 60 * 4)
-        self._cache_version = cache_item.created_at 
+            raise RuntimeError(res.get("error", f"Failed to fetch player landing: {self._pid}"))      
+        cache_item = self._client.cache.set(self._landing_key, res["data"], ttl=60 * 60 * 4)
+        self._cache_version[self._landing_key] = cache_item.created_at 
         return cache_item
 
     def _clear(self) -> None: 
         print(f"Clearing Player {self._pid} data")
-        self._cache_version = None
+        self._cache_version = {}
         self._bio = None
         self._stats = None
         print(f"Player {self._pid} data cleared")
@@ -72,7 +72,7 @@ class Player:
     def _check_cache(self, cache_key: str) -> CacheItem | None: 
         cache = self._client.cache
         cached = cache.get(cache_key)
-        if (cached is None) or (self._cache_version != cached.created_at): 
+        if (cached is None) or (self._cache_version.get(cache_key) != cached.created_at): 
             return None
         return cached
     
@@ -99,7 +99,7 @@ class Player:
             physical attributes, position, and awards.
         """
         if self._bio:
-            if self._check_cache(self._cache_key):
+            if self._check_cache(self._landing_key):
                 return self._bio
         print(f"Building Bio: Player {self._pid}")
         data = self._fetch_player_landing()
@@ -119,12 +119,12 @@ class Player:
             featured stats, and recent games.
         """
         if self._stats:
-            if self._check_cache(self._cache_key):
+            if self._check_cache(self._landing_key):
                 return self._stats
         print(f"Building Stats: Player {self._pid}")
         data = self._fetch_player_landing()
         print(f"Stats built: Player {self._pid}")
-        self._stats = Stats(data=data.data)
+        self._stats = Stats(pid=self._pid, data=data.data, client=self._client)
         return self._stats
     
     def raw(self) -> dict: 
