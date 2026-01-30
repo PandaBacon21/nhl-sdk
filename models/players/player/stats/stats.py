@@ -7,8 +7,8 @@ from .featured_stats import Featured
 from .career_stats import Career
 from .season import Season, FeaturedGame
 from .games import GameLogs
-from ...resources.api_web import _get_game_log
-from ...core.cache import CacheItem
+from .....resources.api_web import _get_game_log
+from .....core.cache import CacheItem
 
 if TYPE_CHECKING: 
     from nhl_stats.client import NhlClient
@@ -38,6 +38,7 @@ class Stats:
         self._pid = pid
         self._client = client
         self._game_key: str = f"player:{pid}:game-log"
+        self._ttl: int = 60*60*4
 
         self.featured: Featured = Featured(featured_stats)
         self.career: Career = Career(career_stats)
@@ -58,8 +59,9 @@ class Stats:
         If no season or game_type specified, defaults to current or most recent season (if player not currently active).
         If season specified but not game_type, game_type defaults to 2 (regular season).
         """
+        
         # Need to update caching
-        ttl = 60*60*4
+        
         if season and game_type:
             cache_key = f"{self._game_key}:{season}:{game_type}"
             cached = self._check_cache(cache_key=cache_key)
@@ -67,14 +69,14 @@ class Stats:
                 print(f"{cache_key} no yet cached")
                 res = _get_game_log(pid=self._pid, season=season, g_type=game_type)
                 game_logs = GameLogs(data=res["data"])
-                self._client.cache.set(key=cache_key, data=game_logs, ttl=ttl)
+                self._client.cache.set(key=cache_key, data=game_logs, ttl=self._ttl)
                 return game_logs
             return cached.data
         else: 
             res = _get_game_log(pid=self._pid)
             key = f"{self._game_key}:{res["data"]["seasonId"]}:{res["data"]["gameTypeId"]}"
             game_logs = GameLogs(data=res["data"])
-            self._client.cache.set(key=key, data=game_logs, ttl=ttl)
+            self._client.cache.set(key=key, data=game_logs, ttl=self._ttl)
             return game_logs
             
         

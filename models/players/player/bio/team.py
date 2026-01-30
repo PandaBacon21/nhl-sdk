@@ -2,7 +2,7 @@
 TEAM DATA CLASS
 """
 
-from ..core.utilities import LocalizedString
+from .....core.utilities import LocalizedString
 
 
 class Team: 

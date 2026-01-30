@@ -1,7 +1,8 @@
 """
 GAME OBJECT
 """
-from ....core.utilities import LocalizedString
+
+from ......core.utilities import LocalizedString
 
 
 class Game:

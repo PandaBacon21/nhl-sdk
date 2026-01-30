@@ -3,7 +3,7 @@ BADGE DATA CLASS
 """
 
 
-from ...core.utilities import LocalizedString
+from .....core.utilities import LocalizedString
 
 class Badge: 
     def __init__(self, data: dict): 

@@ -2,7 +2,7 @@
 PLAYER BIO DATA CLASS
 """
 
-from ..team import Team
+from .team import Team
 from .weight import Weight
 from .height import Height
 from .birth_details import BirthDetails
@@ -10,7 +10,7 @@ from .legacy import Legacy
 from .media import Media
 from .draft import Draft
 
-from ...core.utilities import LocalizedString, _to_bool
+from .....core.utilities import LocalizedString, _to_bool
 
 class Bio:
     def __init__(self, data: dict): 

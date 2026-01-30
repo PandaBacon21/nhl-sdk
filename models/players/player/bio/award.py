@@ -3,7 +3,7 @@ AWARD DATA CLASS
 """
 
 
-from ...core.utilities import LocalizedString
+from .....core.utilities import LocalizedString
 
 class Award: 
     def __init__(self, data: dict): 

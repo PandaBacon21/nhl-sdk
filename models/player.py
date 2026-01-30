@@ -7,8 +7,8 @@ from typing import TYPE_CHECKING
 from datetime import datetime
 
 from ..resources.api_web import _get_player_info
-from .bio import Bio
-from .stats import Stats
+from .players.player import Bio
+from .players.player import Stats
 from ..core.cache import CacheItem
 
 if TYPE_CHECKING: 
@@ -38,6 +38,7 @@ class Player:
         self._pid: int = player_id
         self._landing_key: str = f"player:{self._pid}:landing"
         self._cache_version: dict[str, datetime]= {}
+        self._cache_ttl: int = 60 * 60 * 4
         self._bio: Bio | None = None
         self._stats: Stats | None = None
 
@@ -50,7 +51,7 @@ class Player:
         else: 
             return f"Player Id: {self._pid}. Bio not yet fetched."
 
-    def _fetch_player_landing(self) -> CacheItem:
+    def _get_player_landing(self) -> CacheItem:
         cached = self._check_cache(self._landing_key)
         if cached is not None:
             return cached
@@ -58,7 +59,7 @@ class Player:
         res = _get_player_info(pid=self._pid)
         if not res["ok"]:
             raise RuntimeError(res.get("error", f"Failed to fetch player landing: {self._pid}"))      
-        cache_item = self._client.cache.set(self._landing_key, res["data"], ttl=60 * 60 * 4)
+        cache_item = self._client.cache.set(self._landing_key, res["data"], ttl=self._cache_ttl)
         self._cache_version[self._landing_key] = cache_item.created_at 
         return cache_item
 
@@ -85,7 +86,7 @@ class Player:
         """
         self._clear()
         print(f"Refreshing data for Player {self._pid}")
-        self._fetch_player_landing()    
+        self._get_player_landing()    
 
     @property
     def bio(self) -> Bio:
@@ -102,7 +103,7 @@ class Player:
             if self._check_cache(self._landing_key):
                 return self._bio
         print(f"Building Bio: Player {self._pid}")
-        data = self._fetch_player_landing()
+        data = self._get_player_landing()
         self._bio = Bio(data=data.data)
         print(f"Bio built: Player {self._pid} ")
         return self._bio
@@ -122,7 +123,7 @@ class Player:
             if self._check_cache(self._landing_key):
                 return self._stats
         print(f"Building Stats: Player {self._pid}")
-        data = self._fetch_player_landing()
+        data = self._get_player_landing()
         print(f"Stats built: Player {self._pid}")
         self._stats = Stats(pid=self._pid, data=data.data, client=self._client)
         return self._stats
@@ -141,5 +142,5 @@ class Player:
         dict
             Raw player data.
         """
-        res = self._fetch_player_landing()
+        res = self._get_player_landing()
         return res.data

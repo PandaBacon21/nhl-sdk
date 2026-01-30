@@ -4,8 +4,11 @@ PLAYERS COLLECTION
 
 from __future__ import annotations
 from typing import Optional, Literal, TYPE_CHECKING
+from datetime import datetime
 
 from ..models.player import Player
+from ..models.players import Spotlight, Leaders
+from ..resources.api_web import _get_player_spotlight
 
 if TYPE_CHECKING:
     from nhl_stats.client import NhlClient
@@ -22,8 +25,11 @@ class Players:
     """
     def __init__(self, client:"NhlClient"):
         self._client = client
+        self.leaders: Leaders = Leaders(self._client)
+        self._spotlight_key = f"players:spotlight"
+        self._ttl: int = 60 * 60 * 12
 
-    PlayerType = Literal["skater", "goalie"]
+    PlayerType = Literal["s", "g"]
     StatType = Literal["goals", "goalsSh", "goalsPp", "assists", "points", "plusMinus", "faceOffLeaders", "penaltyMins", "toi"]
     
     def get(self, pid: int) -> "Player": 
@@ -37,18 +43,19 @@ class Players:
         """
         return Player(player_id=pid, client=self._client)
 
-
-    # def get_stat_leaders(self, player_type: PlayerType, category: StatType | None = None, season: Optional[int] = None, 
-    #                   game_type: Optional[int] = None, limit: Optional[int] = None) -> dict: 
-    #     """
-    #     Get stat leaders
+    @property
+    def spotlight(self) -> list[Spotlight]:
+        """
+        Return a list of currently Spotlighted Players 
+        """
+        cached = self._client.cache.get(self._spotlight_key)
+        if cached is not None: 
+            return cached.data
+        data = _get_player_spotlight()
+        players = data["data"]
+        print("Building Spotlight")
+        spotlight = [Spotlight(player) for player in players or []]
         
-    #     If 'season' is included, 'gametype' must also be included, and vice versa. 
-    #     player_type: PlayerType
-    #     category: Optional[str] = StatType
-    #     season: Optional[int] = YYYYYYYY format
-    #     game_type: Optional[int] = 2 (regular season), 3 (playoff)
-    #     limit: Optional[int] = default = top 5, -1 returns all
-    #     """
-    #     if (season is None) ^ (game_type is None):
-    #         raise ValueError(f"season and game_type must be either provided together or omitted together")
+        self._client.cache.set(key=self._spotlight_key, data=spotlight, ttl=self._ttl)
+        print(f"spotlight cached: {datetime.now()}")
+        return spotlight
