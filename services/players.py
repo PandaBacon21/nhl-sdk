@@ -3,11 +3,10 @@ PLAYERS COLLECTION
 """
 
 from __future__ import annotations
-from typing import Literal, TYPE_CHECKING
+from typing import TYPE_CHECKING
 from datetime import datetime
 
-from ..models.player import Player
-from ..models.players import Spotlight, Leaders
+from ..models.players import Spotlight, Leaders, Player
 from ..resources.api_web import _get_player_spotlight
 
 if TYPE_CHECKING:
@@ -26,9 +25,6 @@ class Players:
     def __init__(self, client:"NhlClient"):
         self._client = client
 
-    PlayerType = Literal["s", "g"]
-    StatType = Literal["goals", "goalsSh", "goalsPp", "assists", "points", "plusMinus", "faceOffLeaders", "penaltyMins", "toi"]
-    
     def get(self, pid: int) -> "Player": 
         """
         Return a Player object for the given NHL player ID.

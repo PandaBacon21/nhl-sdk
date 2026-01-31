@@ -1,4 +1,3 @@
-from .bio import Bio
-from .stats import Stats
+from .player import Player
 
-__all__ = ["Bio", "Stats"]
+__all__ = ["Player"]

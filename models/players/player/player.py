@@ -6,10 +6,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from datetime import datetime
 
-from ..resources.api_web import _get_player_info
-from .players.player import Bio
-from .players.player import Stats
-from ..core.cache import CacheItem
+from .bio import Bio
+from .stats import Stats
+from ....resources.api_web import _get_player_info
+from ....core.cache import CacheItem
 
 if TYPE_CHECKING: 
     from nhl_stats.client import NhlClient
