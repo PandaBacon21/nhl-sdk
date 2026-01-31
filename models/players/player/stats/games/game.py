@@ -6,7 +6,18 @@ from ......core.utilities import LocalizedString
 
 
 class Game:
+    """
+    Represents available statistics for a specific game
+    """
     def __init__(self, data: dict): 
+        """
+        Initialize game data from raw NHL gamelogs API response.
+
+        Parameters
+        ----------
+        data : dict
+            Raw game log game data returned by the NHL gamelogs API. 
+        """
         self.game_id: int | None = data.get("gameId")
         self.team_abbrev: str | None = data.get("teamAbbrev")
         self.home_road_flag: str | None = data.get("homeRoadFlag")
@@ -30,6 +41,14 @@ class Game:
         self.toi: str | None = data.get("toi")
 
     def to_dict(self) -> dict:
+        """
+        Convert game statistics to a dictionary.
+
+        Returns
+        -------
+        dict
+            Serializable representation of the game statistics.
+        """
         return {
             "game_id": self.game_id,
             "team_abbrev": self.team_abbrev,

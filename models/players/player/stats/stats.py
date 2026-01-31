@@ -8,7 +8,7 @@ from .career_stats import Career
 from .season import Season, FeaturedGame
 from .games import GameLogs
 from .....resources.api_web import _get_game_log
-from .....core.cache import CacheItem
+from .....core.utilities import _check_cache
 
 if TYPE_CHECKING: 
     from nhl_stats.client import NhlClient
@@ -30,7 +30,7 @@ class Stats:
         Parameters
         ----------
         data : dict
-            Raw player data as returned by the NHL API.
+            Raw player landing data as returned by the NHL API.
         """
         featured_stats: dict = data.get("featuredStats") or {}
         career_stats: dict = data.get("careerTotals") or {}
@@ -45,13 +45,6 @@ class Stats:
         self.seasons = [Season(season) for season in data.get("seasonTotals") or []]
         self.last_5_games = [FeaturedGame(game) for game in data.get("last5Games") or []]
 
-    def _check_cache(self, cache_key: str) -> CacheItem | None: 
-        cache = self._client.cache
-        cached = cache.get(cache_key)
-        if cached is None:
-            return None
-        return cached
-
     def game_log(self, season: Optional[int] = None, game_type: Optional[int] = 2) -> GameLogs: 
         """  
         Retreive Game Logs by Season
@@ -59,12 +52,10 @@ class Stats:
         If no season or game_type specified, defaults to current or most recent season (if player not currently active).
         If season specified but not game_type, game_type defaults to 2 (regular season).
         """
-        
-        # Need to update caching
-        
+
         if season and game_type:
             cache_key = f"{self._game_key}:{season}:{game_type}"
-            cached = self._check_cache(cache_key=cache_key)
+            cached = _check_cache(cache=self._client.cache, cache_key=cache_key)
             if cached is None:
                 print(f"{cache_key} no yet cached")
                 res = _get_game_log(pid=self._pid, season=season, g_type=game_type)

@@ -3,7 +3,7 @@ PLAYERS COLLECTION
 """
 
 from __future__ import annotations
-from typing import Optional, Literal, TYPE_CHECKING
+from typing import Literal, TYPE_CHECKING
 from datetime import datetime
 
 from ..models.player import Player
@@ -25,9 +25,6 @@ class Players:
     """
     def __init__(self, client:"NhlClient"):
         self._client = client
-        self.leaders: Leaders = Leaders(self._client)
-        self._spotlight_key = f"players:spotlight"
-        self._ttl: int = 60 * 60 * 12
 
     PlayerType = Literal["s", "g"]
     StatType = Literal["goals", "goalsSh", "goalsPp", "assists", "points", "plusMinus", "faceOffLeaders", "penaltyMins", "toi"]
@@ -48,14 +45,24 @@ class Players:
         """
         Return a list of currently Spotlighted Players 
         """
-        cached = self._client.cache.get(self._spotlight_key)
+        spotlight_key = f"players:spotlight"
+        ttl: int = 60 * 60 * 6
+        
+        cached = self._client.cache.get(spotlight_key)
         if cached is not None: 
             return cached.data
         data = _get_player_spotlight()
         players = data["data"]
         print("Building Spotlight")
         spotlight = [Spotlight(player) for player in players or []]
-        
-        self._client.cache.set(key=self._spotlight_key, data=spotlight, ttl=self._ttl)
+
+        self._client.cache.set(key=spotlight_key, data=spotlight, ttl=ttl)
         print(f"spotlight cached: {datetime.now()}")
         return spotlight
+    
+    @property
+    def leaders(self) -> Leaders: 
+        """
+        Return leaders of various statistics for skaters and goalies
+        """
+        return Leaders(self._client)

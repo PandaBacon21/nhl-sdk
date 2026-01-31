@@ -7,6 +7,12 @@ from ....core.utilities import LocalizedString
 
 
 class Player: 
+    """
+    Represents a player entry in a leaderboard or statistical result.
+
+    This object wraps raw player data returned by the NHL API and exposes 
+    available attributes 
+    """
     def __init__(self, data: dict): 
         self.value: int | None = data.get("value")
         self.pid: str | None = data.get("id")

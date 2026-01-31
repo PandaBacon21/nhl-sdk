@@ -4,7 +4,21 @@ CAREER STATS
 
 
 class Career:
+    """
+    Represents a player's career statistics.
+
+    This object separates career totals into regular season and
+    playoff statistics.
+    """
     def __init__(self, data: dict):
+        """
+        Initialize career statistics from raw NHL API data.
+
+        Args:
+            data (dict): Raw player landing data returned by the NHL API.
+                Expected to contain ``regularSeason`` and ``playoffs``
+                keys.
+        """
         regular_season: dict = data.get("regularSeason") or {}
         playoffs: dict = data.get("playoffs") or {}
 
@@ -13,7 +27,20 @@ class Career:
         
 
 class CareerStats: 
+    """
+    Aggregated career statistics for a player.
+
+    All values represent cumulative or averaged statistics across
+    a player's entire career for a specific game context
+    (regular season or playoffs).
+    """
     def __init__(self, data: dict):
+        """
+        Initialize aggregated career statistics.
+
+        Args:
+            data (dict): Raw career stat values returned by the NHL API.
+        """
         self.assists: int | None = data.get("assists")
         self.avg_toi: str | None = data.get("avgToi")
         self.faceoff_win_pctg: float | None = data.get("faceoffWinningPctg")
@@ -32,6 +59,12 @@ class CareerStats:
         self.shots: int | None = data.get("shots")
 
     def to_dict(self) -> dict:
+        """
+        Convert career statistics to a dictionary.
+
+        Returns:
+            dict: Serializable representation of career statistics.
+        """
         return {
             "assists": self.assists,
             "avg_toi": self.avg_toi,

@@ -2,6 +2,7 @@
 UTILITY CLASSES AND FUNCTIONS
 """
 
+from .cache import CacheItem
 
 class LocalizedString:
     """
@@ -35,3 +36,9 @@ def _to_bool(value: int | bool | None) -> bool | None:
     if value is None:
         return None
     return bool(value)
+
+def _check_cache(cache, cache_key: str) -> CacheItem | None: 
+        cached = cache.get(cache_key)
+        if cached is None:
+            return None
+        return cached

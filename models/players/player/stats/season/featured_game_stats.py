@@ -3,7 +3,18 @@ LAST 5 GAME STATS
 """
 
 class FeaturedGame:
+    """
+    Represents a single game from a player's recent performance.
+    """
     def __init__(self, data: dict):
+        """
+        Initialize featured game statistics.
+
+        Parameters
+        ----------
+        data : dict
+            Raw per-game player statistics returned by the NHL landing API.
+        """
         self.assists: int | None = data.get("assists")
         self.game_date: str | None = data.get("gameDate")
         self.game_id: int | None = data.get("gameId")
@@ -22,6 +33,14 @@ class FeaturedGame:
         self.toi: str | None = data.get("toi")
     
     def to_dict(self) -> dict:
+        """
+        Convert game statistics to a dictionary.
+
+        Returns
+        -------
+        dict
+            Serializable representation of the game statistics.
+        """
         return {
             "assists": self.assists,
             "game_date": self.game_date,

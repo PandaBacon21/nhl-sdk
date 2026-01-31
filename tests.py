@@ -99,9 +99,9 @@ def main() -> None:
     print(f"1st Spotlighted Player: {players.spotlight[0].name}")
     print(f"2nd Spotlighted Player: {players.spotlight[1].name}")
     print("")
-    goal_leaders = players.leaders.goalies(season=20242025, game_type=2, categories="wins", limit=10)
-    wins = goal_leaders.wins
-    save_pct = goal_leaders.save_pctg
+    goalie_leaders = players.leaders.goalies(season=20242025, game_type=2, categories="wins", limit=10)
+    wins = goalie_leaders.wins
+    save_pct = goalie_leaders.save_pctg
     print(f"Goalie wins leader: {wins[0].last_name}")
     print(f"Goalie wins leader id: {wins[0].pid}")
     print(save_pct)
@@ -109,7 +109,7 @@ def main() -> None:
     skater_leaders = players.leaders.skaters()
     print(f"Current Goals Leader: {skater_leaders.goals[0].last_name}")
 
-
+    
 
 if __name__ == "__main__": 
     main()

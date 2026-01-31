@@ -6,6 +6,13 @@ from .player import Player
 
 
 class GoalieLeaders:
+    """
+    Container for goalie statistical leaders.
+
+    Each attribute represents a leaderboard for a specific goalie
+    statistic. Values are lists of `Player` objects ordered by the
+    underlying NHL API stat ranking.
+    """
     def __init__(self, data: dict): 
         self.wins: list = [Player(goalie) for goalie in data.get("wins") or []]
         self.shutouts: list = [Player(goalie) for goalie in data.get("shutouts") or []]
@@ -13,6 +20,13 @@ class GoalieLeaders:
         self.goals_against_avg: list = [Player(goalie) for goalie in data.get("goalsAgainstAverage") or []]
 
 class SkaterLeaders: 
+    """
+    Container for skater statistical leaders.
+
+    Each attribute represents a leaderboard for a specific skater
+    statistic. Values are lists of `Player` objects ordered by the
+    underlying NHL API stat ranking.
+    """
     def __init__(self, data: dict): 
         self.goals: list = [Player(skater) for skater in data.get("goals") or []]
         self.goals_sh: list = [Player(skater) for skater in data.get("goalsSh") or []]

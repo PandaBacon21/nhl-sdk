@@ -5,7 +5,20 @@ SPOTLIGHT PLAYER
 from ...core.utilities import LocalizedString
 
 class Spotlight: 
+    """
+    Represents a spotlighted player summary.
+
+    A Spotlight object provides a lightweight representation of a player
+    """
     def __init__(self, data: dict): 
+        """
+        Initialize a spotlighted player summary.
+
+        Parameters
+        ----------
+        data : dict
+            Raw spotlight player data returned by the NHL spotlight API.
+        """
         self.pid: int | None = data.get("playerId")
         self.name: LocalizedString = LocalizedString(data=data.get("name"))
         self.slug: str | None = data.get("playerSlug")
@@ -19,6 +32,14 @@ class Spotlight:
 
 
     def to_dict(self) -> dict:
+        """
+        Convert the spotlighted player to a dictionary.
+
+        Returns
+        -------
+        dict
+            Serializable representation of the spotlighted player.
+        """
         return {
             "player_id": self.pid,
             "name": self.name.default,

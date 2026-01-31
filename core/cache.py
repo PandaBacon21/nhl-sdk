@@ -37,14 +37,4 @@ class Cache:
         print(f"{key} stored in cache - ttl: {ttl}")
         return self.store[key]
 
-    # def is_valid(self, key: str) -> bool:
-    #     return self.get(key) is not None
 
-    # def clear(self, prefix: str | None = None) -> None: 
-    #     if prefix is None: 
-    #         self.store.clear()
-    #     else: 
-    #         for key in list(self.store.keys()):
-    #             if key.startswith(prefix): 
-    #                 del self.store[key]
-    

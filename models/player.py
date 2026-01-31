@@ -31,8 +31,10 @@ class Player:
         """
         Parameters
         ----------
-        data : int
-            Unique player Id
+        player_id : int
+            Unique NHL player ID.
+        client : NhlClient
+            NHL API client used for requests and caching.
         """
         self._client = client
         self._pid: int = player_id
@@ -43,15 +45,25 @@ class Player:
         self._stats: Stats | None = None
 
     def __repr__(self): 
+        """
+        Return a string representation of the player.
+        """
         return f"Player(pid: {self._pid})"
     
     def __str__(self): 
+        """
+        Return a string representation of the player.
+        """
         if self._bio:
             return f"{self.bio.first_name} {self.bio.last_name}, Player Id: {self._pid}" 
         else: 
             return f"Player Id: {self._pid}. Bio not yet fetched."
 
     def _get_player_landing(self) -> CacheItem:
+        """
+        Retrieve from cache or NHL landing API for the specific player
+        For internal use only
+        """
         cached = self._check_cache(self._landing_key)
         if cached is not None:
             return cached
@@ -64,6 +76,10 @@ class Player:
         return cache_item
 
     def _clear(self) -> None: 
+        """
+        Clear any cached data for the particular player 
+        For internal use only
+        """
         print(f"Clearing Player {self._pid} data")
         self._cache_version = {}
         self._bio = None
@@ -71,6 +87,10 @@ class Player:
         print(f"Player {self._pid} data cleared")
 
     def _check_cache(self, cache_key: str) -> CacheItem | None: 
+        """
+        Check the cache for valid, cached player landing data
+        For internal use only
+        """
         cache = self._client.cache
         cached = cache.get(cache_key)
         if (cached is None) or (self._cache_version.get(cache_key) != cached.created_at): 
