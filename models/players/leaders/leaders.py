@@ -82,7 +82,7 @@ class Leaders:
             categories (str, optional): example, goals
             limit (int, optional): Maximum number of skaters to return.
         """
-        cache_key = self._cache_key("g", season, game_type, categories, limit)
+        cache_key = self._cache_key("s", season, game_type, categories, limit)
         cached = _check_cache(cache=self._client.cache, cache_key=cache_key)
         if cached is None: 
             print(f"{cache_key} no yet cached")
