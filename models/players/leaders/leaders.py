@@ -38,13 +38,13 @@ class Leaders:
         
         For internal use only
         """
-        if season and game_type:
-            return f"leaders:{position}:{game_type}"
-        if season and game_type and categories: 
-            return f"leaders:{position}:{game_type}:{categories}"
         if season and game_type and categories and limit: 
-            return f"leaders:{position}:{game_type}:{categories}:{limit}"
-        return f"leaders:{position}:now"
+            return f"leaders:{season}:{position}:{game_type}:{categories}:{limit}"
+        if season and game_type and categories: 
+            return f"leaders:{season}:{position}:{game_type}:{categories}"
+        if season and game_type:
+            return f"leaders:{season}:{position}:{game_type}"
+        return f"leaders:{season}:{position}:now"
 
 
     def goalies(self, season: Optional[int] = None, game_type: Optional[int] = None, 
