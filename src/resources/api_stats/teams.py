@@ -1,0 +1,7 @@
+'''
+METHODS FOR RETRIEVING TEAM DATA FROM API.NHLE.COM/STATS/REST
+
+'''
+
+
+from ...core.config import BASE_URL_API_WEB, LAN
