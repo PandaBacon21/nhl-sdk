@@ -2,6 +2,8 @@
 FUNCTIONS FOR RETRIEVING DRAFT DATA FROM API-WEB.NHLE.COM/
 """
 
+from typing import Optional
+
 from ...core.config import V
 from ...core.transport import _call_api_get
 
@@ -9,23 +11,16 @@ from ...core.transport import _call_api_get
 # DRAFT
 # ==========================================================================
 
-def _get_rankings_now() -> dict: 
+def _get_rankings(season: Optional[int], category: Optional[str]) -> dict: 
     """
-    Retrieve a list of all draft prospects by category of prospect as of the current moment
-    """
-    endpoint = f"{V}/draft/rankings/now"
-    rankings: dict = _call_api_get(endpoint=endpoint)
-    # print(rankings)
-    return rankings
-
-def _get_rankings(season: int, category: str) -> dict: 
-    """
-    Retrieve a list of all draft prospects by category of prospect for a specific season
+    Retrieve a list of all draft prospects by category of prospect for the current moment or a specific season
     season: int - YYYY
     category: str - Prospect Category (1 - North American Skater, 2 - International Skater, 
     3 - North American Goalie, 4 - International Goalie)
     """
-    endpoint = f"{V}/draft/rankings/{season}/{category}"
+    endpoint = f"{V}/draft/rankings/now"
+    if season and category: 
+        endpoint = f"{V}/draft/rankings/{season}/{category}"
     rankings: dict = _call_api_get(endpoint=endpoint)
     # print(rankings)
     return rankings
@@ -39,22 +34,15 @@ def _get_tracker_now() -> dict:
     # print(tracker)
     return tracker
 
-def _get_picks_now() -> dict: 
+def _get_picks(season: Optional[int] = None, round: Optional[str] = None) -> dict: 
     """
-    Retrieve the most recent draft picks information
-    """
-    endpoint = f"{V}/draft/picks/now"
-    picks: dict = _call_api_get(endpoint=endpoint)
-    # print(picks)
-    return picks
-
-def _get_picks(season: int, round: str) -> dict: 
-    """
-    Retrieve a list of draft picks for a specific season
+    Retrieve a list of draft picks for the current moment or a specific season
     season: int - YYYY
     round: str - Selectable round (1-7, 1 for round 1 etc.) or all for all selectable rounds
-    """
-    endpoint = f"{V}/draft/picks/{season}/{round}"
+    """    
+    endpoint = f"{V}/draft/picks/now"
+    if season and round: 
+        endpoint = f"{V}/draft/picks/{season}/{round}"
     picks: dict = _call_api_get(endpoint=endpoint)
     # print(picks)
     return picks

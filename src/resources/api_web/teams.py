@@ -2,7 +2,7 @@
 FUNCTIONS FOR RETRIEVING TEAM DATA FROM API-WEB.NHLE.COM/
 """
 
-from typing import Any
+from typing import Any, Optional
 
 from ...core.config import V
 from ...core.transport import _call_api_get
@@ -12,21 +12,14 @@ from ...core.transport import _call_api_get
 # STANDINGS
 # ==========================================================================
 
-def _get_standings() -> dict: 
-    """
-    Retrieve the standings as of the current moment
-    """
-    endpoint = f"{V}/standings/now"
-    standings: dict= _call_api_get(endpoint=endpoint)
-    # print(standings)
-    return standings
-
-def _get_standings_date(date: str) -> dict:
+def _get_standings(date: Optional[str] = None) -> dict:
     """ 
-    Retrieve the standings for a specific date
+    Retrieve the standings as of the current moment a specific date
     date: YYYY-MM-DD
     """
-    endpoint = f"{V}/standings/{date}"
+    endpoint = f"{V}/standings/now"
+    if date: 
+        endpoint = f"{V}/standings/{date}"
     standings: dict = _call_api_get(endpoint=endpoint)
     # print(standings)
     return standings
@@ -44,12 +37,14 @@ def _get_standings_per_season() -> dict:
 # STATS
 # ==========================================================================
 
-def _get_team_stats(team: str) -> dict:
+def _get_team_stats(team: str, season: Optional[int] = None, g_type: Optional[int] = None) -> dict:
     """
     Retrieve current statistics for a specific club
     team: three-letter team code
     """
     endpoint = f"{V}/club-stats/{team}/now"
+    if season and g_type:
+        endpoint = f"{V}/club-stats/{team}/{season}/{g_type}"
     team_stats: dict = _call_api_get(endpoint=endpoint)
     # print(team_stats)
     return team_stats
@@ -65,17 +60,6 @@ def _get_game_types_per_season(team: str) -> dict:
     # print(game_types)
     return game_types
 
-def _get_team_stats_season(team: str, season: int, g_type: int) -> dict: 
-    """
-    Retrieve the stats for a specific team, season, and game type
-    team: three-letter team code
-    season: YYYYYYYY
-    g_type: 2 (regular season), 3 (playoffs)
-    """
-    endpoint = f"{V}/club-stats/{team}/{season}/{g_type}"
-    team_stats: dict = _call_api_get(endpoint=endpoint)
-    # print(team_stats)
-    return team_stats
 
 def _get_team_scoreboard(team: str) -> dict: 
     """
@@ -91,23 +75,15 @@ def _get_team_scoreboard(team: str) -> dict:
 # ROSTER
 # ==========================================================================
 
-def _get_team_roster(team: str) -> dict: 
+def _get_team_roster(team: str, season: Optional[int] = None) -> dict: 
     """
-    Retrieve the roster for a specific team as of the current moment
-    team: three-letter team code
-    """
-    endpoint = f"{V}/roster/{team}/current"
-    roster: dict = _call_api_get(endpoint=endpoint)
-    # print(roster)
-    return roster
-
-def _get_team_roster_season(team: str, season: int) -> dict: 
-    """
-    Retrieve the roster for a specific team and season
+    Retrieve the roster for a specific team as of the current moment or season
     team: three-letter team code
     season: YYYYYYYY
     """
-    endpoint = f"{V}/roster/{team}/{season}"
+    endpoint = f"{V}/roster/{team}/current"
+    if season: 
+        endpoint = f"{V}/roster/{team}/{season}"
     roster: dict[str, Any] = _call_api_get(endpoint=endpoint)
     # print(roster)
     return roster
@@ -136,65 +112,42 @@ def _get_team_prospects(team: str) -> dict:
 # SCHEDULE
 # ==========================================================================
 
-def _get_schedule_season_now(team: str) -> dict: 
+def _get_schedule(team: str, season: Optional[int] = None) -> dict: 
     """
-    Retrieve the season schedule for a specific team as of the current moment
+    Retrieve the season schedule for a specific team at the current moment or season
     team: three-letter team code
+    season: YYYYYYYY
     """
     endpoint = f"{V}/club-schedule-season/{team}/now"
+    if season: 
+        endpoint = f"{V}/club-schedule-season/{team}/{season}"
     schedule: dict[str, Any] = _call_api_get(endpoint=endpoint)
     # print(schedule)
     return schedule
-
-def _get_schedule_season(team: str, season: int) -> dict: 
-    '''
-    Retrieve the season schedule for a specific team and season
-    team: three-letter team code
-    season: YYYYYYYY
-    '''
-    endpoint = f"{V}/club-schedule-season/{team}/{season}"
-    schedule: dict = _call_api_get(endpoint=endpoint)
-    # print(schedule)
-    return schedule
     
-def _get_schedule_month_now(team: str) -> dict: 
+def _get_schedule_month(team: str, month: Optional[str] = None) -> dict: 
     """
-    Retrieve the monthly schedule for a specific team as of the current moment
-    team: three-letter team code
-    """
-    endpoint = f"{V}/club-schedule/{team}/month/now"
-    schedule: dict = _call_api_get(endpoint=endpoint)
-    # print(schedule)
-    return schedule
-    
-def _get_schedule_month(team: str, month: str) -> dict: 
-    """
-    Retrieve the monthly schedule for a specific team and month
+    Retrieve the monthly schedule for a specific team as of the current moment or month
     team: three-letter team code
     month: YYYY-MM
-    """ 
-    endpoint = f"{V}/club-schedule/{team}/month/{month}"
+
+    """
+    endpoint = f"{V}/club-schedule/{team}/month/now"
+    if month: 
+        endpoint = f"{V}/club-schedule/{team}/month/{month}"
     schedule: dict = _call_api_get(endpoint=endpoint)
     # print(schedule)
     return schedule
 
-def _get_schedule_week_now(team: str) -> dict: 
+def _get_schedule_week(team: str, week: Optional[str] = None) -> dict: 
     """
-    Retrieve the weekly schedule for a specific team as of the current moment
-    team: three-letter team code
-    """    
-    endpoint = f"{V}/club-schedule/{team}/week/now"
-    schedule: dict = _call_api_get(endpoint=endpoint)
-    # print(schedule)
-    return schedule
-
-def _get_schedule_week(team: str, week: str) -> dict: 
-    """
-    Retrieve the weekly schedule for a specific team and date
+    Retrieve the weekly schedule for a specific team as of the current moment or date
     team: three-letter team code
     week: YYYY-MM-DD
     """
-    endpoint = f"{V}/club-schedule/{team}/week/{week}"
+    endpoint = f"{V}/club-schedule/{team}/week/now"
+    if week: 
+        endpoint = f"{V}/club-schedule/{team}/week/{week}"
     schedule: dict = _call_api_get(endpoint=endpoint)
     # print(schedule)
     return schedule

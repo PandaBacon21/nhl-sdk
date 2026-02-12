@@ -1,6 +1,7 @@
 """
 FUNCTIONS FOR RETRIEVING GAME DATA FROM API-WEB.NHLE.COM/
 """
+from typing import Optional
 
 from ...core.config import V
 from ...core.transport import _call_api_get
@@ -9,20 +10,14 @@ from ...core.transport import _call_api_get
 # SCHEDULE
 # ==========================================================================
 
-def _get_daily_scores_now() -> dict: 
+def _get_daily_scores(date: Optional[str]) -> dict: 
     """
-    Retrieve daily scores as of the current moment
-    """
-    endpoint = f"{V}/score/now"
-    scores: dict = _call_api_get(endpoint=endpoint)
-    return scores
-
-def _get_daily_scores(date: str) -> dict: 
-    """
-    Retrieve daily scores by date
+    Retrieve daily scores as of the current moment or by date
     date: YYYY-MM-DD
     """
-    endpoint = f"{V}/score/{date}"
+    endpoint = f"{V}/score/now"
+    if date:
+        endpoint = f"{V}/score/{date}"
     scores: dict = _call_api_get(endpoint=endpoint)
     return scores
 
@@ -90,20 +85,14 @@ def _get_game_story(game_id: int) -> dict:
 # NETWORK
 # ==========================================================================
 
-def _get_tv_schedule_now() -> dict:
+def _get_tv_schedule(date: Optional[str]) -> dict:
     """
-    Retrieve the current TV schedule
-    """
-    endpoint = f"{V}/network/tv-schedule/now"
-    schedule: dict= _call_api_get(endpoint=endpoint)
-    return schedule
-
-def _get_tv_schedule(date: str) -> dict:
-    """
-    Retrieve the TV schedule for a specific date
+    Retrieve the TV current schedule or for a specific date
     date: YYYY-MM-DD
     """
-    endpoint = f"{V}/network/tv-schedule/{date}"
+    endpoint = f"{V}/network/tv-schedule/now"
+    if date: 
+        endpoint = f"{V}/network/tv-schedule/{date}"
     schedule: dict = _call_api_get(endpoint=endpoint)
     return schedule
     

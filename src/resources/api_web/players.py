@@ -15,7 +15,7 @@ from ...core.transport import _call_api_get
 # PLAYERS
 # ==========================================================================
 
-def _get_player_info(pid: int) -> dict: 
+def _get_player_landing(pid: int) -> dict: 
     """
     Retrieve information for a specific player.
     """

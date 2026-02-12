@@ -8,7 +8,7 @@ from datetime import datetime
 
 from .bio import Bio
 from .stats import Stats
-from ....resources.api_web import _get_player_info
+from ....resources.api_web import _get_player_landing
 from ....core.cache import CacheItem
 
 if TYPE_CHECKING: 
@@ -68,7 +68,7 @@ class Player:
         if cached is not None:
             return cached
         
-        res = _get_player_info(pid=self._pid)
+        res = _get_player_landing(pid=self._pid)
         if not res["ok"]:
             raise RuntimeError(res.get("error", f"Failed to fetch player landing: {self._pid}"))      
         cache_item = self._client.cache.set(self._landing_key, res["data"], ttl=self._cache_ttl)
