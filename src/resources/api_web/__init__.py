@@ -1,5 +1,5 @@
 from .draft import _get_rankings, _get_tracker_now, _get_picks
-from .games import  _get_daily_scores, _get_scoreboard_now, _get_streams, _get_play_by_play, _get_game_landing, _get_boxscore, _get_game_story, _get_tv_schedule, _get_odds, _get_playoff_carousel, _get_playoff_series, _get_playoff_bracket
+from .games import  _get_daily_scores, _get_scoreboard_now, _get_streams, _get_play_by_play, _get_game_landing, _get_boxscore, _get_game_story, _get_tv_schedule, _get_odds
 from .league import _get_schedule, _get_schedule_calendar
 from .miscellaneous import _get_game_info, _get_game_rail, _get_goal_replay, _get_location, _get_meta, _get_openapi, _get_play_replay, _get_playoff_series_meta, _get_postal_lookup, _get_wsc
 from .players import _get_game_log, _get_goalie_leaders, _get_player_landing, _get_player_spotlight, _get_skater_leaders, _get_skater_leaders
@@ -26,9 +26,6 @@ __all__ = [
     "_get_game_story",
     "_get_tv_schedule",
     "_get_odds",
-    "_get_playoff_carousel",
-    "_get_playoff_series",
-    "_get_playoff_bracket",
 
     # league
     "_get_schedule",

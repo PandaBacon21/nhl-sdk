@@ -23,7 +23,7 @@ def _get_schedule(date: Optional[str] = None) -> dict:
     schedule: dict = _call_api_get(endpoint=endpoint)
     return schedule
 
-def _get_schedule_calendar(date: Optional[str]) -> dict:
+def _get_schedule_calendar(date: Optional[str] = None) -> dict:
     """
     Retrieve the schedule calendar for the current moment or a specific date
     date: str - YYYY-MM-DD
