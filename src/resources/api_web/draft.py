@@ -11,7 +11,7 @@ from ...core.transport import _call_api_get
 # DRAFT
 # ==========================================================================
 
-def _get_rankings(season: Optional[int], category: Optional[str]) -> dict: 
+def _get_rankings(season: Optional[int] = None, category: Optional[int] = None) -> dict: 
     """
     Retrieve a list of all draft prospects by category of prospect for the current moment or a specific season
     season: int - YYYY

@@ -10,7 +10,7 @@ from ...core.transport import _call_api_get
 # SCHEDULE
 # ==========================================================================
 
-def _get_daily_scores(date: Optional[str]) -> dict: 
+def _get_daily_scores(date: Optional[str] = None) -> dict: 
     """
     Retrieve daily scores as of the current moment or by date
     date: YYYY-MM-DD
@@ -85,7 +85,7 @@ def _get_game_story(game_id: int) -> dict:
 # NETWORK
 # ==========================================================================
 
-def _get_tv_schedule(date: Optional[str]) -> dict:
+def _get_tv_schedule(date: Optional[str] = None) -> dict:
     """
     Retrieve the TV current schedule or for a specific date
     date: YYYY-MM-DD
@@ -109,35 +109,5 @@ def _get_odds(country_code: str) -> dict:
     odds: dict = _call_api_get(endpoint=endpoint)
     return odds
 
-# ==========================================================================
-# PLAYOFFS
-# ==========================================================================
 
-def _get_playoff_carousel(season: int) -> dict:
-    """
-    Retrieve an overview of each playoff series
-    season: YYYYYYYY
-    """
-    endpoint = f"{V}/playoff-series/carousel/{season}/"
-    carousel: dict = _call_api_get(endpoint=endpoint)
-    return carousel
-
-def _get_playoff_series(season: int, series_letter: str) -> dict:
-    """
-    Retrieve the schedule for a specific playoff series
-    season: YYYYYYYY
-    series_letter: "A" or "B" or "C" ...
-    """
-    endpoint = f"{V}/schedule/playoff-series/{season}/{series_letter}/"
-    series: dict = _call_api_get(endpoint=endpoint)
-    return series
-    
-def _get_playoff_bracket(year: int) -> dict:
-    """
-    Retrieve the schedule for a specific playoff series
-    year: YYYY
-    """
-    endpoint = f"{V}/playoff-bracket/{year}"
-    bracket: dict = _call_api_get(endpoint=endpoint)
-    return bracket
 
