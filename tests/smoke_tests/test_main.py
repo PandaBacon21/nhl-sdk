@@ -1,5 +1,3 @@
-import pytest
-
 from src.client import NhlClient
 
 
@@ -114,6 +112,8 @@ def test_smoke() -> None:
 
     skater_leaders = players.leaders.skaters()
     print(f"Current Goals Leader: {skater_leaders.goals[0].last_name}")
+
+
 
 if __name__=="__main__": 
     test_smoke()
