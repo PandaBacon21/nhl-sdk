@@ -2,7 +2,7 @@
 Seasons with Game Logs
 """
 
-class Season: 
+class SeasonGameType: 
     def __init__(self, data: dict):
         self.season: int | None = data.get("season")
         self.game_types: list[int] = data.get("gameTypes") or []

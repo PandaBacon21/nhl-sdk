@@ -8,7 +8,6 @@ from datetime import datetime
 
 from .bio import Bio
 from .stats import Stats
-from ....resources.api_web import _get_player_landing
 from ....core.cache import CacheItem
 
 if TYPE_CHECKING: 
@@ -57,7 +56,7 @@ class Player:
         if self._bio:
             return f"{self.bio.first_name} {self.bio.last_name}, Player Id: {self._pid}" 
         else: 
-            return f"Player Id: {self._pid}. Bio not yet fetched."
+            return f"Player Id: {self._pid}. Call .bio() to retrieve name."
 
     def _get_player_landing(self) -> CacheItem:
         """
@@ -68,12 +67,17 @@ class Player:
         if cached is not None:
             return cached
         
-        res = _get_player_landing(pid=self._pid)
-        if not res["ok"]:
-            raise RuntimeError(res.get("error", f"Failed to fetch player landing: {self._pid}"))      
-        cache_item = self._client.cache.set(self._landing_key, res["data"], ttl=self._cache_ttl)
+        res = self._client._api.api_web.call_nhl_players.get_player_landing(pid=self._pid)
+
+        if not res.ok:
+            raise RuntimeError(res.data["error"] or f"Failed to fetch player landing: {self._pid}")  
+        cache_item = self._client.cache.set(self._landing_key, res.data, ttl=self._cache_ttl)
+
+
         self._cache_version[self._landing_key] = cache_item.created_at 
         return cache_item
+    
+
 
     def _clear(self) -> None: 
         """
@@ -126,7 +130,7 @@ class Player:
         data = self._get_player_landing()
         self._bio = Bio(data=data.data)
         print(f"Bio built: Player {self._pid} ")
-        return self._bio
+        return self._bio 
     
     @property
     def stats(self) -> Stats:
@@ -148,19 +152,3 @@ class Player:
         self._stats = Stats(pid=self._pid, data=data.data, client=self._client)
         return self._stats
     
-    def raw(self) -> dict: 
-        """
-        Return the raw NHL API response for this player.
-
-        This mirrors the underlying NHL endpoint response for: 
-        https://api-web.nhle.com/v1/player/{playerId}/landing 
-        
-        Contains all fields returned by the API without additional processing.
-
-        Returns
-        -------
-        dict
-            Raw player data.
-        """
-        res = self._get_player_landing()
-        return res.data

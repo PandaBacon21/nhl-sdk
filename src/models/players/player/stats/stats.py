@@ -7,7 +7,6 @@ from .featured_stats import Featured
 from .career_stats import Career
 from .season import Season, FeaturedGame
 from .games import GameLogs
-from .....resources.api_web import _get_game_log
 from .....core.utilities import _check_cache
 
 if TYPE_CHECKING: 
@@ -58,15 +57,15 @@ class Stats:
             cached = _check_cache(cache=self._client.cache, cache_key=cache_key)
             if cached is None:
                 print(f"{cache_key} no yet cached")
-                res = _get_game_log(pid=self._pid, season=season, g_type=game_type)
-                game_logs = GameLogs(data=res["data"])
+                res = self._client._api.api_web.call_nhl_players.get_game_log(pid=self._pid, season=season, g_type=game_type)
+                game_logs = GameLogs(data=res.data)
                 self._client.cache.set(key=cache_key, data=game_logs, ttl=self._ttl)
                 return game_logs
             return cached.data
         else: 
-            res = _get_game_log(pid=self._pid)
-            key = f"{self._game_key}:{res["data"]["seasonId"]}:{res["data"]["gameTypeId"]}"
-            game_logs = GameLogs(data=res["data"])
+            res = self._client._api.api_web.call_nhl_players.get_game_log(pid=self._pid)
+            key = f"{self._game_key}:{res.data["seasonId"]}:{res.data["gameTypeId"]}"
+            game_logs = GameLogs(data=res.data)
             self._client.cache.set(key=key, data=game_logs, ttl=self._ttl)
             return game_logs
             

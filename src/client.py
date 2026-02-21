@@ -4,6 +4,7 @@ NHL CLIENT
 
 from .services import Players, Teams
 from .core.cache import Cache
+from .resources import API
 
 class NhlClient:
     """
@@ -14,6 +15,7 @@ class NhlClient:
 
     """
     def __init__(self): 
+        self._api = API()
         self.cache = Cache()
         self.players = Players(self)
         self.teams = Teams(self)

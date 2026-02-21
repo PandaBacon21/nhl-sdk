@@ -4,9 +4,9 @@ LEADERS OBJECT
 
 from __future__ import annotations
 from typing import TYPE_CHECKING, Optional
+from datetime import datetime
 
 from .player_leaders import SkaterLeaders, GoalieLeaders
-from ....resources.api_web import _get_skater_leaders, _get_goalie_leaders
 from ....core.utilities import _check_cache
 
 if TYPE_CHECKING:
@@ -21,7 +21,7 @@ class Leaders:
     for both skaters and goalies, with optional season, game type,
     category filtering, and result limits.
     """
-    def __init__(self, client: "NhlClient"):
+    def __init__(self, client: NhlClient):
         """
         Initialize the Leaders API helper.
 
@@ -44,7 +44,9 @@ class Leaders:
             return f"leaders:{season}:{position}:{game_type}:{categories}"
         if season and game_type:
             return f"leaders:{season}:{position}:{game_type}"
-        return f"leaders:{season}:{position}:now"
+        if season:
+            return f"leaders:{season}:{position}:now"
+        return f"leaders:{position}:now"
 
 
     def goalies(self, season: Optional[int] = None, game_type: Optional[int] = None, 
@@ -62,11 +64,13 @@ class Leaders:
         cache_key = self._cache_key("g", season, game_type, categories, limit)
         cached = _check_cache(cache=self._client.cache, cache_key=cache_key)
         if cached is None: 
-            print(f"{cache_key} no yet cached")
-            data = _get_goalie_leaders(season=season, g_type=game_type, categories=categories, limit=limit)
-            leaders = GoalieLeaders(data["data"])
+            print(f"{cache_key} not in cache or expired")
+            data = self._client._api.api_web.call_nhl_players.get_goalie_leaders(season=season, g_type=game_type, categories=categories, limit=limit)
+            leaders = GoalieLeaders(data.data, client=self._client)
             self._client.cache.set(cache_key, leaders, self._ttl)
+            print(f"{cache_key} cached: {datetime.now()}")
             return leaders  
+        print(f"{cache_key} returned from cache")
         return cached.data
 
 
@@ -84,10 +88,12 @@ class Leaders:
         """
         cache_key = self._cache_key("s", season, game_type, categories, limit)
         cached = _check_cache(cache=self._client.cache, cache_key=cache_key)
-        if cached is None: 
-            print(f"{cache_key} no yet cached")
-            data = _get_skater_leaders(season=season, g_type=game_type, categories=categories, limit=limit)
-            leaders = SkaterLeaders(data["data"])
+        if cached is None:
+            print(f"{cache_key} not in cache or expired")
+            data = self._client._api.api_web.call_nhl_players.get_skater_leaders(season=season, g_type=game_type, categories=categories, limit=limit)
+            leaders = SkaterLeaders(data.data, client=self._client)
             self._client.cache.set(cache_key, leaders, self._ttl)
+            print(f"{cache_key} cached: {datetime.now()}")
             return leaders  
+        print(f"{cache_key} returned from cache")
         return cached.data
