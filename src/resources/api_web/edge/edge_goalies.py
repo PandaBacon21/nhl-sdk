@@ -49,9 +49,9 @@ class CallNhlEdgeGoalies:
 
         Both season and game_type are required to be included or omitted together.
         """
-        endpoint = f"{V}/edge/goalie-comparison/{pid}/now"
+        endpoint = f"/{V}/edge/goalie-comparison/{pid}/now"
         if season and game_type:
-            endpoint = f"{V}/edge/goalie-comparison/{pid}/{season}/{game_type}"
+            endpoint = f"/{V}/edge/goalie-comparison/{pid}/{season}/{game_type}"
         res = self._http.get(endpoint=endpoint)
         return res
 
@@ -66,9 +66,9 @@ class CallNhlEdgeGoalies:
 
         Both season and game_type are required to be included or omitted together.
         """
-        endpoint = f"{V}/edge/goalie-5v5-detail/{pid}/now"
+        endpoint = f"/{V}/edge/goalie-5v5-detail/{pid}/now"
         if season and game_type:
-            endpoint = f"{V}/edge/goalie-5v5-detail/{pid}/{season}/{game_type}"
+            endpoint = f"/{V}/edge/goalie-5v5-detail/{pid}/{season}/{game_type}"
         res = self._http.get(endpoint=endpoint)
         return res
 

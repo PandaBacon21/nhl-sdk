@@ -49,9 +49,9 @@ class CallNhlEdgeSkaters:
 
         Both season and game_type are required to be included or omitted together.
         """
-        endpoint = f"{V}/edge/skater-comparison/{pid}/now"
+        endpoint = f"/{V}/edge/skater-comparison/{pid}/now"
         if season and game_type:
-            endpoint = f"{V}/edge/skater-comparison/{pid}/{season}/{game_type}"
+            endpoint = f"/{V}/edge/skater-comparison/{pid}/{season}/{game_type}"
         res = self._http.get(endpoint=endpoint)
         return res
 
@@ -260,7 +260,7 @@ class CallNhlEdgeSkaters:
         res = self._http.get(endpoint=endpoint)
         return res
 
-    def get_skater_shot_location_10(self, pos: str, category: str, sort: str, season: Optional[int] = None, 
+    def get_skater_shot_location_10(self, category: str, sort: str, season: Optional[int] = None, 
                                 game_type: Optional[int] = None) -> APIResponse: 
         """
         Top 10 skaters based on the specified filters.
@@ -273,6 +273,7 @@ class CallNhlEdgeSkaters:
 
         Both season and game_type are required to be included or omitted together.
         """
+        pos: str = "all"
         endpoint = f"/{V}/edge/skater-shot-location-top-10/{pos}/{category}/{sort}/now"
         if season and game_type: 
             endpoint = f"/{V}/edge/skater-shot-location-top-10/{pos}/{category}/{sort}/{season}/{game_type}"

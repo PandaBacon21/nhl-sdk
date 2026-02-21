@@ -2,7 +2,6 @@ from src.resources.api_web.players import CallNhlPlayers as PlayersTest
 from src.core.transport import APICallWeb, APIResponse
 
 PLAYER_ID: int = 8477492
-
 SEASON: int = 20232024
 GAME_TYPE: int = 2
 CATEGORIES: str = "goals"
