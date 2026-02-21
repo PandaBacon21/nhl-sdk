@@ -15,6 +15,6 @@ class Teams:
 
     This is the primary interface for Team related data. 
     """
-    def __init__(self, client: "NhlClient"): 
+    def __init__(self, client: NhlClient): 
         self._client = client
         

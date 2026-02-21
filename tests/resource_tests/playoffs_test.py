@@ -1,33 +1,36 @@
-import src.resources.api_web.playoffs as playoffs_test
+from src.resources.api_web.playoffs import CallNhlPlayoffs as PlayoffTest
+from src.core.transport import APICallWeb, APIResponse
 
 SEASON: int = 20232024
 SERIES_LETTER: str = "A"
 
+playoffs_test = PlayoffTest(http=APICallWeb())
+
 def test_playoff_carousel(monkeypatch) -> None: 
     called = {}
-    def fake_call(endpoint: str, params: dict | None = None) -> dict: 
+    def fake_call(endpoint: str, params: dict | None = None) -> APIResponse: 
         called["endpoint"] = endpoint
         called["params"] = params
-        return {"ok": True, "data": {}, "status_code": 200}
+        return APIResponse(ok=True, data={}, status_code=200)
     
-    monkeypatch.setattr(playoffs_test, "_call_api_get", fake_call)
+    monkeypatch.setattr(playoffs_test._http, "get", fake_call)
 
-    carousel = playoffs_test._get_carousel(season=SEASON)
+    res = playoffs_test.get_carousel(season=SEASON)
 
-    assert carousel["ok"] == True
-    assert carousel["status_code"] == 200
-    assert called["endpoint"] == f"v1/playoff-series/carousel/{SEASON}/"
+    assert res.ok == True
+    assert res.status_code == 200
+    assert called["endpoint"] == f"/v1/playoff-series/carousel/{SEASON}/"
 
 def test_playoff_series_schedule(monkeypatch) -> None: 
     called = {}
-    def fake_call(endpoint: str, params: dict | None = None) -> dict: 
+    def fake_call(endpoint: str, params: dict | None = None) -> APIResponse: 
         called["endpoint"] = endpoint
         called["params"] = params
-        return {"ok": False, "error": "Test Error"}
+        return APIResponse(ok=False, data={"error": "Test Error"}, status_code=500)
     
-    monkeypatch.setattr(playoffs_test, "_call_api_get", fake_call)
+    monkeypatch.setattr(playoffs_test._http, "get", fake_call)
 
-    carousel = playoffs_test._get_series_schedule(season=SEASON, series_letter=SERIES_LETTER)
+    res = playoffs_test.get_series_schedule(season=SEASON, series_letter=SERIES_LETTER)
 
-    assert carousel["ok"] == False
-    assert called["endpoint"] == f"v1/schedule/playoff-series/{SEASON}/{SERIES_LETTER}/"
+    assert res.ok == False
+    assert called["endpoint"] == f"/v1/schedule/playoff-series/{SEASON}/{SERIES_LETTER}/"

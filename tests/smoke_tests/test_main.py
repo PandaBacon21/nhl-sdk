@@ -1,4 +1,3 @@
-import pytest
 
 from src.client import NhlClient
 
@@ -114,6 +113,15 @@ def test_smoke() -> None:
 
     skater_leaders = players.leaders.skaters()
     print(f"Current Goals Leader: {skater_leaders.goals[0].last_name}")
+
+    leaders = nhl.players.leaders
+    skater_edge_leaders = leaders.skaters()
+    print(skater_edge_leaders.assists[0].last_name)
+    edge_landing = skater_edge_leaders.edge.landing()
+
+    print(edge_landing.seasons_with_edge[0])
+    print(edge_landing.leaders.hardest_shot)
+
 
 if __name__=="__main__": 
     test_smoke()

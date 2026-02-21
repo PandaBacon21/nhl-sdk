@@ -1,119 +1,36 @@
-from .draft import _get_rankings, _get_tracker_now, _get_picks
-from .games import  _get_daily_scores, _get_scoreboard_now, _get_streams, _get_play_by_play, _get_game_landing, _get_boxscore, _get_game_story, _get_tv_schedule, _get_odds
-from .league import _get_schedule, _get_schedule_calendar
-from .miscellaneous import _get_game_info, _get_game_rail, _get_goal_replay, _get_location, _get_meta, _get_openapi, _get_play_replay, _get_playoff_series_meta, _get_postal_lookup, _get_wsc
-from .players import _get_game_log, _get_goalie_leaders, _get_player_landing, _get_player_spotlight, _get_skater_leaders, _get_skater_leaders
-from .playoffs import _get_bracket, _get_carousel, _get_series_schedule
-from .season import _get_seasons
-from .teams import _get_game_types_per_season, _get_roster_season_by_team, _get_schedule_month, _get_schedule_month, _get_schedule, _get_schedule_week, _get_standings, _get_standings_per_season, _get_team_prospects, _get_team_roster, _get_team_scoreboard, _get_team_stats
-from .edge.goalies import _call_api_get, _get_cat_goalie_details, _get_goalie_5v5, _get_goalie_comparison, _get_goalie_details, _get_goalie_landing, _get_goalie_save_pctg_10, _get_goalie_shot_location_10, _get_goalies_5v5_10, _get_save_pctg, _get_shot_location
-from .edge.skaters import _call_api_get, _get_cat_skater_details, _get_shot_location, _get_shot_speed, _get_skater_comparison, _get_skater_details, _get_skater_distance_10, _get_skater_landing, _get_skater_shot_location_10, _get_skater_shot_speed_10, _get_skater_zone_time_10, _get_skating_distance, _get_skating_speed, _get_skating_speed_10, _get_zone_time
-from .edge.team import _call_api_get, _get_shot_location, _get_shot_speed, _get_skating_speed, _get_team_comparison, _get_team_details, _get_team_distance, _get_team_shot_location_10, _get_team_shot_speed_10, _get_team_skating_distance_10, _get_team_skating_speed_10, _get_team_zone_time_10, _get_zone_time
+from __future__ import annotations
+from typing import TYPE_CHECKING
 
-__all__ = [
-    # draft
-    "_get_rankings",
-    "_get_tracker_now",
-    "_get_picks",
+from .draft import CallNhlDraft
+from .games import  CallNhlGames
+from .league import CallNhlLeague
+from .miscellaneous import CallNhlMisc
+from .players import  CallNhlPlayers
+from .playoffs import CallNhlPlayoffs
+from .season import CallNhlSeasons
+from .teams import CallNhlTeams
+from .edge.edge_goalies import CallNhlEdgeGoalies
+from .edge.edge_skaters import  CallNhlEdgeSkaters
+from .edge.edge_team import CallNhlEdgeTeam
 
-    # games
-    "_get_daily_scores",
-    "_get_scoreboard_now",
-    "_get_streams",
-    "_get_play_by_play",
-    "_get_game_landing",
-    "_get_boxscore",
-    "_get_game_story",
-    "_get_tv_schedule",
-    "_get_odds",
+if TYPE_CHECKING: 
+    from nhl_stats.src.core.transport import APICallWeb
 
-    # league
-    "_get_schedule",
-    "_get_schedule_calendar",
 
-    # miscellaneous
-    "_get_game_info",
-    "_get_game_rail",
-    "_get_goal_replay",
-    "_get_location",
-    "_get_meta",
-    "_get_openapi",
-    "_get_play_replay",
-    "_get_playoff_series_meta",
-    "_get_postal_lookup",
-    "_get_wsc",
+class APIWeb:
+    def __init__(self, http: APICallWeb): 
+        self.call_nhl_draft = CallNhlDraft(http)
+        self.call_nhl_games = CallNhlGames(http)
+        self.call_nhl_league = CallNhlLeague(http)
+        self.call_nhl_misc = CallNhlMisc(http)
+        self.call_nhl_players = CallNhlPlayers(http)
+        self.call_nhl_playoffs = CallNhlPlayoffs(http)
+        self.call_nhl_seasons = CallNhlSeasons(http)
+        self.call_nhl_teams = CallNhlTeams(http)
+        self.call_nhl_edge_goalies = CallNhlEdgeGoalies(http)
+        self.call_nhl_edge_skaters = CallNhlEdgeSkaters(http)
+        self.cal_nhl_edge_team = CallNhlEdgeTeam(http)
 
-    # players
-    "_get_game_log",
-    "_get_goalie_leaders",
-    "_get_player_landing",
-    "_get_player_spotlight",
-    "_get_skater_leaders",
 
-    # playoffs
-    "_get_bracket",
-    "_get_carousel",
-    "_get_series_schedule",
 
-    # season
-    "_get_seasons",
-
-    # teams
-    "_get_game_types_per_season",
-    "_get_roster_season_by_team",
-    "_get_schedule_month",
-    "_get_schedule_month",
-    "_get_schedule",
-    "_get_schedule_week",
-    "_get_standings",
-    "_get_standings_per_season",
-    "_get_team_prospects",
-    "_get_team_roster",
-    "_get_team_scoreboard",
-    "_get_team_stats",
-
-    # goalies
-    "_call_api_get", 
-    "_get_cat_goalie_details", 
-    "_get_goalie_5v5", 
-    "_get_goalie_comparison", 
-    "_get_goalie_details", 
-    "_get_goalie_landing", 
-    "_get_goalie_save_pctg_10", 
-    "_get_goalie_shot_location_10", 
-    "_get_goalies_5v5_10", 
-    "_get_save_pctg", 
-    "_get_shot_location",
-
-    # skaters
-    "_call_api_get", 
-    "_get_cat_skater_details", 
-    "_get_shot_location", 
-    "_get_shot_speed", 
-    "_get_skater_comparison", 
-    "_get_skater_details", 
-    "_get_skater_distance_10", 
-    "_get_skater_landing", 
-    "_get_skater_shot_location_10", 
-    "_get_skater_shot_speed_10", 
-    "_get_skater_zone_time_10",
-    "_get_skating_distance", 
-    "_get_skating_speed", 
-    "_get_skating_speed_10", 
-    "_get_zone_time",
-
-    # teams
-    "_call_api_get", 
-    "_get_shot_location", 
-    "_get_shot_speed", 
-    "_get_skating_speed", 
-    "_get_team_comparison", 
-    "_get_team_details", 
-    "_get_team_distance", 
-    "_get_team_shot_location_10", 
-    "_get_team_shot_speed_10", 
-    "_get_team_skating_distance_10", 
-    "_get_team_skating_speed_10", 
-    "_get_team_zone_time_10", 
-    "_get_zone_time",
-]
+__all__ = ["APIWeb"]

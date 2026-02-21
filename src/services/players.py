@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING
 from datetime import datetime
 
 from ..models.players import Spotlight, Leaders, Player
-from ..resources.api_web import _get_player_spotlight
 
 if TYPE_CHECKING:
     from nhl_stats.src.client import NhlClient
@@ -22,10 +21,11 @@ class Players:
     objects and access player-related aggregates such as stat leaders.
 
     """
-    def __init__(self, client:"NhlClient"):
+    def __init__(self, client: NhlClient):
         self._client = client
+        self._ttl: int = 60 * 60 * 6
 
-    def get(self, pid: int) -> "Player": 
+    def get(self, pid: int) -> Player: 
         """
         Return a Player object for the given NHL player ID.
         
@@ -41,19 +41,18 @@ class Players:
         """
         Return a list of currently Spotlighted Players 
         """
-        spotlight_key = f"players:spotlight"
-        ttl: int = 60 * 60 * 6
+        spotlight_key: str = f"players:spotlight"
         
         cached = self._client.cache.get(spotlight_key)
         if cached is not None: 
             return cached.data
-        data = _get_player_spotlight()
-        players = data["data"]
+        data = self._client._api.api_web.call_nhl_players.get_player_spotlight()
+        players = data.data
         print("Building Spotlight")
         spotlight = [Spotlight(player) for player in players or []]
 
-        self._client.cache.set(key=spotlight_key, data=spotlight, ttl=ttl)
-        print(f"spotlight cached: {datetime.now()}")
+        self._client.cache.set(key=spotlight_key, data=spotlight, ttl=self._ttl)
+        print(f"{spotlight_key} cached: {datetime.now()}")
         return spotlight
     
     @property
@@ -62,3 +61,4 @@ class Players:
         Return leaders of various statistics for skaters and goalies
         """
         return Leaders(self._client)
+
