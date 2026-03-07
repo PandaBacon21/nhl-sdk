@@ -67,12 +67,12 @@ def test_smoke() -> None:
     for season in player_stats.seasons:
         if season.league == "NHL": 
             print(f"Season: {season.season}, League: {season.league}")
-            if season.game_type == 2: 
+            if season.game_type_id == 2: 
                 print("Game type: Regular Season")
-            elif season.game_type == 3: 
+            elif season.game_type_id == 3: 
                 print("Game type: Playoffs")
             else: 
-                print(f"Game type: {season.game_type}")
+                print(f"Game type: {season.game_type_id}")
             print(f"Goals: {season.stats.goals}")
             print(f"PowerPlay Points: {season.stats.pp_points}")
             print("")

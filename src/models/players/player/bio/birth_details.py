@@ -1,13 +1,23 @@
 """
 BIRTH DETAILS DATA CLASS
 """
+from __future__ import annotations
+from dataclasses import dataclass
 
 from .....core.utilities import LocalizedString
 
-
+@dataclass(slots=True, frozen=True)
 class BirthDetails: 
-    def __init__(self, data: dict): 
-        self.birth_date: str | None = data.get("birthDate")
-        self.city: LocalizedString = LocalizedString(data.get("birthCity"))
-        self.state_province: LocalizedString = LocalizedString(data.get("birthStateProvince"))
-        self.country: str | None = data.get("birthCountry")
+    birth_date: str | None
+    city: LocalizedString 
+    state_province: LocalizedString 
+    country: str | None 
+
+    @classmethod
+    def from_dict(cls, data: dict) -> BirthDetails:
+        return cls(
+            birth_date = data.get("birthDate"),
+            city = LocalizedString(data.get("birthCity")),
+            state_province = LocalizedString(data.get("birthStateProvince")),
+            country = data.get("birthCountry")
+        )

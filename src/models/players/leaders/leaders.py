@@ -3,11 +3,14 @@ LEADERS OBJECT
 """
 
 from __future__ import annotations
+import logging
 from typing import TYPE_CHECKING, Optional
 from datetime import datetime
 
+
 from .player_leaders import SkaterLeaders, GoalieLeaders
 from ....core.utilities import _check_cache
+from ....core.cache.init_cache import get_cache
 
 if TYPE_CHECKING:
     from nhl_stats.src.client import NhlClient
@@ -29,6 +32,8 @@ class Leaders:
             client (NhlClient): Shared NHL API client instance used for accessing the cache.
         """
         self._client = client
+        self._cache = get_cache()
+        self._logger = logging.getLogger("nhl_sdk.leaders")
         self._ttl: int = 60*60*2
 
     def _cache_key(self, position: str, season: Optional[int] = None, game_type: Optional[int] = None, 
@@ -62,15 +67,15 @@ class Leaders:
             limit (int, optional): Maximum number of goalies to return.
         """
         cache_key = self._cache_key("g", season, game_type, categories, limit)
-        cached = _check_cache(cache=self._client.cache, cache_key=cache_key)
+        cached = _check_cache(cache=self._cache, cache_key=cache_key)
         if cached is None: 
-            print(f"{cache_key} not in cache or expired")
+            self._logger.debug(f"{cache_key} not in cache or expired")
             data = self._client._api.api_web.call_nhl_players.get_goalie_leaders(season=season, g_type=game_type, categories=categories, limit=limit)
             leaders = GoalieLeaders(data.data, client=self._client)
-            self._client.cache.set(cache_key, leaders, self._ttl)
-            print(f"{cache_key} cached: {datetime.now()}")
+            self._cache.set(cache_key, leaders, self._ttl)
+            self._logger.info(f"goalies.leaders: retrieved and cached. ttl: {self._ttl}")
             return leaders  
-        print(f"{cache_key} returned from cache")
+        self._logger.info(f"{self._cache_key}: valid and retrieved from cache")
         return cached.data
 
 
@@ -87,13 +92,14 @@ class Leaders:
             limit (int, optional): Maximum number of skaters to return.
         """
         cache_key = self._cache_key("s", season, game_type, categories, limit)
-        cached = _check_cache(cache=self._client.cache, cache_key=cache_key)
+        cached = _check_cache(cache=self._cache, cache_key=cache_key)
         if cached is None:
-            print(f"{cache_key} not in cache or expired")
+            self._logger.debug(f"{cache_key} not in cache or expired")
             data = self._client._api.api_web.call_nhl_players.get_skater_leaders(season=season, g_type=game_type, categories=categories, limit=limit)
             leaders = SkaterLeaders(data.data, client=self._client)
-            self._client.cache.set(cache_key, leaders, self._ttl)
+            self._cache.set(cache_key, leaders, self._ttl)
             print(f"{cache_key} cached: {datetime.now()}")
+            self._logger.info(f"skaters.leaders: retrieved and cached. ttl: {self._ttl}")
             return leaders  
-        print(f"{cache_key} returned from cache")
+        self._logger.info(f"{self._cache_key}: valid and retrieved from cache")
         return cached.data

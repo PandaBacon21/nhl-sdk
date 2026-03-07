@@ -1,11 +1,12 @@
 """
 PLAYERS COLLECTION
 """
-
 from __future__ import annotations
+import logging
 from typing import TYPE_CHECKING
-from datetime import datetime
 
+from ..core.utilities import _check_cache
+from ..core.cache.init_cache import get_cache
 from ..models.players import Spotlight, Leaders, Player
 
 if TYPE_CHECKING:
@@ -23,7 +24,12 @@ class Players:
     """
     def __init__(self, client: NhlClient):
         self._client = client
+        self._cache = get_cache()
+        self._logger = logging.getLogger("nhl_sdk.players")
         self._ttl: int = 60 * 60 * 6
+        self._spotlight_key: str = f"players:spotlight"
+
+        self._logger.info(f"Players object initialized")
 
     def get(self, pid: int) -> Player: 
         """
@@ -34,6 +40,7 @@ class Players:
         data : int
             Unique player Id
         """
+        self._logger.debug(f"GET Player({pid})")
         return Player(player_id=pid, client=self._client)
 
     @property
@@ -41,18 +48,17 @@ class Players:
         """
         Return a list of currently Spotlighted Players 
         """
-        spotlight_key: str = f"players:spotlight"
         
-        cached = self._client.cache.get(spotlight_key)
+        cached = _check_cache(self._cache, self._spotlight_key)
         if cached is not None: 
+            self._logger.info(f"{self._spotlight_key}: valid and retrieved from cache")
             return cached.data
+        self._logger.debug(f"{self._spotlight_key}: not cached or expired. Retrieving Spotlight")
         data = self._client._api.api_web.call_nhl_players.get_player_spotlight()
         players = data.data
-        print("Building Spotlight")
-        spotlight = [Spotlight(player) for player in players or []]
-
-        self._client.cache.set(key=spotlight_key, data=spotlight, ttl=self._ttl)
-        print(f"{spotlight_key} cached: {datetime.now()}")
+        spotlight = [Spotlight.from_dict(player) for player in players or []]
+        self._cache.set(key=self._spotlight_key, data=spotlight, ttl=self._ttl)
+        self._logger.info(f"{self._spotlight_key}: retrieved and cached | TTL: {self._ttl}")
         return spotlight
     
     @property
@@ -60,5 +66,6 @@ class Players:
         """
         Return leaders of various statistics for skaters and goalies
         """
+        self._logger.debug(f"Retrieve Players Leaders")
         return Leaders(self._client)
 

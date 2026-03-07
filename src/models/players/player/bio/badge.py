@@ -1,14 +1,20 @@
 """
 BADGE DATA CLASS
 """
-
+from __future__ import annotations
+from dataclasses import dataclass
 
 from .....core.utilities import LocalizedString
 
+@dataclass(slots=True, frozen=True)
 class Badge: 
-    def __init__(self, data: dict): 
-        self.logo: LocalizedString = LocalizedString(data.get("logoUrl"))
-        self.title: LocalizedString = LocalizedString(data.get("title"))
+    logo: LocalizedString 
+    title: LocalizedString 
+
+    @classmethod
+    def from_dict(cls, data: dict) -> Badge:
+        return cls(
+            logo = LocalizedString(data.get("logoUrl")),
+            title = LocalizedString(data.get("title")),
+        )
     
-    def __str__(self) -> str:
-        return f"Badge: {self.title}" 

@@ -1,10 +1,19 @@
 """
 MEDIA DATA CLASS
 """
+from __future__ import annotations
+from dataclasses import dataclass
 
+@dataclass(slots=True, frozen=True)
 class Media:
-    def __init__(self, data: dict):
-        self.slug: str | None = data.get("playerSlug")
-        self.headshot: str | None = data.get("headshot")
-        self.hero_image: str | None = data.get("heroImage")
-        self.slug: str | None = data.get("playerSlug")
+    slug: str | None
+    headshot: str | None
+    hero_image: str | None 
+
+    @classmethod
+    def from_dict(cls, data: dict) -> Media:
+        return cls(
+            slug = data.get("playerSlug"),
+            headshot = data.get("headshot"),
+            hero_image = data.get("heroImage"),
+            )

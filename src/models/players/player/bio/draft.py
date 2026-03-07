@@ -1,22 +1,33 @@
 """
 DRAFT DATA CLASS
 """
-
+from __future__ import annotations
+from dataclasses import dataclass
 
 from typing import Any
 
-
+@dataclass(slots=True, frozen=True)
 class Draft: 
-    def __init__(self, data: dict):
-        draft = data.get("draftDetails")
+    year: int | None 
+    team: str | None 
+    round: int | None 
+    pick_in_round: int | None 
+    pick_overall: int | None 
 
-        self.year: int | None = self._handle_missing(draft, "year")
-        self.team: str | None = self._handle_missing(draft, "teamAbbrev")
-        self.round: int | None = self._handle_missing(draft, "round")
-        self.pick_in_round: int | None = self._handle_missing(draft, "pickInRound")
-        self.pick_overall: int | None = self._handle_missing(draft, "overallPick")
+    @classmethod
+    def from_dict(cls, data: dict) -> Draft:
+        _draft = data.get("draftDetails")
 
-    def _handle_missing(self, data: dict | None, type: str) -> Any:
+        return cls(
+             year = cls._handle_missing(_draft, "year"),
+             team = cls._handle_missing(_draft, "teamAbbrev"),
+             round = cls._handle_missing(_draft, "round"),
+             pick_in_round = cls._handle_missing(_draft, "pickInRound"),
+             pick_overall = cls._handle_missing(_draft, "overallPick")
+             )
+
+    @staticmethod
+    def _handle_missing(data: dict | None, type: str) -> Any:
         if not isinstance(data, dict):
             return None
         return data.get(type)

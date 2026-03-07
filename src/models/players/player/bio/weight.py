@@ -1,11 +1,17 @@
 """
 WEIGHT DATA CLASS
 """
+from __future__ import annotations
+from dataclasses import dataclass
 
+@dataclass(slots=True, frozen=True)
 class Weight: 
-    def __init__(self, data: dict):
-        self.weight_lbs: int | None = data.get("weightInPounds")
-        self.weight_kg: int | None = data.get("weightInKilograms")
-    
-    def __str__(self) -> str: 
-        return f"{self.weight_lbs} lbs"
+    weight_lbs: int | None 
+    weight_kg: int | None 
+
+    @classmethod
+    def from_dict(cls, data: dict) -> Weight:
+        return cls(
+            weight_lbs = data.get("weightInPounds"),
+            weight_kg = data.get("weightInKilograms")
+        )

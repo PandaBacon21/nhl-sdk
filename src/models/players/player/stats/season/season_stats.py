@@ -1,55 +1,55 @@
 """
 SEASON STATS
 """
+from __future__ import annotations
+from dataclasses import dataclass
 
+
+@dataclass(slots=True, frozen=True)
 class SeasonStats:
     """
     Statistical totals for a player in a single season.
-
-    Provides season-level metrics for performance analysis, including
-    goals, assists, penalties, and time on ice.
-
-    Not all data is available for each season. Younger years, minor leagues, and special events (Olympics, Winter Classic, 4 Nations, etc 
-    may have limited features due to the stats available from the API)
-    
-    Instances of this class are accessed via `Season.stats`.
     """
-    def __init__(self, data: dict): 
-        """
-        Initialize a SeasonStats record.
 
-        Parameters
-        ----------
-        data : dict
-            Raw season data containing statistical fields as returned in Player data
-            by the NHL API.
-        """
-        self.assists: int | None = data.get("assists")
-        self.avg_toi: str | None = data.get("avgToi")
-        self.faceoff_win_pctg: float | None = data.get("faceoffWinningPctg")
-        self.game_winning_goals: int | None = data.get("gameWinningGoals")
-        self.games_played: int | None = data.get("gamesPlayed")
-        self.goals: int | None = data.get("goals")
-        self.ot_goals: int | None = data.get("otGoals")
-        self.pim: int | None = data.get("pim")
-        self.plus_minus: int | None = data.get("plusMinus")
-        self.points: int | None = data.get("points")
-        self.pp_goals: int | None = data.get("powerPlayGoals")
-        self.pp_points: int | None = data.get("powerPlayPoints")
-        self.shooting_pctg: float | None = data.get("shootingPctg")
-        self.sh_goals: int | None = data.get("shorthandedGoals")
-        self.sh_points: int | None = data.get("shorthandedPoints")
-        self.shots: int | None = data.get("shots")
+    assists: int | None
+    avg_toi: str | None
+    faceoff_win_pctg: float | None
+    game_winning_goals: int | None
+    games_played: int | None
+    goals: int | None
+    ot_goals: int | None
+    pim: int | None
+    plus_minus: int | None
+    points: int | None
+    pp_goals: int | None
+    pp_points: int | None
+    shooting_pctg: float | None
+    sh_goals: int | None
+    sh_points: int | None
+    shots: int | None
+
+    @classmethod
+    def from_dict(cls, data: dict) -> SeasonStats:
+        return cls(
+            assists=data.get("assists"),
+            avg_toi=data.get("avgToi"),
+            faceoff_win_pctg=data.get("faceoffWinningPctg"),
+            game_winning_goals=data.get("gameWinningGoals"),
+            games_played=data.get("gamesPlayed"),
+            goals=data.get("goals"),
+            ot_goals=data.get("otGoals"),
+            pim=data.get("pim"),
+            plus_minus=data.get("plusMinus"),
+            points=data.get("points"),
+            pp_goals=data.get("powerPlayGoals"),
+            pp_points=data.get("powerPlayPoints"),
+            shooting_pctg=data.get("shootingPctg"),
+            sh_goals=data.get("shorthandedGoals"),
+            sh_points=data.get("shorthandedPoints"),
+            shots=data.get("shots"),
+        )
 
     def to_dict(self) -> dict:
-        """
-        Convert the SeasonStats object to a plain dictionary.
-
-        Returns
-        -------
-        dict
-            Dictionary mapping all stat names to their current values.
-        """
         return {
             "assists": self.assists,
             "avg_toi": self.avg_toi,

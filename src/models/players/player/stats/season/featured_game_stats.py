@@ -1,46 +1,55 @@
 """
 LAST 5 GAME STATS
 """
+from __future__ import annotations
+from dataclasses import dataclass
 
+
+@dataclass(slots=True, frozen=True)
 class FeaturedGame:
     """
     Represents a single game from a player's recent performance.
     """
-    def __init__(self, data: dict):
-        """
-        Initialize featured game statistics.
 
-        Parameters
-        ----------
-        data : dict
-            Raw per-game player statistics returned by the NHL landing API.
-        """
-        self.assists: int | None = data.get("assists")
-        self.game_date: str | None = data.get("gameDate")
-        self.game_id: int | None = data.get("gameId")
-        self.game_type_id: int | None = data.get("gameTypeId")
-        self.goals: int | None = data.get("goals")
-        self.home_road_flag: str | None = data.get("homeRoadFlag")
-        self.opponent_abbrev: str | None = data.get("opponentAbbrev")
-        self.pim: int | None = data.get("pim")
-        self.plus_minus: int | None = data.get("plusMinus")
-        self.points: int | None = data.get("points")
-        self.pp_goals: int | None = data.get("powerPlayGoals")
-        self.shifts: int | None = data.get("shifts")
-        self.sh_goals: int | None = data.get("shorthandedGoals")
-        self.shots: int | None = data.get("shots")
-        self.team_abbrev: str | None = data.get("teamAbbrev")
-        self.toi: str | None = data.get("toi")
-    
+    assists: int | None
+    game_date: str | None
+    game_id: int | None
+    game_type_id: int | None
+    goals: int | None
+    home_road_flag: str | None
+    opponent_abbrev: str | None
+    pim: int | None
+    plus_minus: int | None
+    points: int | None
+    pp_goals: int | None
+    shifts: int | None
+    sh_goals: int | None
+    shots: int | None
+    team_abbrev: str | None
+    toi: str | None
+
+    @classmethod
+    def from_dict(cls, data: dict) -> FeaturedGame:
+        return cls(
+            assists=data.get("assists"),
+            game_date=data.get("gameDate"),
+            game_id=data.get("gameId"),
+            game_type_id=data.get("gameTypeId"),
+            goals=data.get("goals"),
+            home_road_flag=data.get("homeRoadFlag"),
+            opponent_abbrev=data.get("opponentAbbrev"),
+            pim=data.get("pim"),
+            plus_minus=data.get("plusMinus"),
+            points=data.get("points"),
+            pp_goals=data.get("powerPlayGoals"),
+            shifts=data.get("shifts"),
+            sh_goals=data.get("shorthandedGoals"),
+            shots=data.get("shots"),
+            team_abbrev=data.get("teamAbbrev"),
+            toi=data.get("toi"),
+        )
+
     def to_dict(self) -> dict:
-        """
-        Convert game statistics to a dictionary.
-
-        Returns
-        -------
-        dict
-            Serializable representation of the game statistics.
-        """
         return {
             "assists": self.assists,
             "game_date": self.game_date,

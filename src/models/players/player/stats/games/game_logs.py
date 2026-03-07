@@ -1,10 +1,13 @@
 """
 GAME_LOGS OBJECTS
 """
+from __future__ import annotations
+from dataclasses import dataclass
 
 from .game import Game
 from .season_game_type import SeasonGameType
 
+@dataclass(slots=True, frozen=True)
 class GameLogs:
     """
     Represents a collection of game log data for a player.
@@ -12,20 +15,28 @@ class GameLogs:
     This object groups per-game stats for a
     specific season and game type (e.g., regular season or playoffs).
     """
+    season_id: int | None 
+    game_type: int | None 
+    seasons: list 
+    games: list 
 
-    def __init__(self, data: dict):
+    @classmethod
+    def from_dict(cls, data: dict) -> GameLogs:
         """
-        Initialize game log data from raw NHL API response.
-
         Parameters
         ----------
         data : dict
             Raw game log data returned by the NHL gamelogs API. Expected to include
             season metadata, season summaries, and individual game entries.
         """
-        self.season_id: int | None = data.get("seasonId")
-        self.game_type: int | None = data.get("gameTypeId")
-        self.seasons: list = [SeasonGameType(season) for season in data.get("playerStatsSeasons") or []]
-        self.games: list = [Game(game) for game in data.get("gameLog") or [] ] 
-
-        print(f"Building GameLogs: {self.season_id}:{self.game_type}")
+        season_id = data.get("seasonId")
+        game_type = data.get("gameTypeId")
+        seasons = [SeasonGameType.from_dict(season) for season in data.get("playerStatsSeasons") or []]
+        games = [Game.from_dict(game) for game in data.get("gameLog") or [] ] 
+        print(f"Building GameLogs: {season_id}:{game_type}")
+        return cls(
+            season_id = season_id,
+            game_type = game_type,
+            seasons = seasons,
+            games = games 
+        )

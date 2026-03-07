@@ -1,21 +1,21 @@
 """
 AWARD DATA CLASS
 """
-
+from __future__ import annotations
+from dataclasses import dataclass
 
 from .....core.utilities import LocalizedString
 
+@dataclass(slots=True, frozen=True)
 class Award: 
-    def __init__(self, data: dict): 
-        self.trophy: LocalizedString = LocalizedString(data.get("trophy"))
-        self.seasons: list = data.get("seasons") or []
+    trophy: LocalizedString
+    seasons: list 
+
+
+    @classmethod
+    def from_dict(cls, data: dict) -> Award:
+        return cls(
+            trophy = LocalizedString(data.get("trophy")),
+            seasons = data.get("seasons") or []
+        )
     
-    def __str__(self) -> str:
-        if not self.seasons:
-            return f"Trophy: {self.trophy}"
-        seasons = ", ".join(
-            str(season.get("seasonId"))
-            for season in self.seasons
-            if isinstance(season, dict)
-            )
-        return f"Trophy: {self.trophy}, Seasons: [{seasons}]"

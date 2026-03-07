@@ -1,11 +1,15 @@
 """
 SEASON OBJECT
 """
+from __future__ import annotations
+from dataclasses import dataclass
 
 from .season_team import SeasonTeam
 from .season_stats import SeasonStats
 
-class Season: 
+
+@dataclass(slots=True, frozen=True)
+class Season:
     """
     Per-season statistical record for a player.
 
@@ -14,20 +18,31 @@ class Season:
 
     Instances of this class are accessed via `Player.stats.seasons`.
     """
-    def __init__(self, data: dict):
-        """
-        Initialize a Season record.
 
-        Parameters
-        ----------
-        data : dict
-            Raw season data containing statistical fields as returned in Player data
-            by the NHL API.
-        """
-        self.season: int | None = data.get("season")
-        self.sequence: int | None = data.get("sequence") # order of data in the same season
-        self.game_type: str | None = data.get("gameTypeId") # Update this to helper in future 
-        self.league: str | None = data.get("leagueAbbrev")
-        self.team: SeasonTeam = SeasonTeam(data)
-        self.stats: SeasonStats = SeasonStats(data)
+    season: int | None
+    sequence: int | None
+    game_type_id: int | None
+    league: str | None
+    team: SeasonTeam
+    stats: SeasonStats
 
+    @classmethod
+    def from_dict(cls, data: dict) -> Season:
+        return cls(
+            season=data.get("season"),
+            sequence=data.get("sequence"),
+            game_type_id=data.get("gameTypeId"),
+            league=data.get("leagueAbbrev"),
+            team=SeasonTeam.from_dict(data),
+            stats=SeasonStats.from_dict(data),
+        )
+
+    def to_dict(self) -> dict:
+        return {
+            "season": self.season,
+            "sequence": self.sequence,
+            "game_type_id": self.game_type_id,
+            "league": self.league,
+            "team": self.team.to_dict(),
+            "stats": self.stats.to_dict(),
+        }

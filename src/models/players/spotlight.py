@@ -1,48 +1,60 @@
 """
 SPOTLIGHT PLAYER
 """
+from __future__ import annotations
+import logging
+from dataclasses import dataclass
 
 from ...core.utilities import LocalizedString
 
-class Spotlight: 
+logger = logging.getLogger("nhl_sdk.spotlight")
+
+@dataclass(slots=True, frozen=True)
+class Spotlight:
     """
     Represents a spotlighted player summary.
-
-    A Spotlight object provides a lightweight representation of a player
     """
-    def __init__(self, data: dict): 
-        """
-        Initialize a spotlighted player summary.
+    pid: int | None
+    name: LocalizedString
+    slug: str | None
+    position: str | None
+    number: int | None
+    team_id: str | None
+    headshot: str | None
+    team_code: str | None
+    team_logo: str | None
+    sort_id: int | None
 
-        Parameters
-        ----------
-        data : dict
-            Raw spotlight player data returned by the NHL spotlight API.
-        """
-        self.pid: int | None = data.get("playerId")
-        self.name: LocalizedString = LocalizedString(data=data.get("name"))
-        self.slug: str | None = data.get("playerSlug")
-        self.position: str | None = data.get("position")
-        self.number: int | None = data.get("sweaterNumber")
-        self.team_id: str | None = data.get("teamId")
-        self.headshot: str | None = data.get("headshot")
-        self.team_code: str | None = data.get("teamTriCode")
-        self.team_logo: str | None = data.get("teamLogo")
-        self.sortId: int | None = data.get("sortId")
-
+    @classmethod
+    def from_dict(cls, data: dict) -> Spotlight:
+        pid = data.get("playerId")
+        name = LocalizedString(data=data.get("name"))
+        slug = data.get("playerSlug")
+        position=data.get("position")
+        number=data.get("sweaterNumber")
+        team_id=data.get("teamId")
+        headshot=data.get("headshot")
+        team_code=data.get("teamTriCode")
+        team_logo=data.get("teamLogo")
+        sort_id=data.get("sortId")
+        logger.debug(f"Spotlight Player created: {pid} - {name}")
+        return cls(
+            pid = pid,
+            name = name,
+            slug = slug,
+            position = position,
+            number = number,
+            team_id = team_id,
+            headshot = headshot,
+            team_code = team_code,
+            team_logo = team_logo,
+            sort_id = sort_id,
+        )
 
     def to_dict(self) -> dict:
-        """
-        Convert the spotlighted player to a dictionary.
-
-        Returns
-        -------
-        dict
-            Serializable representation of the spotlighted player.
-        """
         return {
             "player_id": self.pid,
-            "name": self.name.default,
+            "name": str(self.name), 
             "slug": self.slug,
             "position": self.position,
             "sweater_number": self.number,
@@ -50,5 +62,5 @@ class Spotlight:
             "team_code": self.team_code,
             "team_logo": self.team_logo,
             "headshot": self.headshot,
-            "sort_id": self.sortId,
+            "sort_id": self.sort_id,
         }

@@ -7,7 +7,7 @@ from pathlib import Path
 import json
 import requests
 
-from ...core.config import BASE_URL_API_WEB, LAN
+from ...core.config import BASE_URL_API_WEB, LANG
 
 
 
