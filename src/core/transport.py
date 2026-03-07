@@ -1,14 +1,18 @@
 """
 OBJECT FOR DIRECT API CALLS AND ERROR HANDLING
 """
+from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional, Any
+import time
 import requests
+import logging
 
 from .config import BASE_URL_API_WEB
-from .errors.errors import NotFoundError, ServerError, ForbiddenError, RateLimitError, NhlApiError
+from .errors import NotFoundError, ServerError, ForbiddenError, RateLimitError, NhlApiError
 
 session = requests.Session()
+
 
 @dataclass(slots=True)
 class APIResponse:
@@ -22,17 +26,22 @@ class APICallWeb:
         self.base_url = base_url.rstrip("/")
         self.response = APIResponse
         self.session = session
+        self.logger = logging.getLogger("nhl_sdk.api_call_web")
+        self.logger.info(msg=f"APICallWeb initialized: base_url - {self.base_url}")
     
     def get(self, endpoint: str, params: Optional[dict] = None, *, raise_on_error: bool = True) -> APIResponse:
         url = self.base_url+endpoint
-
+        start = time.monotonic()
+        self.logger.debug(f"GET {endpoint} | params={params}")
         try:
             res = self.session.get(url=url, params=params, timeout=30)
         except requests.RequestException as e:
-            # network/DNS/timeout/connection issues (no HTTP response)
+            # network/DNS/timeout/connection issues 
+            self.logger.error(f"Network error for {endpoint}: {e}")
             if raise_on_error:
                 raise NhlApiError(f"Request failed for {url}: {e}", status_code=None, url=url) from e
             return APIResponse(ok=False, data={"error": str(e)}, status_code=0)
+        elapsed = (time.monotonic() - start) * 1000
 
         try:
             payload = res.json() if res.content else None
@@ -43,13 +52,16 @@ class APICallWeb:
 
         # Success path
         if 200 <= res.status_code < 300:
+            self.logger.info(f"{res.status_code} {endpoint} | {elapsed:.1f}ms")
             return APIResponse(ok=True, data=payload, status_code=res.status_code)
 
         # Error path
         if raise_on_error:
+            self.logger.warning(f"{res.status_code} {endpoint} | {elapsed:.1f}ms | raise={raise_on_error}")
             self._raise_for_status(res, endpoint=endpoint, url=url, payload=payload)
 
-        # If not raising, return structured failure response
+        # If not raising, return failure response
+        self.logger.warning(f"{res.status_code} {endpoint} | {elapsed:.1f}ms | detail={payload}")
         return APIResponse(
             ok=False,
             data={

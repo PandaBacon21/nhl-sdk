@@ -1,11 +1,18 @@
 """
 HEIGHT DATA CLASS
 """
+from __future__ import annotations
+from dataclasses import dataclass
 
+@dataclass(slots=True, frozen=True)
 class Height: 
-    def __init__(self, data: dict): 
-        self.height_in: int | None = data.get("heightInInches")
-        self.height_cm: int | None = data.get("heightInCentimeters")
+    height_in: int | None 
+    height_cm: int | None
 
-    def __str__(self) -> str: 
-        return f"{self.height_in} inches"
+    @classmethod
+    def from_dict(cls, data: dict) -> Height:
+        return cls(
+            height_in = data.get("heightInInches"),
+            height_cm = data.get("heightInCentimeters")
+
+        )

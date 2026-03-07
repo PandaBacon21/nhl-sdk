@@ -26,7 +26,7 @@ class CallNhlTeams:
         if date: 
             endpoint = f"/{V}/standings/{date}"
         res: APIResponse = self._http.get(endpoint=endpoint)
-        # print(res)
+        
         return res
         
     def get_standings_per_season(self,) -> APIResponse: 

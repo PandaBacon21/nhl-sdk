@@ -1,9 +1,22 @@
 """
 Seasons with Game Logs
 """
+from __future__ import annotations
+from dataclasses import dataclass
 
+@dataclass(slots=True, frozen=True)
 class SeasonGameType: 
-    def __init__(self, data: dict):
-        self.season: int | None = data.get("season")
-        self.game_types: list[int] = data.get("gameTypes") or []
-        self.playoffs: bool = True if len(self.game_types) == 2 else False
+    season: int | None 
+    game_types: list[int] 
+    playoffs: bool 
+
+    @classmethod
+    def from_dict(cls, data: dict) -> SeasonGameType:
+        season  = data.get("season")
+        game_types = data.get("gameTypes") or []
+        playoffs = True if len(game_types) == 2 else False
+        return cls(
+            season = season,
+            game_types = game_types,
+            playoffs = playoffs
+    )

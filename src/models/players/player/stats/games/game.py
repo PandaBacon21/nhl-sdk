@@ -1,15 +1,40 @@
 """
 GAME OBJECT
 """
+from __future__ import annotations
+from dataclasses import dataclass
 
 from ......core.utilities import LocalizedString
 
-
+@dataclass(slots=True, frozen=True)
 class Game:
     """
     Represents available statistics for a specific game
     """
-    def __init__(self, data: dict): 
+    game_id: int | None 
+    team_abbrev: str | None 
+    home_road_flag: str | None
+    game_date: str | None 
+    goals: int | None 
+    assists: int | None
+    team_name: LocalizedString 
+    opponent_name: LocalizedString 
+    points: int | None 
+    plus_minus: int | None
+    pp_goals: int | None 
+    pp_points: int | None 
+    gw_goals: int | None 
+    ot_goals: int | None 
+    shots: int | None 
+    shifts: int | None 
+    sh_goals: int | None 
+    sh_points: int | None 
+    opponent_abbrev: str | None 
+    pim: int | None 
+    toi: str | None 
+
+    @classmethod
+    def from_dict(cls, data: dict) -> Game: 
         """
         Initialize game data from raw NHL gamelogs API response.
 
@@ -18,27 +43,29 @@ class Game:
         data : dict
             Raw game log game data returned by the NHL gamelogs API. 
         """
-        self.game_id: int | None = data.get("gameId")
-        self.team_abbrev: str | None = data.get("teamAbbrev")
-        self.home_road_flag: str | None = data.get("homeRoadFlag")
-        self.game_date: str | None = data.get("gameDate")
-        self.goals: int | None = data.get("goals")
-        self.assists: int | None = data.get("assists")
-        self.team_name: LocalizedString = LocalizedString(data=data.get("commonName"))
-        self.opponent_name: LocalizedString = LocalizedString(data=data.get("opponentCommonName"))
-        self.points: int | None = data.get("points")
-        self.plus_minus: int | None = data.get("plusMinus")
-        self.pp_goals: int | None = data.get("powerPlayGoals")
-        self.pp_points: int | None = data.get("powerPlayPoints")
-        self.gw_goals: int | None = data.get("gameWinningGoals")
-        self.ot_goals: int | None = data.get("otGoals")
-        self.shots: int | None = data.get("shots")
-        self.shifts: int | None = data.get("shifts")
-        self.sh_goals: int | None = data.get("shorthandedGoals")
-        self.sh_points: int | None = data.get("shorthandedPoints")
-        self.opponent_abbrev: str | None = data.get("opponentAbbrev")
-        self.pim: int | None = data.get("pim")
-        self.toi: str | None = data.get("toi")
+        return cls(
+            game_id = data.get("gameId"),
+            team_abbrev = data.get("teamAbbrev"),
+            home_road_flag = data.get("homeRoadFlag"),
+            game_date = data.get("gameDate"),
+            goals = data.get("goals"),
+            assists = data.get("assists"),
+            team_name = LocalizedString(data=data.get("commonName")),
+            opponent_name = LocalizedString(data=data.get("opponentCommonName")),
+            points = data.get("points"),
+            plus_minus = data.get("plusMinus"),
+            pp_goals = data.get("powerPlayGoals"),
+            pp_points = data.get("powerPlayPoints"),
+            gw_goals = data.get("gameWinningGoals"),
+            ot_goals = data.get("otGoals"),
+            shots = data.get("shots"),
+            shifts = data.get("shifts"),
+            sh_goals = data.get("shorthandedGoals"),
+            sh_points = data.get("shorthandedPoints"),
+            opponent_abbrev = data.get("opponentAbbrev"),
+            pim = data.get("pim"),
+            toi = data.get("toi")
+        )
 
     def to_dict(self) -> dict:
         """

@@ -1,8 +1,10 @@
 """
 PLAYER BIO DATA CLASS
 """
+from __future__ import annotations
+from dataclasses import dataclass
 
-from .team import Team
+from .bio_team import BioTeam
 from .weight import Weight
 from .height import Height
 from .birth_details import BirthDetails
@@ -12,22 +14,40 @@ from .draft import Draft
 
 from .....core.utilities import LocalizedString, _to_bool
 
+@dataclass(slots=True, frozen=True)
 class Bio:
-    def __init__(self, data: dict): 
+    player_id: int 
+    first_name: LocalizedString 
+    last_name: LocalizedString 
+    number: int | None 
+    position: str | None 
+    team: BioTeam 
+    hand: str | None 
+    is_active: bool | None 
+    height: Height 
+    weight: Weight 
+    birth_details: BirthDetails 
+    draft: Draft 
+    legacy: Legacy 
+    media: Media 
 
-        self.player_id: int = data["playerId"]
-        self.first_name: LocalizedString = LocalizedString(data.get("firstName"))
-        self.last_name: LocalizedString = LocalizedString(data.get("lastName"))
-        self.number: int | None = data.get("sweaterNumber")
-        self.position: str | None = data.get("position")
-        self.team: Team = Team(data)
-        self.hand: str | None = data.get("shootsCatches")
-        self.is_active: bool | None = _to_bool(data.get("isActive"))
-        self.height: Height = Height(data)
-        self.weight: Weight = Weight(data)
-        self.birth_details: BirthDetails = BirthDetails(data)
-        self.draft: Draft  = Draft(data)
-        self.legacy: Legacy = Legacy(data)
-        self.media: Media = Media(data)
 
+    @classmethod
+    def from_dict(cls, data: dict) -> Bio:
+        return cls(
+            player_id = data["playerId"],
+            first_name = LocalizedString(data.get("firstName")),
+            last_name = LocalizedString(data.get("lastName")),
+            number = data.get("sweaterNumber"),
+            position = data.get("position"),
+            team = BioTeam.from_dict(data),
+            hand = data.get("shootsCatches"),
+            is_active = _to_bool(data.get("isActive")),
+            height = Height.from_dict(data),
+            weight = Weight.from_dict(data),
+            birth_details = BirthDetails.from_dict(data),
+            draft = Draft.from_dict(data),
+            legacy = Legacy.from_dict(data),
+            media = Media.from_dict(data)
+        )
   

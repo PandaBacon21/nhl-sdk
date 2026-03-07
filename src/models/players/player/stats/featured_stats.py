@@ -1,72 +1,82 @@
 """
 FEATURED STATS
 """
+from __future__ import annotations
+from dataclasses import dataclass
 
-
+@dataclass(slots=True, frozen=True)
 class Featured:
     """
     Represents featured statistics for a player.
 
-    Featured statistics highlight a subset of notable performance metrics
-    for the current season, along with corresponding career totals.
-
-    If player is retired, Featured returns their last, most recent season season. 
+    If player is retired, returns most recent season.
     """
-    def __init__(self, data: dict):
-        """
-        Initialize featured statistics from raw NHL landing API data.
 
-        Args:
-            data (dict): Raw featured statistic data returned by the NHL landing API.
-                Expected to include a ``regularSeason`` object containing
-                season-specific and career summary statistics.
-        """
+    season: int | None
+    season_stats: FeaturedStats
+    career_stats: FeaturedStats
+
+    @classmethod
+    def from_dict(cls, data: dict) -> Featured:
         regular_season: dict = data.get("regularSeason") or {}
         sub_season: dict = regular_season.get("subSeason") or {}
         career: dict = regular_season.get("career") or {}
+        
 
-        self.season: int | None = data.get("season")
-        self.season_stats: FeaturedStats = FeaturedStats(sub_season)
-        self.career_stats: FeaturedStats = FeaturedStats(career)
-
-
-class FeaturedStats: 
-    """
-    Highlighted statistical totals for a player.
-
-    This object represents a curated subset of player statistics intended
-    for quick display or summary views, rather than a complete statistical
-    breakdown.
-    """
-    def __init__(self, data: dict):
-        """
-        Initialize featured statistical values.
-
-        Args:
-            data (dict): Raw featured statistic values returned by the NHL landing API.
-        """
-        self.assists: int | None = data.get("assists")
-        self.game_winning_goals: int | None = data.get("gameWinningGoals")
-        self.games_played: int | None = data.get("gamesPlayed")
-        self.goals: int | None = data.get("goals")
-        self.ot_goals: int | None = data.get("otGoals")
-        self.pim: int | None = data.get("pim")
-        self.plus_minus: int | None = data.get("plusMinus")
-        self.points: int | None = data.get("points")
-        self.pp_goals: int | None = data.get("powerPlayGoals")
-        self.pp_points: int | None = data.get("powerPlayPoints")
-        self.shooting_pctg: float | None = data.get("shootingPctg")
-        self.sh_goals: int | None = data.get("shorthandedGoals")
-        self.sh_points: int | None = data.get("shorthandedPoints")
-        self.shots: int | None = data.get("shots")
+        return cls(
+            season=data.get("season"),
+            season_stats=FeaturedStats.from_dict(sub_season),
+            career_stats=FeaturedStats.from_dict(career),
+        )
 
     def to_dict(self) -> dict:
-        """
-        Convert featured statistics to a dictionary.
+        return {
+            "season": self.season,
+            "season_stats": self.season_stats.to_dict(),
+            "career_stats": self.career_stats.to_dict(),
+        }
 
-        Returns:
-            dict: Serializable representation of featured statistics.
-        """
+@dataclass(slots=True, frozen=True)
+class FeaturedStats:
+    """
+    Highlighted statistical totals for a player.
+    """
+
+    assists: int | None
+    game_winning_goals: int | None
+    games_played: int | None
+    goals: int | None
+    ot_goals: int | None
+    pim: int | None
+    plus_minus: int | None
+    points: int | None
+    pp_goals: int | None
+    pp_points: int | None
+    shooting_pctg: float | None
+    sh_goals: int | None
+    sh_points: int | None
+    shots: int | None
+
+    @classmethod
+    def from_dict(cls, data: dict) -> FeaturedStats:
+        return cls(
+            assists=data.get("assists"),
+            game_winning_goals=data.get("gameWinningGoals"),
+            games_played=data.get("gamesPlayed"),
+            goals=data.get("goals"),
+            ot_goals=data.get("otGoals"),
+            pim=data.get("pim"),
+            plus_minus=data.get("plusMinus"),
+            points=data.get("points"),
+            pp_goals=data.get("powerPlayGoals"),
+            pp_points=data.get("powerPlayPoints"),
+            shooting_pctg=data.get("shootingPctg"),
+            sh_goals=data.get("shorthandedGoals"),
+            sh_points=data.get("shorthandedPoints"),
+            shots=data.get("shots"),
+        )
+
+    def to_dict(self) -> dict:
         return {
             "assists": self.assists,
             "game_winning_goals": self.game_winning_goals,

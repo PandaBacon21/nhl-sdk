@@ -1,32 +1,34 @@
 """
 CAREER STATS
 """
+from __future__ import annotations
+from dataclasses import dataclass
 
 
+@dataclass(slots=True, frozen=True)
 class Career:
     """
     Represents a player's career statistics.
 
-    This object separates career totals into regular season and
-    playoff statistics.
+    Separates career totals into regular season and playoff statistics.
     """
-    def __init__(self, data: dict):
-        """
-        Initialize career statistics from raw NHL API data.
 
-        Args:
-            data (dict): Raw player landing data returned by the NHL API.
-                Expected to contain ``regularSeason`` and ``playoffs``
-                keys.
-        """
-        regular_season: dict = data.get("regularSeason") or {}
-        playoffs: dict = data.get("playoffs") or {}
+    regular_season: CareerStats
+    playoffs: CareerStats
 
-        self.regular_season: CareerStats = CareerStats(regular_season)
-        self.playoffs: CareerStats = CareerStats(playoffs)
-        
+    @classmethod
+    def from_dict(cls, data: dict) -> Career:
+        regular_season_data: dict = data.get("regularSeason") or {}
+        playoffs_data: dict = data.get("playoffs") or {}
 
-class CareerStats: 
+        return cls(
+            regular_season=CareerStats.from_dict(regular_season_data),
+            playoffs=CareerStats.from_dict(playoffs_data),
+        )
+
+
+@dataclass(slots=True, frozen=True)
+class CareerStats:
     """
     Aggregated career statistics for a player.
 
@@ -34,37 +36,46 @@ class CareerStats:
     a player's entire career for a specific game context
     (regular season or playoffs).
     """
-    def __init__(self, data: dict):
-        """
-        Initialize aggregated career statistics.
 
-        Args:
-            data (dict): Raw career stat values returned by the NHL API.
-        """
-        self.assists: int | None = data.get("assists")
-        self.avg_toi: str | None = data.get("avgToi")
-        self.faceoff_win_pctg: float | None = data.get("faceoffWinningPctg")
-        self.game_winning_goals: int | None = data.get("gameWinningGoals")
-        self.games_played: int | None = data.get("gamesPlayed")
-        self.goals: int | None = data.get("goals")
-        self.ot_goals: int | None = data.get("otGoals")
-        self.pim: int | None = data.get("pim")
-        self.plus_minus: int | None = data.get("plusMinus")
-        self.points: int | None = data.get("points")
-        self.pp_goals: int | None = data.get("powerPlayGoals")
-        self.pp_points: int | None = data.get("powerPlayPoints")
-        self.shooting_pctg: float | None = data.get("shootingPctg")
-        self.sh_goals: int | None = data.get("shorthandedGoals")
-        self.sh_points: int | None = data.get("shorthandedPoints")
-        self.shots: int | None = data.get("shots")
+    assists: int | None
+    avg_toi: str | None
+    faceoff_win_pctg: float | None
+    game_winning_goals: int | None
+    games_played: int | None
+    goals: int | None
+    ot_goals: int | None
+    pim: int | None
+    plus_minus: int | None
+    points: int | None
+    pp_goals: int | None
+    pp_points: int | None
+    shooting_pctg: float | None
+    sh_goals: int | None
+    sh_points: int | None
+    shots: int | None
+
+    @classmethod
+    def from_dict(cls, data: dict) -> CareerStats:
+        return cls(
+            assists=data.get("assists"),
+            avg_toi=data.get("avgToi"),
+            faceoff_win_pctg=data.get("faceoffWinningPctg"),
+            game_winning_goals=data.get("gameWinningGoals"),
+            games_played=data.get("gamesPlayed"),
+            goals=data.get("goals"),
+            ot_goals=data.get("otGoals"),
+            pim=data.get("pim"),
+            plus_minus=data.get("plusMinus"),
+            points=data.get("points"),
+            pp_goals=data.get("powerPlayGoals"),
+            pp_points=data.get("powerPlayPoints"),
+            shooting_pctg=data.get("shootingPctg"),
+            sh_goals=data.get("shorthandedGoals"),
+            sh_points=data.get("shorthandedPoints"),
+            shots=data.get("shots"),
+        )
 
     def to_dict(self) -> dict:
-        """
-        Convert career statistics to a dictionary.
-
-        Returns:
-            dict: Serializable representation of career statistics.
-        """
         return {
             "assists": self.assists,
             "avg_toi": self.avg_toi,
