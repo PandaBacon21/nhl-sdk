@@ -6,8 +6,8 @@ from .resources import API
 
 from .core.config import BaseConfig, _build_config
 from .core.logger import NhlLogger
-from .core.cache.caches import BaseCache
-from .core.cache.init_cache import init_cache
+from .core.cache.base_cache import BaseCache
+from .core.cache import init_cache
 
 
 class NhlClient:

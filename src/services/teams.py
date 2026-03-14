@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from ..core.cache.init_cache import get_cache
+from ..core.cache import get_cache
 from ..resources.api_web import teams
 
 if TYPE_CHECKING: 

@@ -77,21 +77,17 @@ def test_smoke() -> None:
             print(f"PowerPlay Points: {season.stats.pp_points}")
             print("")
 
-    # print(player.raw())
-    # player.refresh()
-    # print(player.bio.first_name)
-    # # print(player.bio.last_name)
-
     game_log = player.stats.game_log()
     game_log_2 = player.stats.game_log(season=20232024, game_type=2)
-    # print(game_log)
+
+
     print(f"Game Log - Season: {game_log.season_id}")
     print(f"Game Type: {game_log_2.game_type}")
     game = game_log.games[0]
     game_2 = game_log_2.games[0]
     print(f"Game ID - Log 2: {game_2.game_id}")
     print(f"Game ID - Log 1: {game.game_id}")
-    # print(game.to_dict())
+
     for game in game_log.games:
         print(f"Opponent: {game.opponent_abbrev}, Goals: {game.goals}")
     print("")
@@ -104,9 +100,11 @@ def test_smoke() -> None:
     print(f"1st Spotlighted Player: {players.spotlight[0].name}")
     print(f"2nd Spotlighted Player: {players.spotlight[1].name}")
     print("")
+
     goalie_leaders = players.leaders.goalies(season=20242025, game_type=2, categories="wins", limit=10)
     wins = goalie_leaders.wins
     save_pct = goalie_leaders.save_pctg
+
     print(f"Goalie wins leader: {wins[0].last_name}")
     print(f"Goalie wins leader id: {wins[0].pid}")
     print(save_pct)
@@ -117,6 +115,7 @@ def test_smoke() -> None:
     leaders = nhl.players.leaders
     skater_edge_leaders = leaders.skaters()
     print(skater_edge_leaders.assists[0].last_name)
+    
     edge_landing = skater_edge_leaders.edge.landing()
 
     print(edge_landing.seasons_with_edge[0])

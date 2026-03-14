@@ -11,7 +11,7 @@ from ....core.utilities import _check_cache
 from .bio import Bio
 from .stats import Stats
 from ....core.cache.cache_item import CacheItem
-from ....core.cache.init_cache import get_cache
+from ....core.cache import get_cache
 
 if TYPE_CHECKING: 
     from nhl_stats.src.client import NhlClient

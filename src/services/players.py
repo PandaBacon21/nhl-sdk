@@ -6,7 +6,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from ..core.utilities import _check_cache
-from ..core.cache.init_cache import get_cache
+from ..core.cache import get_cache
 from ..models.players import Spotlight, Leaders, Player
 
 if TYPE_CHECKING:
@@ -51,9 +51,9 @@ class Players:
         
         cached = _check_cache(self._cache, self._spotlight_key)
         if cached is not None: 
-            self._logger.info(f"{self._spotlight_key}: valid and retrieved from cache")
+            self._logger.info(f"{self._spotlight_key}: Cache Hit")
             return cached.data
-        self._logger.debug(f"{self._spotlight_key}: not cached or expired. Retrieving Spotlight")
+        self._logger.debug(f"{self._spotlight_key}: Cache Miss")
         data = self._client._api.api_web.call_nhl_players.get_player_spotlight()
         players = data.data
         spotlight = [Spotlight.from_dict(player) for player in players or []]
