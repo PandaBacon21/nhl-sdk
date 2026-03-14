@@ -6,7 +6,8 @@ from abc import ABC
 from typing import Optional
 from dataclasses import dataclass, field, replace
 from pathlib import Path
-from .cache.caches import BaseCache, LocalCache
+from .cache.base_cache import BaseCache
+from .cache.mem_cache import MemCache
 
 # api-web.nhle.com/ 
 BASE_URL_API_WEB: str = "https://api-web.nhle.com"
@@ -28,7 +29,7 @@ class BaseConfig(ABC):
     log_level: str = "DEBUG"
     lang: str = LANG
     log_file: Optional[str] = None  # None -> print only
-    cache: BaseCache = field(default_factory=LocalCache)  # None -> local cache
+    cache: BaseCache = field(default_factory=MemCache)  # None -> local cache
 
 @dataclass(slots=True, frozen=True)
 class DefaultConfig(BaseConfig):

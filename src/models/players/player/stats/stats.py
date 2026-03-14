@@ -9,7 +9,7 @@ from .featured_stats import Featured
 from .career_stats import Career
 from .season import Season, FeaturedGame
 from .games import GameLogs
-from .....core.cache.init_cache import get_cache
+from .....core.cache import get_cache
 from .....core.utilities import _check_cache
 
 if TYPE_CHECKING: 

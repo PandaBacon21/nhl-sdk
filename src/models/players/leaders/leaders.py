@@ -10,7 +10,7 @@ from datetime import datetime
 
 from .player_leaders import SkaterLeaders, GoalieLeaders
 from ....core.utilities import _check_cache
-from ....core.cache.init_cache import get_cache
+from ....core.cache import get_cache
 
 if TYPE_CHECKING:
     from nhl_stats.src.client import NhlClient
