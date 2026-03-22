@@ -8,15 +8,15 @@ from typing import TYPE_CHECKING
 from datetime import datetime
 
 from ....core.utilities import _check_cache
-from .bio import Bio
+from .profile import Profile
 from .stats import Stats
 from ....core.cache.cache_item import CacheItem
 from ....core.cache import get_cache
 
-if TYPE_CHECKING: 
+if TYPE_CHECKING:
     from nhl_stats.src.client import NhlClient
 
-class Player: 
+class Player:
     """
     Represents a single NHL player.
 
@@ -29,7 +29,7 @@ class Player:
 
     Use the Players collection to obtain Player instances.
     """
-    def __init__(self, player_id: int, client: NhlClient): 
+    def __init__(self, player_id: int, client: NhlClient):
         """
         Parameters
         ----------
@@ -46,26 +46,26 @@ class Player:
         self._landing_key: str = f"player:{self._pid}:landing"
         self._cache_ttl: int = 60 * 60 * 4
 
-        self._bio: Bio | None = None
+        self._profile: Profile | None = None
         self._stats: Stats | None = None
-        self._version: dict[str, datetime]= {}
+        self._version: dict[str, datetime] = {}
 
         self._logger.info(f"Player object - pid: {self._pid} initialized")
 
-    def __repr__(self): 
+    def __repr__(self):
         """
         Return a string representation of the player.
         """
         return f"Player(pid: {self._pid})"
-    
-    def __str__(self): 
+
+    def __str__(self):
         """
         Return a string representation of the player.
         """
-        if self._bio:
-            return f"{self.bio.first_name} {self.bio.last_name}, Player Id: {self._pid}" 
-        else: 
-            return f"Player Id: {self._pid}. Call .bio() to retrieve name."
+        if self._profile:
+            return f"{self.profile.first_name} {self.profile.last_name}, Player Id: {self._pid}"
+        else:
+            return f"Player Id: {self._pid}. Call .profile() to retrieve name."
 
     def _get_player_landing(self) -> CacheItem:
         """
@@ -74,30 +74,30 @@ class Player:
         """
         cached = _check_cache(self._cache, self._landing_key)
         if cached is not None:
-            self._logger.info(f"{self._landing_key}: valid and retrieved from cache")
+            self._logger.info(f"{self._landing_key}: Cache Hit")
             return cached
-        self._logger.debug(f"{self._landing_key}: not cached or expired. Retrieving {self._landing_key}")
-        
+        self._logger.debug(f"{self._landing_key}: Cache Miss")
+
         res = self._api_web.call_nhl_players.get_player_landing(pid=self._pid)
 
         if not res.ok == True:
             self._logger.warning(f"Player pid {self._pid} failed to fetch player landing")
-            raise RuntimeError(res.data["error"] or f"Failed to fetch player landing: {self._pid}")  
+            raise RuntimeError(res.data["error"] or f"Failed to fetch player landing: {self._pid}")
         cache_item = self._cache.set(self._landing_key, res.data, ttl=self._cache_ttl)
-        self._logger.info(f"{self._landing_key}: set in cache | ttl: {self._cache_ttl}")
+        self._logger.info(f"{self._landing_key}: Cached | ttl: {self._cache_ttl}")
         return cache_item
 
-    def _clear(self) -> None: 
+    def _clear(self) -> None:
         """
-        Clear any cached data for the particular player 
+        Clear any cached data for the particular player
         For internal use only
         """
-        self._bio = None
+        self._profile = None
         self._stats = None
         self._logger.info(f"Player {self._pid}:  data cleared")
 
     @property
-    def bio(self) -> Bio:
+    def profile(self) -> Profile:
         """
         Player biographical information.
 
@@ -107,14 +107,14 @@ class Player:
             Structured biographical data such as name, birth details,
             physical attributes, position, and awards.
         """
-        if self._bio:
+        if self._profile:
             if _check_cache(self._cache, self._landing_key):
-                return self._bio
+                return self._profile
         data = self._get_player_landing()
-        self._bio = Bio.from_dict(data=data.data)
+        self._profile = Profile.from_dict(data=data.data)
         self._logger.debug(f"{self._pid} bio retrieved")
-        return self._bio 
-    
+        return self._profile
+
     @property
     def stats(self) -> Stats:
         """
@@ -128,14 +128,14 @@ class Player:
         """
         if self._stats:
             if _check_cache(self._cache, self._landing_key):
-                self._logger.info(f"Player: {self._pid} | Stats retrieved from cache")
+                self._logger.info(f"{self._landing_key}: Cache Hit")
                 return self._stats
         data = self._get_player_landing()
         self._stats = Stats(pid=self._pid, data=data.data, client=self._client)
         self._logger.debug(f"{self._pid} stats retrieved")
         return self._stats
-    
-    def refresh(self) -> None:  
+
+    def refresh(self) -> None:
         """
         Refresh player data from the NHL API.
 
@@ -144,4 +144,4 @@ class Player:
         """
         self._clear()
         self._logger.info(f"Refreshing data for Player {self._pid}")
-        self._get_player_landing()    
+        self._get_player_landing()

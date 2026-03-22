@@ -23,7 +23,6 @@ class CallNhlPlayoffs:
         """ 
         endpoint = f"/{V}/playoff-series/carousel/{season}/"
         res: APIResponse = self._http.get(endpoint=endpoint)
-        # print(res)
         return res
 
     # ==========================================================================
@@ -38,7 +37,6 @@ class CallNhlPlayoffs:
         """ 
         endpoint = f"/{V}/schedule/playoff-series/{season}/{series_letter}/"
         res: APIResponse = self._http.get(endpoint=endpoint)
-        # print(res)
         return res
 
     # ==========================================================================
@@ -53,5 +51,4 @@ class CallNhlPlayoffs:
         """ 
         endpoint = f"/{V}/playoff-bracket/{year}"
         res: APIResponse = self._http.get(endpoint=endpoint)
-        # print(res)
         return res

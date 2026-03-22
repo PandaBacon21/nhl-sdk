@@ -59,13 +59,13 @@ def test_skater_leaders(monkeypatch) -> None:
         "limit": LIMIT
         }
 
-def test_skater_leaders_error(monkeypatch) -> None: 
+def test_skater_leaders_error(monkeypatch) -> None:
     called = {}
-    def fake_call(endpoint: str, params: dict | None = None) -> APIResponse: 
+    def fake_call(endpoint: str, params: dict | None = None) -> APIResponse:
         called["endpoint"] = endpoint
         called["params"] = params
         return APIResponse(ok=False, data={"error": "Test Error"}, status_code=500)
-    
+
     monkeypatch.setattr(players_test._http, "get", fake_call)
 
     res = players_test.get_skater_leaders(season=SEASON, g_type=GAME_TYPE)
@@ -73,6 +73,91 @@ def test_skater_leaders_error(monkeypatch) -> None:
     assert res.ok == False
     assert res.data == {"error": "Test Error"}
     assert called["endpoint"] == f"/v1/skater-stats-leaders/{SEASON}/{GAME_TYPE}"
+    assert called["params"] == {}
+
+def test_skater_leaders_current(monkeypatch) -> None:
+    called = {}
+    def fake_call(endpoint: str, params: dict | None = None) -> APIResponse:
+        called["endpoint"] = endpoint
+        called["params"] = params
+        return APIResponse(ok=True, data={}, status_code=200)
+
+    monkeypatch.setattr(players_test._http, "get", fake_call)
+
+    res = players_test.get_skater_leaders()
+
+    assert res.ok == True
+    assert called["endpoint"] == "/v1/skater-stats-leaders/current"
+    assert called["params"] == {}
+
+def test_game_log(monkeypatch) -> None:
+    called = {}
+    def fake_call(endpoint: str, params: dict | None = None) -> APIResponse:
+        called["endpoint"] = endpoint
+        return APIResponse(ok=True, data={}, status_code=200)
+
+    monkeypatch.setattr(players_test._http, "get", fake_call)
+
+    res = players_test.get_game_log(pid=PLAYER_ID, season=SEASON, g_type=GAME_TYPE)
+
+    assert res.ok == True
+    assert called["endpoint"] == f"/v1/player/{PLAYER_ID}/game-log/{SEASON}/{GAME_TYPE}"
+
+def test_game_log_now(monkeypatch) -> None:
+    called = {}
+    def fake_call(endpoint: str, params: dict | None = None) -> APIResponse:
+        called["endpoint"] = endpoint
+        return APIResponse(ok=True, data={}, status_code=200)
+
+    monkeypatch.setattr(players_test._http, "get", fake_call)
+
+    res = players_test.get_game_log(pid=PLAYER_ID)
+
+    assert res.ok == True
+    assert called["endpoint"] == f"/v1/player/{PLAYER_ID}/game-log/now"
+
+def test_player_spotlight(monkeypatch) -> None:
+    called = {}
+    def fake_call(endpoint: str, params: dict | None = None) -> APIResponse:
+        called["endpoint"] = endpoint
+        return APIResponse(ok=True, data={}, status_code=200)
+
+    monkeypatch.setattr(players_test._http, "get", fake_call)
+
+    res = players_test.get_player_spotlight()
+
+    assert res.ok == True
+    assert called["endpoint"] == "/v1/player-spotlight"
+
+def test_goalie_leaders(monkeypatch) -> None:
+    called = {}
+    def fake_call(endpoint: str, params: dict | None = None) -> APIResponse:
+        called["endpoint"] = endpoint
+        called["params"] = params
+        return APIResponse(ok=True, data={}, status_code=200)
+
+    monkeypatch.setattr(players_test._http, "get", fake_call)
+
+    res = players_test.get_goalie_leaders(season=SEASON, g_type=GAME_TYPE, categories=CATEGORIES, limit=LIMIT)
+
+    assert res.ok == True
+    assert called["endpoint"] == f"/v1/goalie-stats-leaders/{SEASON}/{GAME_TYPE}"
+    assert called["params"] == {"categories": CATEGORIES, "limit": LIMIT}
+
+def test_goalie_leaders_current(monkeypatch) -> None:
+    called = {}
+    def fake_call(endpoint: str, params: dict | None = None) -> APIResponse:
+        called["endpoint"] = endpoint
+        called["params"] = params
+        return APIResponse(ok=True, data={}, status_code=200)
+
+    monkeypatch.setattr(players_test._http, "get", fake_call)
+
+    res = players_test.get_goalie_leaders()
+
+    assert res.ok == True
+    assert called["endpoint"] == "/v1/goalie-stats-leaders/current"
+    assert called["params"] == {}
 
 
 

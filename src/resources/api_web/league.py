@@ -35,6 +35,5 @@ class CallNhlLeague:
         if date: 
             endpoint = f"/{V}/schedule-calendar/{date}"
         res: APIResponse = self._http.get(endpoint=endpoint)
-        # print(res)
         return res
 

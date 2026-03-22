@@ -50,15 +50,14 @@ class Players:
         """
         
         cached = _check_cache(self._cache, self._spotlight_key)
-        if cached is not None: 
-            self._logger.info(f"{self._spotlight_key}: Cache Hit")
+        if cached is not None:
+            self._logger.debug(f"{self._spotlight_key}: Cache Hit")
             return cached.data
         self._logger.debug(f"{self._spotlight_key}: Cache Miss")
-        data = self._client._api.api_web.call_nhl_players.get_player_spotlight()
-        players = data.data
-        spotlight = [Spotlight.from_dict(player) for player in players or []]
+        res = self._client._api.api_web.call_nhl_players.get_player_spotlight()
+        spotlight = [Spotlight.from_dict(player) for player in res.data or []]
         self._cache.set(key=self._spotlight_key, data=spotlight, ttl=self._ttl)
-        self._logger.info(f"{self._spotlight_key}: retrieved and cached | TTL: {self._ttl}")
+        self._logger.debug(f"{self._spotlight_key}: Cached | ttl: {self._ttl}")
         return spotlight
     
     @property

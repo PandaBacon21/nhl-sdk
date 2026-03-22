@@ -19,5 +19,4 @@ class CallNhlSeasons:
         """ 
         endpoint = f"/{V}/season"
         res: APIResponse = self._http.get(endpoint=endpoint)
-        # print(res)
         return res

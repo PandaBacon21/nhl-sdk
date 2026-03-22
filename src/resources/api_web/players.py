@@ -25,7 +25,6 @@ class CallNhlPlayers:
         Retrieve information for a specific player.
         """
         endpoint = f"/{V}/player/{pid}/landing"
-        # player_info: dict = _call_apiget(endpoint=endpoint)
         res: APIResponse = self._http.get(endpoint=endpoint)
         return res
 
@@ -47,7 +46,6 @@ class CallNhlPlayers:
         """
         endpoint = f"/{V}/player-spotlight"
         res: APIResponse= self._http.get(endpoint=endpoint)
-        # print(spotlight)
         return res
         
     # ==========================================================================

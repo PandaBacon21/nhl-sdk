@@ -4,7 +4,7 @@ PLAYER BIO DATA CLASS
 from __future__ import annotations
 from dataclasses import dataclass
 
-from .bio_team import BioTeam
+from .profile_team import ProfileTeam
 from .weight import Weight
 from .height import Height
 from .birth_details import BirthDetails
@@ -15,13 +15,13 @@ from .draft import Draft
 from .....core.utilities import LocalizedString, _to_bool
 
 @dataclass(slots=True, frozen=True)
-class Bio:
+class Profile:
     player_id: int 
     first_name: LocalizedString 
     last_name: LocalizedString 
     number: int | None 
     position: str | None 
-    team: BioTeam 
+    team: ProfileTeam 
     hand: str | None 
     is_active: bool | None 
     height: Height 
@@ -33,14 +33,14 @@ class Bio:
 
 
     @classmethod
-    def from_dict(cls, data: dict) -> Bio:
+    def from_dict(cls, data: dict) -> Profile:
         return cls(
             player_id = data["playerId"],
             first_name = LocalizedString(data.get("firstName")),
             last_name = LocalizedString(data.get("lastName")),
             number = data.get("sweaterNumber"),
             position = data.get("position"),
-            team = BioTeam.from_dict(data),
+            team = ProfileTeam.from_dict(data),
             hand = data.get("shootsCatches"),
             is_active = _to_bool(data.get("isActive")),
             height = Height.from_dict(data),
