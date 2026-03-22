@@ -44,7 +44,7 @@ class Player:
         self._logger = logging.getLogger("nhl_sdk.player")
         self._pid: int = player_id
         self._landing_key: str = f"player:{self._pid}:landing"
-        self._cache_ttl: int = 60 * 60 * 4
+        self._cache_ttl: int = 60 * 60 * 6
 
         self._profile: Profile | None = None
         self._stats: Stats | None = None

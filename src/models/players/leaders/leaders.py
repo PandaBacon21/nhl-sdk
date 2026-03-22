@@ -25,7 +25,7 @@ class Leaders:
         self._client = client
         self._cache = get_cache()
         self._logger = logging.getLogger("nhl_sdk.leaders")
-        self._ttl: int = 60 * 60 * 2
+        self._ttl: int = 60 * 60 * 1
 
     def _cache_key(self, position: str, season: Optional[int] = None, game_type: Optional[int] = None,
                    categories: Optional[str] = None, limit: Optional[int] = None) -> str:
