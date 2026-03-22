@@ -26,7 +26,6 @@ class CallNhlTeams:
         if date: 
             endpoint = f"/{V}/standings/{date}"
         res: APIResponse = self._http.get(endpoint=endpoint)
-        
         return res
         
     def get_standings_per_season(self,) -> APIResponse: 
@@ -35,7 +34,6 @@ class CallNhlTeams:
         """
         endpoint = f"/{V}/standings-season"
         res: APIResponse = self._http.get(endpoint=endpoint)
-        # print(res)
         return res
 
     # ==========================================================================
@@ -51,7 +49,6 @@ class CallNhlTeams:
         if season and g_type:
             endpoint = f"/{V}/club-stats/{team}/{season}/{g_type}"
         res: APIResponse = self._http.get(endpoint=endpoint)
-        # print(res)
         return res
 
     def get_game_types_per_season(self, team: str) -> APIResponse: 
@@ -62,7 +59,6 @@ class CallNhlTeams:
         """
         endpoint = f"/{V}/club-stats-season/{team}"
         res: APIResponse = self._http.get(endpoint=endpoint)
-        # print(res)
         return res
 
 
@@ -73,7 +69,6 @@ class CallNhlTeams:
         """
         endpoint = f"/{V}/scoreboard/{team}/now"
         res: APIResponse = self._http.get(endpoint=endpoint)
-        # print(res)
         return res
 
     # ==========================================================================
@@ -90,7 +85,6 @@ class CallNhlTeams:
         if season: 
             endpoint = f"/{V}/roster/{team}/{season}"
         res: APIResponse = self._http.get(endpoint=endpoint)
-        # print(res)
         return res
 
     def get_roster_season_by_team(self, team: str) -> APIResponse: 
@@ -100,7 +94,6 @@ class CallNhlTeams:
         """
         endpoint = f"/{V}/roster-season/{team}"
         res: APIResponse = self._http.get(endpoint=endpoint)
-        # print(res)
         return res
 
     def get_team_prospects(self, team: str) -> APIResponse: 
@@ -110,7 +103,6 @@ class CallNhlTeams:
         """
         endpoint = f"/{V}/prospects/{team}"
         res: APIResponse = self._http.get(endpoint=endpoint)
-        # print(res)
         return res
         
     # ==========================================================================
@@ -127,7 +119,6 @@ class CallNhlTeams:
         if season: 
             endpoint = f"/{V}/club-schedule-season/{team}/{season}"
         res: APIResponse = self._http.get(endpoint=endpoint)
-        # print(res)
         return res
         
     def get_schedule_month(self, team: str, month: Optional[str] = None) -> APIResponse: 
@@ -141,7 +132,6 @@ class CallNhlTeams:
         if month: 
             endpoint = f"/{V}/club-schedule/{team}/month/{month}"
         res: APIResponse = self._http.get(endpoint=endpoint)
-        # print(res)
         return res
 
     def get_schedule_week(self, team: str, week: Optional[str] = None) -> APIResponse: 
@@ -154,6 +144,5 @@ class CallNhlTeams:
         if week: 
             endpoint = f"/{V}/club-schedule/{team}/week/{week}"
         res: APIResponse = self._http.get(endpoint=endpoint)
-        # print(res)
         return res
 

@@ -12,31 +12,31 @@ def test_smoke() -> None:
     # player = players.get(pid=8478550) # Panarin
     # player = players.get(pid=8451101) # Sakic
 
-    """BIO TESTING"""
+    """PROFILE TESTING"""
     print(player)
-    print(f"Player first name: {player.bio.first_name}")
-    print(f"Player last name: {player.bio.last_name}")
+    print(f"Player first name: {player.profile.first_name}")
+    print(f"Player last name: {player.profile.last_name}")
 
-    assert player.bio.first_name == "Nathan"
-    assert player.bio.last_name == "MacKinnon"
+    assert player.profile.first_name == "Nathan"
+    assert player.profile.last_name == "MacKinnon"
 
-    print(f"Current Team: {player.bio.team}")
-    print(f"Weight: {player.bio.weight.weight_lbs}")
-    print(f"Height: {player.bio.height}")
-    print(f"Player draft year: {player.bio.draft.year}")
-    print(f"Player home city: {player.bio.birth_details.city}")
-    print(f"Player home state/Province: {player.bio.birth_details.state_province}")
-    print(f"In Hockey Hall of Fame: {player.bio.legacy.in_HHOF}")
-    print(f"In top 100 All Time: {player.bio.legacy.in_top_100_all_time}")
-    print(f"Is actively playing: {player.bio.is_active}")
-    print(f"Player headshot: {player.bio.media.headshot}")
-    print(f"Player Slug: {player.bio.media.slug}")
+    print(f"Current Team: {player.profile.team}")
+    print(f"Weight: {player.profile.weight.weight_lbs}")
+    print(f"Height: {player.profile.height}")
+    print(f"Player draft year: {player.profile.draft.year}")
+    print(f"Player home city: {player.profile.birth_details.city}")
+    print(f"Player home state/Province: {player.profile.birth_details.state_province}")
+    print(f"In Hockey Hall of Fame: {player.profile.legacy.in_HHOF}")
+    print(f"In top 100 All Time: {player.profile.legacy.in_top_100_all_time}")
+    print(f"Is actively playing: {player.profile.is_active}")
+    print(f"Player headshot: {player.profile.media.headshot}")
+    print(f"Player Slug: {player.profile.media.slug}")
     print("")
-    badges = player.bio.legacy.badges
+    badges = player.profile.legacy.badges
     print("Player Badges:")
     for badge in badges: 
         print(badge)
-    awards = player.bio.legacy.awards
+    awards = player.profile.legacy.awards
     print("")
     print("Player Awards:")
     for award in awards:

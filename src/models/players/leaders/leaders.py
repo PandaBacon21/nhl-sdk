@@ -1,12 +1,9 @@
 """
 LEADERS OBJECT
 """
-
 from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING, Optional
-from datetime import datetime
-
 
 from .player_leaders import SkaterLeaders, GoalieLeaders
 from ....core.utilities import _check_cache
@@ -25,40 +22,40 @@ class Leaders:
     category filtering, and result limits.
     """
     def __init__(self, client: NhlClient):
-        """
-        Initialize the Leaders API helper.
-
-        Args:
-            client (NhlClient): Shared NHL API client instance used for accessing the cache.
-        """
         self._client = client
         self._cache = get_cache()
         self._logger = logging.getLogger("nhl_sdk.leaders")
-        self._ttl: int = 60*60*2
+        self._ttl: int = 60 * 60 * 2
 
-    def _cache_key(self, position: str, season: Optional[int] = None, game_type: Optional[int] = None, 
-                categories: Optional[str] = None, limit: Optional[int] = None) -> str: 
-        """
-        Generate a cache key for leader queries.
-        
-        For internal use only
-        """
-        if season and game_type and categories and limit: 
-            return f"leaders:{season}:{position}:{game_type}:{categories}:{limit}"
-        if season and game_type and categories: 
-            return f"leaders:{season}:{position}:{game_type}:{categories}"
-        if season and game_type:
-            return f"leaders:{season}:{position}:{game_type}"
-        if season:
-            return f"leaders:{season}:{position}:now"
-        return f"leaders:{position}:now"
+    def _cache_key(self, position: str, season: Optional[int] = None, game_type: Optional[int] = None,
+                   categories: Optional[str] = None, limit: Optional[int] = None) -> str:
+        key = f"leaders:{position}"
+        key += f":{season}" if season else ":now"
+        if game_type:
+            key += f":{game_type}"
+        if categories:
+            key += f":{categories}"
+        if limit:
+            key += f":{limit}"
+        return key
 
+    def _fetch(self, cache_key: str, api_fn, model_cls):
+        cached = _check_cache(cache=self._cache, cache_key=cache_key)
+        if cached is not None:
+            self._logger.debug(f"{cache_key}: Cache Hit")
+            return cached.data
+        self._logger.debug(f"{cache_key}: Cache Miss")
+        res = api_fn()
+        result = model_cls(res.data, client=self._client)
+        self._cache.set(cache_key, result, self._ttl)
+        self._logger.debug(f"{cache_key}: Cached | ttl: {self._ttl}")
+        return result
 
-    def goalies(self, season: Optional[int] = None, game_type: Optional[int] = None, 
+    def goalies(self, season: Optional[int] = None, game_type: Optional[int] = None,
                 categories: Optional[str] = None, limit: Optional[int] = None) -> GoalieLeaders:
         """
         Retrieve goalie statistical leaders.
-        No season and game_type retreives current leaders
+        No season and game_type retrieves current leaders.
 
         Args:
             season (int, optional): NHL season (e.g. 20232024).
@@ -67,39 +64,31 @@ class Leaders:
             limit (int, optional): Maximum number of goalies to return.
         """
         cache_key = self._cache_key("g", season, game_type, categories, limit)
-        cached = _check_cache(cache=self._cache, cache_key=cache_key)
-        if cached is None: 
-            self._logger.debug(f"{cache_key} not in cache or expired")
-            data = self._client._api.api_web.call_nhl_players.get_goalie_leaders(season=season, g_type=game_type, categories=categories, limit=limit)
-            leaders = GoalieLeaders(data.data, client=self._client)
-            self._cache.set(cache_key, leaders, self._ttl)
-            self._logger.info(f"goalies.leaders: retrieved and cached. ttl: {self._ttl}")
-            return leaders  
-        self._logger.info(f"{self._cache_key}: valid and retrieved from cache")
-        return cached.data
+        return self._fetch(
+            cache_key,
+            lambda: self._client._api.api_web.call_nhl_players.get_goalie_leaders(
+                season=season, g_type=game_type, categories=categories, limit=limit
+            ),
+            GoalieLeaders,
+        )
 
-
-    def skaters(self, season: Optional[int] = None, game_type: Optional[int] = None, 
+    def skaters(self, season: Optional[int] = None, game_type: Optional[int] = None,
                 categories: Optional[str] = None, limit: Optional[int] = None) -> SkaterLeaders:
         """
-        Retrieve skater statistical leaders. 
-        No season and game_type retreives current leaders
+        Retrieve skater statistical leaders.
+        No season and game_type retrieves current leaders.
 
         Args:
             season (int, optional): NHL season (e.g. 20232024).
             game_type (int, optional): 2 - regular season, 3 - playoffs.
-            categories (str, optional): example, goals
+            categories (str, optional): example, goals.
             limit (int, optional): Maximum number of skaters to return.
         """
         cache_key = self._cache_key("s", season, game_type, categories, limit)
-        cached = _check_cache(cache=self._cache, cache_key=cache_key)
-        if cached is None:
-            self._logger.debug(f"{cache_key} not in cache or expired")
-            data = self._client._api.api_web.call_nhl_players.get_skater_leaders(season=season, g_type=game_type, categories=categories, limit=limit)
-            leaders = SkaterLeaders(data.data, client=self._client)
-            self._cache.set(cache_key, leaders, self._ttl)
-            print(f"{cache_key} cached: {datetime.now()}")
-            self._logger.info(f"skaters.leaders: retrieved and cached. ttl: {self._ttl}")
-            return leaders  
-        self._logger.info(f"{self._cache_key}: valid and retrieved from cache")
-        return cached.data
+        return self._fetch(
+            cache_key,
+            lambda: self._client._api.api_web.call_nhl_players.get_skater_leaders(
+                season=season, g_type=game_type, categories=categories, limit=limit
+            ),
+            SkaterLeaders,
+        )

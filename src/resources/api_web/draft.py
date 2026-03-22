@@ -26,7 +26,6 @@ class CallNhlDraft:
         if season and category: 
             endpoint = f"/{V}/draft/rankings/{season}/{category}"
         res: APIResponse = self._http.get(endpoint=endpoint)
-        # print(res)
         return res
 
     def get_tracker_now(self) -> APIResponse: 
@@ -35,7 +34,6 @@ class CallNhlDraft:
         """
         endpoint = f"/{V}/draft-tracker/picks/now"
         res: APIResponse = self._http.get(endpoint=endpoint)
-        # print(res)
         return res
 
     def get_picks(self, season: Optional[int] = None, round: Optional[str] = None) -> APIResponse: 
@@ -48,12 +46,7 @@ class CallNhlDraft:
         if season and round: 
             endpoint = f"/{V}/draft/picks/{season}/{round}"
         res: APIResponse = self._http.get(endpoint=endpoint)
-        # print(res)
         return res
-
-
-
-
 
 
 

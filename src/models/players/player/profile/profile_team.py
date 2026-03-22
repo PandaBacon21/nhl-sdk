@@ -8,14 +8,14 @@ from .....core.utilities import LocalizedString
 
 
 @dataclass(slots=True, frozen=True)
-class BioTeam: 
+class ProfileTeam: 
     id: int | None 
     name: LocalizedString 
     code: str | None 
     logo: str | None 
     
     @classmethod
-    def from_dict(cls, data: dict) -> BioTeam:
+    def from_dict(cls, data: dict) -> ProfileTeam:
         return cls(
             id = data.get("currentTeamId"),
             name = LocalizedString(data.get("fullTeamName")),

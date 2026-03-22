@@ -33,9 +33,8 @@ class CallNhlMisc:
             params["seasonStates"] = season_states
 
         endpoint = f"/{V}/meta"
-        meta: APIResponse = self._http.get(endpoint=endpoint, params=params) 
-        # print(meta)
-        return meta
+        res: APIResponse = self._http.get(endpoint=endpoint, params=params) 
+        return res
 
     def get_game_info(self, game_id:int) -> APIResponse: 
         """
@@ -43,18 +42,16 @@ class CallNhlMisc:
         game_id: int
         """
         endpoint = f"/{V}/meta/game/{game_id}"
-        game_info: APIResponse = self._http.get(endpoint=endpoint)
-        # print(game_info)
-        return game_info
+        res: APIResponse = self._http.get(endpoint=endpoint)
+        return res
 
     def get_location(self) -> APIResponse: 
         """
         Returns country code that the webserver thinks the user is in
         """
         endpoint = f"/{V}/location"
-        location: APIResponse = self._http.get(endpoint=endpoint)
-        # print(location)
-        return location
+        res: APIResponse = self._http.get(endpoint=endpoint)
+        return res
 
     def get_playoff_series_meta(self, year: int, series_letter: str) -> APIResponse: 
         """
@@ -63,9 +60,8 @@ class CallNhlMisc:
         series_letter: str - a, b, c, d, etc
         """
         endpoint = f"/{V}/meta/playoff-series/{year}/{series_letter}"
-        series: APIResponse = self._http.get(endpoint=endpoint)
-        # print(series)
-        return series
+        res: APIResponse = self._http.get(endpoint=endpoint)
+        return res
 
     # ==========================================================================
     # POSTAL LOOKUP
@@ -77,9 +73,8 @@ class CallNhlMisc:
         postal_code: str
         """
         endpoint = f"/{V}/postal-lookup/{postal_code}"
-        location: APIResponse = self._http.get(endpoint=endpoint)
-        # print(location)
-        return location
+        res: APIResponse = self._http.get(endpoint=endpoint)
+        return res
 
     # ==========================================================================
     # GAME REPLAYS
@@ -92,9 +87,8 @@ class CallNhlMisc:
         event_number: int
         """
         endpoint = f"/{V}/ppt-replay/goal/{game_id}/{event_number}"
-        replay: APIResponse = self._http.get(endpoint=endpoint)
-        # print(replay)
-        return replay
+        res: APIResponse = self._http.get(endpoint=endpoint)
+        return res
 
     def get_play_replay(self, game_id: int, event_number: int) -> APIResponse: 
         """
@@ -103,9 +97,8 @@ class CallNhlMisc:
         event_number: int
         """
         endpoint = f"/{V}/ppt-replay/{game_id}/{event_number}"
-        replay: APIResponse = self._http.get(endpoint=endpoint)
-        # print(replay)
-        return replay
+        res: APIResponse = self._http.get(endpoint=endpoint)
+        return res
 
     # ==========================================================================
     # ADDITIONAL GAME CONTENT
@@ -118,7 +111,6 @@ class CallNhlMisc:
         """
         endpoint = f"/{V}/gamecenter/{game_id}/right-rail"
         game_rail: APIResponse = self._http.get(endpoint=endpoint)
-        # print(game_rail)
         return game_rail
 
     def get_wsc(self, game_id: int) -> APIResponse: 
@@ -127,9 +119,8 @@ class CallNhlMisc:
         game_id: int
         """
         endpoint = f"/{V}/gamecenter/{game_id}/right-rail"
-        wsc: APIResponse = self._http.get(endpoint=endpoint)
-        # print(wsc)
-        return wsc
+        res: APIResponse = self._http.get(endpoint=endpoint)
+        return res
 
     # ==========================================================================
     # OPENAPI SPEC
@@ -140,7 +131,6 @@ class CallNhlMisc:
         Retrieve the OpenAPI specification. (Seems to return 404 currently)
         """
         endpoint = f"/model/{V}/openapi.json"
-        openapi: APIResponse = self._http.get(endpoint=endpoint)
-        # print(openapi)
-        return openapi
+        res: APIResponse = self._http.get(endpoint=endpoint)
+        return res
 
