@@ -47,8 +47,8 @@ def _to_bool(value: int | bool | None) -> bool | None:
     return bool(value)
 
 
-def _check_cache(cache, cache_key: str) -> CacheItem | None: 
-        cached = cache.get(cache_key)
-        if cached is None:
-            return None
-        return cached
+def _check_cache(cache, cache_key: str) -> CacheItem | None:
+    cached = cache.get(cache_key)
+    if cached is None:
+        return None
+    return cached
