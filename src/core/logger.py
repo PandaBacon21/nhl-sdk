@@ -2,28 +2,31 @@
 LOGGING CONFIGURATION
 """
 from __future__ import annotations
-import logging 
+import logging
+from pathlib import Path
 from typing import TYPE_CHECKING
 
-if TYPE_CHECKING: 
+if TYPE_CHECKING:
     from .config import BaseConfig
 
-class NhlLogger: 
-    def __init__(self, config: BaseConfig): 
+class NhlLogger:
+    def __init__(self, config: BaseConfig):
         log_level = config.log_level.upper()
         self.logger = logging.getLogger(config.log_name)
         self.logger.setLevel(getattr(logging, log_level, logging.INFO))
-    
-        formatter = logging.Formatter(
-            fmt= "[%(asctime)s] [%(levelname)s] %(name)s - %(message)s",
-            datefmt="%Y-%m-%d %H:%M:%S"
-            )
 
-        if config.log_file: 
-            handler = logging.FileHandler(config.log_file)
-        else: 
+        formatter = logging.Formatter(
+            fmt="[%(asctime)s] [%(levelname)s] %(name)s - %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S"
+        )
+
+        if config.log_file:
+            log_path = Path(config.log_file).expanduser()
+            log_path.parent.mkdir(parents=True, exist_ok=True)
+            handler = logging.FileHandler(log_path)
+        else:
             handler = logging.StreamHandler()
-        
+
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
         self.logger.info(f"Logger: '{self.logger.name}' created. Log Level: {log_level}")
@@ -39,4 +42,3 @@ class NhlLogger:
 
     def error(self, msg):
         self.logger.error(msg)
-

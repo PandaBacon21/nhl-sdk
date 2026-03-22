@@ -6,18 +6,19 @@ from abc import ABC
 from typing import Optional
 from dataclasses import dataclass, field, replace
 from pathlib import Path
+from platformdirs import user_log_dir
 from .cache.base_cache import BaseCache
 from .cache.mem_cache import MemCache
 
-# api-web.nhle.com/ 
+# api-web.nhle.com/
 BASE_URL_API_WEB: str = "https://api-web.nhle.com"
-V: str  = "v1"
+V: str = "v1"
 
-# api.nhle.com/stats/rest/ 
+# api.nhle.com/stats/rest/
 BASE_URL_API_STATS: str = "https://api.nhle.com/stats/rest"
 LANG: str = "en"
 
-FILE_PATH = Path("~/.config/nhl_sdk/nhl.log")
+FILE_PATH: Path = Path(user_log_dir("nhl_sdk")) / "nhl.log"
 
 @dataclass(slots=True, frozen=True)
 class BaseConfig(ABC):
@@ -25,11 +26,12 @@ class BaseConfig(ABC):
     _base_url_api_stats: str = field(default=BASE_URL_API_STATS, init=True)
     _v: str = field(default=V, init=True)
 
-    log_name: str = "nhl_sdk" 
+    log_name: str = "nhl_sdk"
     log_level: str = "DEBUG"
     lang: str = LANG
-    log_file: Optional[str] = None  # None -> print only
-    cache: BaseCache = field(default_factory=MemCache)  # None -> local cache
+    # log_file: Optional[str] = str(FILE_PATH)  # default log path; set to None for stdout only
+    log_file: Optional[str] = None # Set to None for stdout only - Currently set just for testing
+    cache: BaseCache = field(default_factory=MemCache)
 
 @dataclass(slots=True, frozen=True)
 class DefaultConfig(BaseConfig):
@@ -46,11 +48,11 @@ def _build_config(config_from_object: BaseConfig | None, log_name: str | None,
     if config_from_object or log_name or log_level or log_file or lang or cache:
         config: BaseConfig = replace(
             config,
-            lang = lang if lang is not None else config.lang,
-            log_name = log_name if log_name is not None else config.log_name,
-            log_level = log_level if log_level is not None else config.log_level,
-            log_file = log_file if log_file is not None else config.log_file,
-            cache = cache if cache is not None else config.cache,
+            lang=lang if lang is not None else config.lang,
+            log_name=log_name if log_name is not None else config.log_name,
+            log_level=log_level if log_level is not None else config.log_level,
+            log_file=log_file if log_file is not None else config.log_file,
+            cache=cache if cache is not None else config.cache,
         )
     if config_from_object: 
         config = config_from_object

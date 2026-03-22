@@ -1,15 +1,14 @@
 """
 LOCAL MEMORY CACHE
 """
+import logging
 from typing import Any
 
 from .cache_item import CacheItem
 from .base_cache import BaseCache
 
 
-
-
-class MemCache(BaseCache): 
+class MemCache(BaseCache):
     """
     In-memory cache implementation.
 
@@ -17,12 +16,9 @@ class MemCache(BaseCache):
     process. It is suitable for development environments and lightweight
     workloads but does not persist across restarts.
     """
-    def __init__(self): 
-        """
-        Inititialize the in memory, LocalCache
-        """
-
+    def __init__(self):
         self._store: dict[str, CacheItem] = {}
+        self._logger = logging.getLogger("nhl_sdk.cache")
 
     def __str__(self) -> str:
         return f"Default in-memory cache"
@@ -51,7 +47,7 @@ class MemCache(BaseCache):
         if item is None: 
             return None
         if item._is_expired():
-            print(f"{key} is expired")
+            self._logger.debug(f"{key}: Expired")
             self.delete(key)
             return None
         return item
@@ -70,7 +66,6 @@ class MemCache(BaseCache):
             Time-to-live in seconds. None disables expiration.
         """
         self._store[key] = CacheItem.create(data=data, ttl=ttl)
-        print(f"{key} stored in cache - ttl: {ttl}")
         return self._store[key] 
 
     def delete(self, key: str) -> None: 

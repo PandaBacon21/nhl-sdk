@@ -23,10 +23,10 @@ class CacheItem:
     @classmethod
     def create(cls, data: Any, ttl: int | None) -> CacheItem:
         return cls(
-            data = data,
-            ttl = ttl,
-            created_at = datetime.now(timezone.utc)
-        ) 
+            data=data,
+            ttl=ttl,
+            created_at=datetime.now(timezone.utc)
+        )
 
     def _is_expired(self) -> bool: 
         """
