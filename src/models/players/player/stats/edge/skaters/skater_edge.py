@@ -36,7 +36,7 @@ class SkaterEdge:
         self._cache = get_cache()
         self._logger = logging.getLogger("nhl_sdk.player.stats.edge.skater")
         self._base_key: str = f"player:{pid}:edge:skater"
-        self._ttl: int = 60 * 60 * 6
+        self._ttl: int = 60 * 60 * 1
 
         self._logger.debug(f"{self._pid} SkaterEdge initialized")
 
