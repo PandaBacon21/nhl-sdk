@@ -3,7 +3,7 @@
 An unofficial Python SDK for the NHL API. Personal side project built for fun — no guarantees on cadence, but actively maintained.
 
 > Only possible due to the great work by Zmalski documenting the [NHL API](https://github.com/Zmalski/NHL-API-Reference).
-> Full Postman collection for manual testing available [here](https://josh-personal.postman.co/workspace/My-Personal-Workspace~1a09e9af-597c-4eb3-806e-860262a49125/collection/19505270-dfda07ab-2c76-4c1e-9682-296f91049732?action=share&creator=19505270&active-environment=19505270-97cd10c3-3bf7-4101-b0b2-569cd2507fed).
+> Full Postman collection for manual testing available [here](https://www.postman.com/josh-a/workspace/nhl-api-unofficial-collection/collection/19505270-dfda07ab-2c76-4c1e-9682-296f91049732?action=share&source=copy-link&creator=19505270).
 
 ---
 
