@@ -1,9 +1,9 @@
-from src.models.players.player.stats.season.season_stats import SeasonStats
-from src.models.players.player.stats.season.season_team import SeasonTeam
-from src.models.players.player.stats.season.season import Season
-from src.models.players.player.stats.season.featured_game_stats import FeaturedGame
-from src.models.players.player.stats.career_stats import Career, CareerStats
-from src.models.players.player.stats.featured_stats import Featured, FeaturedStats
+from src.models.players.player.player_stats.season.player_season_stats import SeasonStats
+from src.models.players.player.player_stats.season.player_season_team import SeasonTeam
+from src.models.players.player.player_stats.season.player_season import Season
+from src.models.players.player.player_stats.season.player_featured_game_stats import FeaturedGame
+from src.models.players.player.player_stats.player_career_stats import Career, CareerStats
+from src.models.players.player.player_stats.player_featured_stats import Featured, FeaturedStats
 
 
 STAT_DATA = {

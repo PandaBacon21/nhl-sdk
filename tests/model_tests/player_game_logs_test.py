@@ -1,6 +1,6 @@
-from src.models.players.player.stats.games.season_game_type import SeasonGameType
-from src.models.players.player.stats.games.game import Game
-from src.models.players.player.stats.games.game_logs import GameLogs
+from src.models.players.player.player_stats.games.player_season_game_type import SeasonGameType
+from src.models.players.player.player_stats.games.player_game import Game
+from src.models.players.player.player_stats.games.player_game_logs import GameLogs
 
 
 # ==========================================================================

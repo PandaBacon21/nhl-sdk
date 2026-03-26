@@ -2,10 +2,11 @@
 LEADERS OBJECTS
 """
 from __future__ import annotations
+from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
-from .edge.edge_leaders import SkaterEdgeLeaders#, GoalieEdgeLeaders
+from .edge.edge_leaders import EdgeLeaders, SkaterEdgeLeaders, GoalieEdgeLeaders
 from .leaders_team import LeadersTeam
 from ....core.utilities import LocalizedString
 
@@ -48,9 +49,13 @@ class LeaderPlayer:
             "team": self.team.to_dict(),
         }
 
-class BaseLeaders:
+class BaseLeaders(ABC):
     def __init__(self, client: NhlClient):
         self._client = client
+
+    @property
+    @abstractmethod
+    def edge(self) -> EdgeLeaders: ...
 
 
 class GoalieLeaders(BaseLeaders):
@@ -63,6 +68,10 @@ class GoalieLeaders(BaseLeaders):
         self.goals_against_avg: list[LeaderPlayer] = [
             LeaderPlayer.from_dict(gaa) for gaa in (data.get("goalsAgainstAverage") or [])
         ]
+
+    @property
+    def edge(self) -> GoalieEdgeLeaders:
+        return GoalieEdgeLeaders(client=self._client)
 
 class SkaterLeaders(BaseLeaders):
     def __init__(self, data: dict, client: NhlClient):

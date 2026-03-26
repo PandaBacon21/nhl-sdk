@@ -1,4 +1,4 @@
-from src.models.players.player.stats.edge.edge_types import (
+from src.models.players.player.player_stats.edge.player_edge_types import (
     LeaderPlayer,
     EdgeLeagueAvg,
     EdgeMeasurement,

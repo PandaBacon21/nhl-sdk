@@ -28,7 +28,8 @@ class NhlLogger:
             handler = logging.StreamHandler()
 
         handler.setFormatter(formatter)
-        self.logger.addHandler(handler)
+        if not self.logger.handlers:
+            self.logger.addHandler(handler)
         self.logger.info(f"Logger: '{self.logger.name}' created. Log Level: {log_level}")
 
     def info(self, msg):
