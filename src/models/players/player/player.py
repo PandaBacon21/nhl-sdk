@@ -9,7 +9,7 @@ from datetime import datetime
 
 from ....core.utilities import _check_cache
 from .profile import Profile
-from .stats import Stats
+from .player_stats import PlayerStats
 from ....core.cache.cache_item import CacheItem
 from ....core.cache import get_cache
 
@@ -47,7 +47,7 @@ class Player:
         self._cache_ttl: int = 60 * 60 * 6
 
         self._profile: Profile | None = None
-        self._stats: Stats | None = None
+        self._stats: PlayerStats | None = None
         self._version: dict[str, datetime] = {}
 
         self._logger.info(f"Player object - pid: {self._pid} initialized")
@@ -116,7 +116,7 @@ class Player:
         return self._profile
 
     @property
-    def stats(self) -> Stats:
+    def stats(self) -> PlayerStats:
         """
         Player statistical information.
 
@@ -131,7 +131,7 @@ class Player:
                 self._logger.info(f"{self._landing_key}: Cache Hit")
                 return self._stats
         data = self._get_player_landing()
-        self._stats = Stats(pid=self._pid, data=data.data, client=self._client)
+        self._stats = PlayerStats(pid=self._pid, data=data.data, client=self._client)
         self._logger.debug(f"{self._pid} stats retrieved")
         return self._stats
 

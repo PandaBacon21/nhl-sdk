@@ -1,4 +1,4 @@
-from src.models.players.player.stats.edge.skaters.skater_comparison import (
+from src.models.players.player.player_stats.edge.skaters.skater_comparison import (
     ShotSpeedDetails,
     SkatingSpeedDetails,
     DistanceGame,

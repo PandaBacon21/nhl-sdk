@@ -1,27 +1,27 @@
-from src.models.players.player.stats.edge.skaters.skater_details import (
+from src.models.players.player.player_stats.edge.skaters.skater_details import (
     SkatingSpeed,
     SogSummary,
     SogDetail,
     ZoneTimeDetails,
     SkaterDetails,
 )
-from src.models.players.player.stats.edge.skaters.skater_distance_10 import (
+from src.models.players.player.player_stats.edge.skaters.skater_distance_10 import (
     DistanceLeaderEntry,
     SkaterDistanceTop10,
 )
-from src.models.players.player.stats.edge.skaters.skater_speed_10 import (
+from src.models.players.player.player_stats.edge.skaters.skater_speed_10 import (
     SpeedLeaderEntry,
     SkaterSpeedTop10,
 )
-from src.models.players.player.stats.edge.skaters.skater_zone_time_10 import (
+from src.models.players.player.player_stats.edge.skaters.skater_zone_time_10 import (
     ZoneTimeLeaderEntry,
     SkaterZoneTimeTop10,
 )
-from src.models.players.player.stats.edge.skaters.skater_shot_speed_10 import (
+from src.models.players.player.player_stats.edge.skaters.skater_shot_speed_10 import (
     ShotSpeedLeaderEntry,
     SkaterShotSpeedTop10,
 )
-from src.models.players.player.stats.edge.skaters.skater_shot_location_10 import (
+from src.models.players.player.player_stats.edge.skaters.skater_shot_location_10 import (
     ShotLocationLeaderEntry,
     SkaterShotLocationTop10,
 )
@@ -229,6 +229,7 @@ def test_speed_leader_entry_from_dict() -> None:
     entry = SpeedLeaderEntry.from_dict(SPEED_ENTRY)
     assert entry.player.last_name.default == "McDavid"
     assert entry.max_speed.imperial == 24.8
+    assert entry.max_speed.overlay
     assert entry.max_speed.overlay.away_team.abbrev == "EDM"
     assert entry.bursts_over_22 == 3
     assert entry.bursts_20_22 == 18
@@ -280,6 +281,7 @@ def test_shot_speed_leader_entry_from_dict() -> None:
     entry = ShotSpeedLeaderEntry.from_dict(SHOT_SPEED_ENTRY)
     assert entry.player.sweater_number == 97
     assert entry.hardest_shot.imperial == 96.2
+    assert entry.hardest_shot.overlay
     assert entry.hardest_shot.overlay.game_date == "2024-01-15"
     assert entry.shot_attempts_over_100 == 2
     assert entry.shot_attempts_90_100 == 8
