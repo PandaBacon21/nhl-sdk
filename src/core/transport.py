@@ -22,54 +22,74 @@ class APIResponse:
 
 
 class APICallWeb:
-    def __init__(self, base_url: str = BASE_URL_API_WEB, session: requests.Session = session) -> None: 
+    def __init__(self, base_url: str = BASE_URL_API_WEB, session: requests.Session = session, max_retries: int = 3) -> None:
         self.base_url = base_url.rstrip("/")
         self.response = APIResponse
         self.session = session
+        self.max_retries = max_retries
         self.logger = logging.getLogger("nhl_sdk.api_call_web")
         self.logger.info(msg=f"APICallWeb initialized: base_url - {self.base_url}")
-    
+
     def get(self, endpoint: str, params: Optional[dict] = None, *, raise_on_error: bool = True) -> APIResponse:
         url = self.base_url+endpoint
-        start = time.monotonic()
         self.logger.debug(f"GET {endpoint} | params={params}")
-        try:
-            res = self.session.get(url=url, params=params, timeout=30)
-        except requests.RequestException as e:
-            # network/DNS/timeout/connection issues 
-            self.logger.error(f"Network error for {endpoint}: {e}")
-            if raise_on_error:
-                raise NhlApiError(f"Request failed for {url}: {e}", status_code=None, url=url) from e
-            return APIResponse(ok=False, data={"error": str(e)}, status_code=0)
-        elapsed = (time.monotonic() - start) * 1000
 
-        try:
-            payload = res.json() if res.content else None
-        except ValueError as e:
-            if raise_on_error:
-                raise NhlApiError(f"Invalid JSON from {url}", status_code=res.status_code, url=url) from e
-            return APIResponse(ok=False, data={"error": "Invalid JSON"}, status_code=res.status_code)
+        for attempt in range(self.max_retries + 1):
+            start = time.monotonic()
+            try:
+                res = self.session.get(url=url, params=params, timeout=30)
+            except requests.RequestException as e:
+                self.logger.error(f"Network error for {endpoint}: {e}")
+                if raise_on_error:
+                    raise NhlApiError(f"Request failed for {url}: {e}", status_code=None, url=url) from e
+                return APIResponse(ok=False, data={"error": str(e)}, status_code=0)
+            elapsed = (time.monotonic() - start) * 1000
 
-        # Success path
-        if 200 <= res.status_code < 300:
+            # Retry on 429 with backoff
+            if res.status_code == 429 and attempt < self.max_retries:
+                wait = self._retry_wait(res, attempt)
+                self.logger.warning(f"429 {endpoint} | rate limited, retrying in {wait:.1f}s (attempt {attempt + 1}/{self.max_retries})")
+                time.sleep(wait)
+                continue
+
+            # Check for non-2xx before attempting JSON parse — error bodies may be HTML
+            if not (200 <= res.status_code < 300):
+                if raise_on_error:
+                    self.logger.warning(f"{res.status_code} {endpoint} | {elapsed:.1f}ms | raise={raise_on_error}")
+                    payload = None
+                    try:
+                        payload = res.json() if res.content else None
+                    except ValueError:
+                        pass
+                    self._raise_for_status(res, endpoint=endpoint, url=url, payload=payload)
+                self.logger.warning(f"{res.status_code} {endpoint} | {elapsed:.1f}ms")
+                return APIResponse(
+                    ok=False,
+                    data={"error": f"HTTP {res.status_code} for {endpoint}"},
+                    status_code=res.status_code,
+                )
+
+            try:
+                payload = res.json() if res.content else None
+            except ValueError as e:
+                if raise_on_error:
+                    raise NhlApiError(f"Invalid JSON from {url}", status_code=res.status_code, url=url) from e
+                return APIResponse(ok=False, data={"error": "Invalid JSON"}, status_code=res.status_code)
+
             self.logger.info(f"{res.status_code} {endpoint} | {elapsed:.1f}ms")
             return APIResponse(ok=True, data=payload, status_code=res.status_code)
 
-        # Error path
-        if raise_on_error:
-            self.logger.warning(f"{res.status_code} {endpoint} | {elapsed:.1f}ms | raise={raise_on_error}")
-            self._raise_for_status(res, endpoint=endpoint, url=url, payload=payload)
+        # Should be unreachable — loop always returns or raises
+        raise NhlApiError(f"Exhausted retries for {url}", status_code=None, url=url)  # pragma: no cover
 
-        # If not raising, return failure response
-        self.logger.warning(f"{res.status_code} {endpoint} | {elapsed:.1f}ms | detail={payload}")
-        return APIResponse(
-            ok=False,
-            data={
-                "error": f"HTTP {res.status_code} for {endpoint}",
-                "detail": payload,
-            },
-            status_code=res.status_code,
-        )   
+    def _retry_wait(self, res: requests.Response, attempt: int) -> float:
+        retry_after = res.headers.get("Retry-After")
+        if retry_after:
+            try:
+                return float(retry_after)
+            except ValueError:
+                pass
+        return float(2 ** attempt)  # 1s, 2s, 4s
 
     def _raise_for_status(self, res: requests.Response, *, endpoint: str, url: str, payload: object) -> None:
         status = res.status_code

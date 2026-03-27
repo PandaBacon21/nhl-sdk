@@ -5,7 +5,6 @@ PLAYER CLASS
 from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
-from datetime import datetime
 
 from ....core.utilities import _check_cache
 from .profile import Profile
@@ -44,13 +43,11 @@ class Player:
         self._logger = logging.getLogger("nhl_sdk.player")
         self._pid: int = player_id
         self._landing_key: str = f"player:{self._pid}:landing"
-        self._cache_ttl: int = 60 * 60 * 6
+        self._ttl: int = 60 * 60 * 6
 
+        self._pos: str = "S"
         self._profile: Profile | None = None
         self._stats: PlayerStats | None = None
-        self._version: dict[str, datetime] = {}
-
-        self._logger.info(f"Player object - pid: {self._pid} initialized")
 
     def __repr__(self):
         """
@@ -74,17 +71,19 @@ class Player:
         """
         cached = _check_cache(self._cache, self._landing_key)
         if cached is not None:
-            self._logger.info(f"{self._landing_key}: Cache Hit")
+            self._logger.debug(f"{self._landing_key}: Cache Hit")
+            self._pos = "G" if cached.data.get("position") == "G" else "S"
             return cached
         self._logger.debug(f"{self._landing_key}: Cache Miss")
 
         res = self._api_web.call_nhl_players.get_player_landing(pid=self._pid)
 
-        if not res.ok == True:
+        if not res.ok:
             self._logger.warning(f"Player pid {self._pid} failed to fetch player landing")
             raise RuntimeError(res.data["error"] or f"Failed to fetch player landing: {self._pid}")
-        cache_item = self._cache.set(self._landing_key, res.data, ttl=self._cache_ttl)
-        self._logger.info(f"{self._landing_key}: Cached | ttl: {self._cache_ttl}")
+        self._pos = "G" if res.data.get("position") == "G" else "S"
+        cache_item = self._cache.set(key=self._landing_key, data=res.data, ttl=self._ttl)
+        self._logger.debug(f"{self._landing_key}: Cached | ttl: {self._ttl}")
         return cache_item
 
     def _clear(self) -> None:
@@ -131,17 +130,7 @@ class Player:
                 self._logger.info(f"{self._landing_key}: Cache Hit")
                 return self._stats
         data = self._get_player_landing()
-        self._stats = PlayerStats(pid=self._pid, data=data.data, client=self._client)
+        self._stats = PlayerStats(pos=self._pos, pid=self._pid, data=data.data, client=self._client)
         self._logger.debug(f"{self._pid} stats retrieved")
         return self._stats
 
-    def refresh(self) -> None:
-        """
-        Refresh player data from the NHL API.
-
-        Clears any cached data and immediately re-fetches the
-        latest player information.
-        """
-        self._clear()
-        self._logger.info(f"Refreshing data for Player {self._pid}")
-        self._get_player_landing()

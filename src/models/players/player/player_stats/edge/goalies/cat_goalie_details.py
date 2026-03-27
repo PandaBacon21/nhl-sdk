@@ -17,7 +17,7 @@ class CatGoalieDetails:
     GAA, games above .900, goal differential per 60, goal support average,
     point percentage, and shot location breakdowns.
 
-    Instances of this class are accessed via `Stats.edge.goalie.cat_details()`.
+    Instances of this class are accessed via `Stats.edge().cat_details()`.
     """
     player: CatGoaliePlayerSummary
     seasons_with_edge: list

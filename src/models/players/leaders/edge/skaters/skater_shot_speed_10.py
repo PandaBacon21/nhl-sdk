@@ -4,7 +4,7 @@ SKATER SHOT SPEED TOP 10 MODEL
 from __future__ import annotations
 from dataclasses import dataclass
 
-from ..player_edge_types import LeaderPlayer, EdgePeak
+from ....player.player_stats.edge.player_edge_types import LeaderPlayer, EdgePeak
 
 
 @dataclass(slots=True, frozen=True)

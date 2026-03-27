@@ -97,7 +97,7 @@ class SkatingDistance:
     Provides last 10 games of skating distance broken down by strength situation,
     plus season totals and peaks for all/even/power-play/penalty-kill situations.
 
-    Instances of this class are accessed via `Stats.edge.skater.skating_distance()`.
+    Instances of this class are accessed via `Stats.edge().skating_distance()`.
     """
     last_10_games: list
     distance_by_strength: list

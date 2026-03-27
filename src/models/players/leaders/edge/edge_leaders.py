@@ -8,8 +8,15 @@ from typing import Optional, TYPE_CHECKING
 
 from .....core.cache import get_cache
 from .....core.utilities import _check_cache
-from .skater_landing import SkaterLanding
-from .goalie_landing import GoalieLanding
+from .skaters.skater_landing import SkaterLanding
+from .goalies.goalie_landing import GoalieLanding
+from .skaters import (
+    SkaterDistanceTop10,
+    SkaterSpeedTop10,
+    SkaterZoneTimeTop10,
+    SkaterShotSpeedTop10,
+    SkaterShotLocationTop10,
+)
 
 if TYPE_CHECKING:
     from nhl_stats.src.client import NhlClient
@@ -72,59 +79,90 @@ class SkaterEdgeLeaders(EdgeLeaders):
         )
 
     def distance_top_10(self, pos: str, strength: str, sort: str,
-                        season: Optional[int] = None, game_type: Optional[int] = None) -> list:
+                        season: Optional[int] = None, game_type: Optional[int] = None) -> SkaterDistanceTop10:
         """Retrieve top 10 skaters by skating distance."""
         key = self._cache_key("distance_10", season, game_type, pos, strength, sort)
-        return self._fetch(
-            key,
-            lambda: self._client._api.api_web.call_nhl_edge_skaters.get_skater_distance_10(
-                pos=pos, strength=strength, sort=sort, season=season, game_type=game_type,
-            ),
+        cached = _check_cache(cache=self._cache, cache_key=key)
+        if cached is not None:
+            self._logger.debug(f"{key}: Cache Hit")
+            return cached.data
+        self._logger.debug(f"{key}: Cache Miss")
+        res = self._client._api.api_web.call_nhl_edge_skaters.get_skater_distance_10(
+            pos=pos, strength=strength, sort=sort, season=season, game_type=game_type,
         )
+        result = SkaterDistanceTop10.from_list(res.data or [])
+        self._cache.set(key=key, data=result, ttl=self._ttl)
+        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
+        return result
 
     def speed_top_10(self, pos: str, sort: str,
-                     season: Optional[int] = None, game_type: Optional[int] = None) -> list:
+                     season: Optional[int] = None, game_type: Optional[int] = None) -> SkaterSpeedTop10:
         """Retrieve top 10 fastest skaters."""
         key = self._cache_key("speed_10", season, game_type, pos, sort)
-        return self._fetch(
-            key,
-            lambda: self._client._api.api_web.call_nhl_edge_skaters.get_skating_speed_10(
-                pos=pos, sort=sort, season=season, game_type=game_type,
-            ),
+        cached = _check_cache(cache=self._cache, cache_key=key)
+        if cached is not None:
+            self._logger.debug(f"{key}: Cache Hit")
+            return cached.data
+        self._logger.debug(f"{key}: Cache Miss")
+        res = self._client._api.api_web.call_nhl_edge_skaters.get_skating_speed_10(
+            pos=pos, sort=sort, season=season, game_type=game_type,
         )
+        result = SkaterSpeedTop10.from_list(res.data or [])
+        self._cache.set(key=key, data=result, ttl=self._ttl)
+        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
+        return result
 
     def zone_time_top_10(self, pos: str, strength: str, sort: str,
-                         season: Optional[int] = None, game_type: Optional[int] = None) -> list:
+                         season: Optional[int] = None, game_type: Optional[int] = None) -> SkaterZoneTimeTop10:
         """Retrieve top 10 skaters by zone time."""
         key = self._cache_key("zone_time_10", season, game_type, pos, strength, sort)
-        return self._fetch(
-            key,
-            lambda: self._client._api.api_web.call_nhl_edge_skaters.get_skater_zone_time_10(
-                pos=pos, strength=strength, sort=sort, season=season, game_type=game_type,
-            ),
+        cached = _check_cache(cache=self._cache, cache_key=key)
+        if cached is not None:
+            self._logger.debug(f"{key}: Cache Hit")
+            return cached.data
+        self._logger.debug(f"{key}: Cache Miss")
+        res = self._client._api.api_web.call_nhl_edge_skaters.get_skater_zone_time_10(
+            pos=pos, strength=strength, sort=sort, season=season, game_type=game_type,
         )
+        result = SkaterZoneTimeTop10.from_list(res.data or [])
+        self._cache.set(key=key, data=result, ttl=self._ttl)
+        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
+        return result
 
     def shot_speed_top_10(self, pos: str, sort: str,
-                          season: Optional[int] = None, game_type: Optional[int] = None) -> list:
+                          season: Optional[int] = None, game_type: Optional[int] = None) -> SkaterShotSpeedTop10:
         """Retrieve top 10 skaters by shot speed."""
         key = self._cache_key("shot_speed_10", season, game_type, pos, sort)
-        return self._fetch(
-            key,
-            lambda: self._client._api.api_web.call_nhl_edge_skaters.get_skater_shot_speed_10(
-                pos=pos, sort=sort, season=season, game_type=game_type,
-            ),
+        cached = _check_cache(cache=self._cache, cache_key=key)
+        if cached is not None:
+            self._logger.debug(f"{key}: Cache Hit")
+            return cached.data
+        self._logger.debug(f"{key}: Cache Miss")
+        res = self._client._api.api_web.call_nhl_edge_skaters.get_skater_shot_speed_10(
+            pos=pos, sort=sort, season=season, game_type=game_type,
         )
+        result = SkaterShotSpeedTop10.from_list(res.data or [])
+        self._cache.set(key=key, data=result, ttl=self._ttl)
+        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
+        return result
 
     def shot_location_top_10(self, category: str, sort: str,
-                             season: Optional[int] = None, game_type: Optional[int] = None) -> list:
+                             season: Optional[int] = None, game_type: Optional[int] = None) -> SkaterShotLocationTop10:
         """Retrieve top 10 skaters by shot location."""
         key = self._cache_key("shot_location_10", season, game_type, category, sort)
-        return self._fetch(
-            key,
-            lambda: self._client._api.api_web.call_nhl_edge_skaters.get_skater_shot_location_10(
-                category=category, sort=sort, season=season, game_type=game_type,
-            ),
+        cached = _check_cache(cache=self._cache, cache_key=key)
+        if cached is not None:
+            self._logger.debug(f"{key}: Cache Hit")
+            return cached.data
+        self._logger.debug(f"{key}: Cache Miss")
+        res = self._client._api.api_web.call_nhl_edge_skaters.get_skater_shot_location_10(
+            category=category, sort=sort, season=season, game_type=game_type,
         )
+        result = SkaterShotLocationTop10.from_list(res.data or [])
+        self._cache.set(key=key, data=result, ttl=self._ttl)
+        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
+        return result
+
 
 
 class GoalieEdgeLeaders(EdgeLeaders):

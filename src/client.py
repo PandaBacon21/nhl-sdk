@@ -32,7 +32,7 @@ class NhlClient:
 
 
         # Log Client Creation
-        self._logger.info(f"NHL Client initialized")
+        self._logger.debug(f"NHL Client initialized")
         self._logger.debug(f"Config - Log Name: {self._config.log_name} | Log Level: {self._config.log_level} | \
                            Log File: {self._config.log_file} | Lang: {self._config.lang} | Cache: {self._config.cache!r}")
 

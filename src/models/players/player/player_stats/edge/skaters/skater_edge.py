@@ -3,7 +3,7 @@ SKATER EDGE STATS
 """
 from __future__ import annotations
 import logging
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from .skater_details import SkaterDetails
 from .skater_comparison import SkaterComparison
@@ -28,7 +28,7 @@ class SkaterEdge:
     including details, comparison, skating distance/speed,
     zone time, shot speed/location, and CAT details.
 
-    Instances of this class are accessed via `Stats.edge.skater`.
+    Instances of this class are accessed via `Stats.edge()`.
     """
     def __init__(self, pid: int, client: NhlClient):
         self._pid = pid
@@ -58,7 +58,7 @@ class SkaterEdge:
         self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
         return result
 
-    def details(self, season: Optional[int] = None, game_type: Optional[int] = None) -> SkaterDetails:
+    def details(self, season: int | None = None, game_type: int | None = None) -> SkaterDetails:
         """Retrieve NHL Edge ranking and stat summaries for the skater."""
         return self._fetch(
             "details",
@@ -66,7 +66,7 @@ class SkaterEdge:
             SkaterDetails, season, game_type,
         )
 
-    def comparison(self, season: Optional[int] = None, game_type: Optional[int] = None) -> SkaterComparison:
+    def comparison(self, season: int | None = None, game_type: int | None = None) -> SkaterComparison:
         """Retrieve NHL Edge drill-down comparison data for the skater."""
         return self._fetch(
             "comparison",
@@ -74,7 +74,7 @@ class SkaterEdge:
             SkaterComparison, season, game_type,
         )
 
-    def skating_distance(self, season: Optional[int] = None, game_type: Optional[int] = None) -> SkatingDistance:
+    def skating_distance(self, season: int | None = None, game_type: int | None = None) -> SkatingDistance:
         """Retrieve skating distance detail for the skater."""
         return self._fetch(
             "skating_distance",
@@ -82,7 +82,7 @@ class SkaterEdge:
             SkatingDistance, season, game_type,
         )
 
-    def skating_speed(self, season: Optional[int] = None, game_type: Optional[int] = None) -> SkatingSpeed:
+    def skating_speed(self, season: int | None = None, game_type: int | None = None) -> SkatingSpeed:
         """Retrieve skating speed detail for the skater."""
         return self._fetch(
             "skating_speed",
@@ -90,7 +90,7 @@ class SkaterEdge:
             SkatingSpeed, season, game_type,
         )
 
-    def zone_time(self, season: Optional[int] = None, game_type: Optional[int] = None) -> ZoneTime:
+    def zone_time(self, season: int | None = None, game_type: int | None = None) -> ZoneTime:
         """Retrieve zone time detail for the skater."""
         return self._fetch(
             "zone_time",
@@ -98,7 +98,7 @@ class SkaterEdge:
             ZoneTime, season, game_type,
         )
 
-    def shot_speed(self, season: Optional[int] = None, game_type: Optional[int] = None) -> ShotSpeed:
+    def shot_speed(self, season: int | None = None, game_type: int | None = None) -> ShotSpeed:
         """Retrieve shot speed detail for the skater."""
         return self._fetch(
             "shot_speed",
@@ -106,7 +106,7 @@ class SkaterEdge:
             ShotSpeed, season, game_type,
         )
 
-    def shot_location(self, season: Optional[int] = None, game_type: Optional[int] = None) -> ShotLocation:
+    def shot_location(self, season: int | None = None, game_type: int | None = None) -> ShotLocation:
         """Retrieve shot location detail for the skater."""
         return self._fetch(
             "shot_location",
@@ -114,7 +114,7 @@ class SkaterEdge:
             ShotLocation, season, game_type,
         )
 
-    def cat_details(self, season: Optional[int] = None, game_type: Optional[int] = None) -> CatSkaterDetails:
+    def cat_details(self, season: int | None = None, game_type: int | None = None) -> CatSkaterDetails:
         """Retrieve CAT endpoint NHL Edge details for the skater."""
         return self._fetch(
             "cat_details",

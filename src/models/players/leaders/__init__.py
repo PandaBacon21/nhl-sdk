@@ -1,4 +1,4 @@
 from .leaders import Leaders
-from .player_leaders import GoalieLeaders, SkaterLeaders
+from .player_leaders import GoalieLeaders, SkaterLeaders, GoalieStatLeaders, SkaterStatLeaders
 
-__all__ = ["Leaders", "SkaterLeaders", "GoalieLeaders"]
+__all__ = ["Leaders", "SkaterLeaders", "GoalieLeaders", "SkaterStatLeaders", "GoalieStatLeaders"]

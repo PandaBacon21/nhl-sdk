@@ -1,5 +1,6 @@
+from unittest.mock import MagicMock
 from src.models.players.leaders.leaders_team import LeadersTeam
-from src.models.players.leaders.player_leaders import LeaderPlayer
+from src.models.players.leaders.player_leaders import LeaderPlayer, GoalieStatLeaders, SkaterStatLeaders
 from src.models.players.spotlight import Spotlight
 
 
@@ -137,3 +138,91 @@ def test_spotlight_to_dict_name_uses_str() -> None:
     spotlight = Spotlight.from_dict({})
     d = spotlight.to_dict()
     assert d["name"] == ""
+
+
+# ==========================================================================
+# GOALIE LEADERS
+# ==========================================================================
+
+GOALIE_LEADER_ENTRY = {
+    "value": 30,
+    "id": "8478048",
+    "firstName": {"default": "Andrei"},
+    "lastName": {"default": "Vasilevskiy"},
+    "sweaterNumber": 88,
+    "position": "G",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20232024/TBL/8478048.png",
+    "teamName": {"default": "Tampa Bay Lightning"},
+    "teamAbbrev": "TBL",
+    "teamLogo": "https://assets.nhle.com/logos/nhl/svg/TBL_light.svg",
+}
+
+def test_goalie_stat_leaders_from_dict() -> None:
+    data = {
+        "wins": [GOALIE_LEADER_ENTRY],
+        "shutouts": [GOALIE_LEADER_ENTRY],
+        "savePctg": [GOALIE_LEADER_ENTRY],
+        "goalsAgainstAverage": [GOALIE_LEADER_ENTRY],
+    }
+    leaders = GoalieStatLeaders(data=data)
+    assert len(leaders.wins) == 1
+    assert leaders.wins[0].last_name.default == "Vasilevskiy"
+    assert len(leaders.shutouts) == 1
+    assert len(leaders.save_pctg) == 1
+    assert len(leaders.goals_against_avg) == 1
+
+def test_goalie_stat_leaders_empty() -> None:
+    leaders = GoalieStatLeaders(data={})
+    assert leaders.wins == []
+    assert leaders.shutouts == []
+    assert leaders.save_pctg == []
+    assert leaders.goals_against_avg == []
+
+
+# ==========================================================================
+# SKATER LEADERS
+# ==========================================================================
+
+SKATER_LEADER_ENTRY = {
+    "value": 64,
+    "id": "8478402",
+    "firstName": {"default": "Connor"},
+    "lastName": {"default": "McDavid"},
+    "sweaterNumber": 97,
+    "position": "C",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20232024/EDM/8478402.png",
+    "teamName": {"default": "Edmonton Oilers"},
+    "teamAbbrev": "EDM",
+    "teamLogo": "https://assets.nhle.com/logos/nhl/svg/EDM_light.svg",
+}
+
+def test_skater_stat_leaders_from_dict() -> None:
+    data = {
+        "goals": [SKATER_LEADER_ENTRY],
+        "goalsSh": [SKATER_LEADER_ENTRY],
+        "goalsPp": [SKATER_LEADER_ENTRY],
+        "assists": [SKATER_LEADER_ENTRY],
+        "points": [SKATER_LEADER_ENTRY],
+        "plusMinus": [SKATER_LEADER_ENTRY],
+        "penaltyMins": [SKATER_LEADER_ENTRY],
+        "faceoffLeaders": [SKATER_LEADER_ENTRY],
+        "toi": [SKATER_LEADER_ENTRY],
+    }
+    leaders = SkaterStatLeaders(data=data)
+    assert len(leaders.goals) == 1
+    assert leaders.goals[0].last_name.default == "McDavid"
+    assert len(leaders.assists) == 1
+    assert len(leaders.points) == 1
+    assert len(leaders.goals_sh) == 1
+    assert len(leaders.goals_pp) == 1
+    assert len(leaders.plus_minus) == 1
+    assert len(leaders.penalty_min) == 1
+    assert len(leaders.faceoff_leaders) == 1
+    assert len(leaders.toi) == 1
+
+def test_skater_stat_leaders_empty() -> None:
+    leaders = SkaterStatLeaders(data={})
+    assert leaders.goals == []
+    assert leaders.assists == []
+    assert leaders.points == []
+    assert leaders.toi == []

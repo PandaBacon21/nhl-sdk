@@ -155,7 +155,7 @@ class SkaterDetails:
     Provides a full per-category summary including shot speed, skating speed,
     distance skated, shot on goal details, and zone time percentages.
 
-    Instances of this class are accessed via `Stats.edge.skater.details()`.
+    Instances of this class are accessed via `Stats.edge().details()`.
     """
     seasons_with_edge: list
     top_shot_speed: EdgeMeasurement

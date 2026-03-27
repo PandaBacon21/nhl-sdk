@@ -88,7 +88,7 @@ class ShotSpeed:
     Provides the player's hardest shot instances across the season,
     plus a season summary including top/average speed rankings and shot attempt bucket counts.
 
-    Instances of this class are accessed via `Stats.edge.skater.shot_speed()`.
+    Instances of this class are accessed via `Stats.edge().shot_speed()`.
     """
     hardest_shots: list
     speed_summary: ShotSpeedSummary

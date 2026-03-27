@@ -71,7 +71,7 @@ class GoalieSavePctg:
     totals for save percentage, games above .900, percentage of games above .900,
     point percentage, and goals against average.
 
-    Instances of this class are accessed via `Stats.edge.goalie.save_pctg()`.
+    Instances of this class are accessed via `Stats.edge().save_pctg()`.
     """
     seasons_with_edge: list
     last_10_games: list

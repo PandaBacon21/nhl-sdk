@@ -76,7 +76,7 @@ class GoalieComparison:
     percentage (last 10 games and season summary), and overall save percentage
     (last 10 games and season summary).
 
-    Instances of this class are accessed via `Stats.edge.goalie.comparison()`.
+    Instances of this class are accessed via `Stats.edge().comparison()`.
     """
     seasons_with_edge: list
     shot_location_summary: list

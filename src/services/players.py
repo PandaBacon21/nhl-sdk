@@ -27,9 +27,7 @@ class Players:
         self._cache = get_cache()
         self._logger = logging.getLogger("nhl_sdk.players")
         self._ttl: int = 60 * 60 * 6
-        self._spotlight_key: str = f"players:spotlight"
-
-        self._logger.info(f"Players object initialized")
+        self._spotlight_key: str = "players:spotlight"
 
     def get(self, pid: int) -> Player: 
         """
@@ -61,10 +59,11 @@ class Players:
         return spotlight
     
     @property
-    def leaders(self) -> Leaders: 
+    def leaders(self) -> Leaders:
         """
         Return leaders of various statistics for skaters and goalies
         """
         self._logger.debug(f"Retrieve Players Leaders")
         return Leaders(self._client)
+
 

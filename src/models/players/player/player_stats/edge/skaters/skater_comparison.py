@@ -242,7 +242,7 @@ class SkaterComparison:
     skating distance, season distance details, shot location data,
     and zone time/starts.
 
-    Instances of this class are accessed via `Stats.edge.skater.comparison()`.
+    Instances of this class are accessed via `Stats.edge().comparison()`.
     """
     seasons_with_edge: list
     shot_speed: ShotSpeedDetails

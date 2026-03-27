@@ -4,7 +4,7 @@ GOALIE EDGE LANDING MODEL
 from __future__ import annotations
 from dataclasses import dataclass
 
-from ...player.player_stats.edge.player_edge_types import EdgeSeason, LeaderPlayer
+from ....player.player_stats.edge.player_edge_types import EdgeSeason, LeaderPlayer
 
 
 @dataclass(slots=True, frozen=True)
@@ -44,7 +44,7 @@ class GoalieHighDangerSavePctgLeader:
     """Leader entry for high danger save percentage."""
     player: LeaderPlayer
     save_pctg: float | None
-    shot_location_details: list
+    shot_location_details: list[GoalieSavePctgAreaDetail]
 
     @classmethod
     def from_dict(cls, data: dict) -> GoalieHighDangerSavePctgLeader:
@@ -60,7 +60,7 @@ class GoalieHighDangerSavesLeader:
     """Leader entry for total high danger saves."""
     player: LeaderPlayer
     saves: int | None
-    shot_location_details: list
+    shot_location_details: list[GoalieSavesAreaDetail]
 
     @classmethod
     def from_dict(cls, data: dict) -> GoalieHighDangerSavesLeader:
@@ -122,7 +122,7 @@ class GoalieLandingLeaders:
 @dataclass(slots=True, frozen=True)
 class GoalieLanding:
     """Top-level model for the goalie Edge landing page response."""
-    seasons_with_edge: list
+    seasons_with_edge: list[EdgeSeason]
     minimum_games_played: int | None
     leaders: GoalieLandingLeaders
 

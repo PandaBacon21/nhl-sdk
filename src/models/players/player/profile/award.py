@@ -9,7 +9,7 @@ from .....core.utilities import LocalizedString
 @dataclass(slots=True, frozen=True)
 class Award: 
     trophy: LocalizedString
-    seasons: list 
+    seasons: list[int]
 
 
     @classmethod

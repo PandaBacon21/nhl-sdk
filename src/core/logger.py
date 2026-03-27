@@ -30,7 +30,7 @@ class NhlLogger:
         handler.setFormatter(formatter)
         if not self.logger.handlers:
             self.logger.addHandler(handler)
-        self.logger.info(f"Logger: '{self.logger.name}' created. Log Level: {log_level}")
+        self.logger.debug(f"Logger: '{self.logger.name}' created. Log Level: {log_level}")
 
     def info(self, msg):
         self.logger.info(msg)

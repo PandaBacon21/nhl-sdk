@@ -30,7 +30,7 @@ from nhl_stats.src.client import NhlClient
 
 client = NhlClient()
 
-# Get a player
+# --- Players ---
 player = client.players.get(8477492)  # Nathan MacKinnon
 
 # Profile
@@ -39,7 +39,6 @@ print(player.profile.position)
 
 # Stats
 print(player.stats.career)
-print(player.stats.featured)
 print(player.stats.seasons)
 print(player.stats.last_5_games)
 
@@ -49,10 +48,31 @@ logs = player.stats.game_log()
 # Game log (specific season + game type)
 logs = player.stats.game_log(season=20232024, game_type=2)
 
-# Edge stats (skaters)
-details  = player.stats.edge.skater.details()
-speed    = player.stats.edge.skater.skating_speed()
-distance = player.stats.edge.skater.skating_distance()
+# NHL Edge — position-aware (returns SkaterEdge or GoalieEdge automatically)
+details = player.stats.edge().details()
+speed   = player.stats.edge().skating_speed()
+
+# Spotlight + leaders
+spotlight = client.players.spotlight
+leaders   = client.players.leaders
+skater_leaders = leaders.skaters(categories="goals", limit=10)
+
+# --- Teams ---
+# Standings
+standings = client.teams.standings.get_standings()
+standings_by_date = client.teams.standings.get_standings(date="2025-01-15")
+
+# Stats
+team_stats = client.teams.stats.get_team_stats("COL")
+scoreboard = client.teams.stats.get_team_scoreboard("COL")
+
+# Roster
+roster = client.teams.roster.get_team_roster("COL")
+
+# Schedule
+schedule      = client.teams.schedule.get_schedule("COL")
+month_sched   = client.teams.schedule.get_schedule_month("COL", month="2025-01")
+week_sched    = client.teams.schedule.get_schedule_week("COL", week="2025-01-06")
 ```
 
 ---
@@ -67,23 +87,13 @@ from nhl_stats.src.client import NhlClient
 client = NhlClient(
     log_name="my_app",        # logger name              (default: "nhl_sdk")
     log_level="INFO",         # DEBUG|INFO|WARNING|ERROR  (default: "DEBUG")
-    log_file="/tmp/nhl.log",  # log file path; None = stdout only
+    log_file="/tmp/nhl.log",  # log file path; None = stdout only (default: None)
     lang="en",                # response language         (default: "en")
     cache=my_cache,           # custom BaseCache impl     (default: MemCache)
 )
 ```
 
-### Log File Default
-
-By default, logs are written to the platform-appropriate directory resolved by [`platformdirs`](https://github.com/platformdirs/platformdirs):
-
-| Platform | Default Path                          |
-| -------- | ------------------------------------- |
-| macOS    | `~/Library/Logs/nhl_sdk/nhl.log`      |
-| Linux    | `~/.cache/nhl_sdk/log/nhl.log`        |
-| Windows  | `%LOCALAPPDATA%\nhl_sdk\Logs\nhl.log` |
-
-Set `log_file=None` to write to stdout only.
+By default, logs are written to stdout only (`log_file=None`). Pass any file path string to write to a file instead.
 
 ### Custom Config Object
 
@@ -113,67 +123,15 @@ class MyCache(BaseCache):
 
 ## API Reference
 
-### `client.players`
-
-| Method / Property | Returns           | Description                               |
-| ----------------- | ----------------- | ----------------------------------------- |
-| `.get(pid)`       | `Player`          | Player object for the given NHL player ID |
-| `.spotlight`      | `list[Spotlight]` | Currently spotlighted players             |
-| `.leaders`        | `Leaders`         | Stat leaders for skaters and goalies      |
-
----
-
-### `Player`
-
-| Property / Method | Returns   | Description                                                    |
-| ----------------- | --------- | -------------------------------------------------------------- |
-| `.profile`        | `Profile` | Biographical info (name, position, birth, draft, awards, etc.) |
-| `.stats`          | `Stats`   | Statistical data                                               |
-| `.refresh()`      | `None`    | Clears cache and re-fetches latest data                        |
-
----
-
-### `Player.stats`
-
-| Attribute / Method             | Returns              | Description                       |
-| ------------------------------ | -------------------- | --------------------------------- |
-| `.featured`                    | `Featured`           | Current season featured stats     |
-| `.career`                      | `Career`             | Career totals                     |
-| `.seasons`                     | `list[Season]`       | Per-season stat totals            |
-| `.last_5_games`                | `list[FeaturedGame]` | Most recent 5 games               |
-| `.game_log(season, game_type)` | `GameLogs`           | Full game log for a season        |
-| `.edge`                        | `EdgeStats`          | NHL Edge tracking stats container |
-
----
-
-### `Player.stats.edge`
-
-| Sub-resource | Status      | Description                |
-| ------------ | ----------- | -------------------------- |
-| `.skater`    | Implemented | Skater-specific Edge stats |
-| `.goalie`    | Coming soon | —                          |
-| `.team`      | Coming soon | —                          |
-
-#### `edge.skater` methods
-
-All methods accept optional `season` and `game_type` parameters. Results are cached (1hr TTL).
-
-| Method                | Description                   |
-| --------------------- | ----------------------------- |
-| `.details()`          | Full skater Edge detail stats |
-| `.comparison()`       | Skater comparison stats       |
-| `.skating_distance()` | Skating distance metrics      |
-| `.skating_speed()`    | Skating speed metrics         |
-| `.zone_time()`        | Zone time breakdown           |
-| `.shot_speed()`       | Shot speed data               |
-| `.shot_location()`    | Shot location data            |
-| `.cat_details()`      | Category-based skater details |
+Full method and property documentation is in [docs/api-reference.md](docs/api-reference.md).
 
 ---
 
 ## Error Handling
 
-The NHL API is public and requires no authentication. As this is an unofficial SDK against an undocumented API, there is no guarantee that endpoints or response structures won't change, and unexpected errors outside those listed below may occur. Errors you may encounter:
+The NHL API is public and requires no authentication. As this is an unofficial SDK against an undocumented API, there is no guarantee that endpoints or response structures won't change, and unexpected errors outside those listed below may occur.
+
+On HTTP 429, the SDK automatically retries up to 3 times with backoff (respecting the `Retry-After` header when present) before raising `RateLimitError`.
 
 ```python
 from nhl_stats.src.core.errors import NotFoundError, RateLimitError, NhlApiError
@@ -184,7 +142,7 @@ try:
 except NotFoundError as e:
     print(f"Player not found: {e} (status {e.status_code})")
 except RateLimitError:
-    print("Rate limited")
+    print("Rate limited — retries exhausted")
 except NhlApiError as e:
     print(f"API error: {e}")
 ```
@@ -205,9 +163,9 @@ except NhlApiError as e:
 - [x] Player spotlight
 - [x] Stat leaders (skaters + goalies)
 - [x] NHL Edge — skater stats
-- [ ] NHL Edge — goalie stats
+- [x] NHL Edge — goalie stats
+- [x] Teams namespace (standings, stats, roster, schedule)
 - [ ] NHL Edge — team stats
-- [ ] Teams namespace
 - [ ] League / schedule / standings
 
 ---

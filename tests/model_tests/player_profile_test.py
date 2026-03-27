@@ -1,6 +1,4 @@
-from src.models.players.player.profile.height import Height
-from src.models.players.player.profile.weight import Weight
-from src.models.players.player.profile.birth_details import BirthDetails
+from src.core.utilities import BirthDetails, LocalizedString
 from src.models.players.player.profile.draft import Draft
 from src.models.players.player.profile.media import Media
 from src.models.players.player.profile.profile_team import ProfileTeam
@@ -11,33 +9,47 @@ from src.models.players.player.profile.profile import Profile
 
 
 # ==========================================================================
-# HEIGHT
+# LOCALIZED STRING
 # ==========================================================================
 
-def test_height_from_dict() -> None:
-    h = Height.from_dict({"heightInInches": 73, "heightInCentimeters": 185})
-    assert h.height_in == 73
-    assert h.height_cm == 185
+def test_localized_string_repr() -> None:
+    ls = LocalizedString({"default": "Nathan"})
+    assert repr(ls) == "LocalizedString(default='Nathan')"
 
-def test_height_empty() -> None:
-    h = Height.from_dict({})
-    assert h.height_in is None
-    assert h.height_cm is None
+def test_localized_string_repr_none() -> None:
+    ls = LocalizedString(None)
+    assert repr(ls) == "LocalizedString(default=None)"
 
+def test_localized_string_eq_str() -> None:
+    ls = LocalizedString({"default": "Nathan"})
+    assert ls == "Nathan"
+    assert ls != "Other"
 
-# ==========================================================================
-# WEIGHT
-# ==========================================================================
+def test_localized_string_eq_localized_string() -> None:
+    a = LocalizedString({"default": "Nathan"})
+    b = LocalizedString({"default": "Nathan"})
+    c = LocalizedString({"default": "Cale"})
+    assert a == b
+    assert a != c
 
-def test_weight_from_dict() -> None:
-    w = Weight.from_dict({"weightInPounds": 193, "weightInKilograms": 88})
-    assert w.weight_lbs == 193
-    assert w.weight_kg == 88
+def test_localized_string_eq_other_type() -> None:
+    ls = LocalizedString({"default": "Nathan"})
+    assert ls != 42
+    assert ls != None  # noqa: E711
 
-def test_weight_empty() -> None:
-    w = Weight.from_dict({})
-    assert w.weight_lbs is None
-    assert w.weight_kg is None
+def test_localized_string_get_locale_no_fallback() -> None:
+    ls = LocalizedString({"default": "Colorado", "fr": "du Colorado"})
+    assert ls.get_locale("fr") == "du Colorado"
+    assert ls.get_locale("es", fallback=False) is None
+    assert ls.get_locale("es", fallback=True) == "Colorado"
+
+def test_localized_string_locales_with_multiple() -> None:
+    ls = LocalizedString({"default": "Colorado", "fr": "du Colorado"})
+    assert ls.locales == {"fr"}
+
+def test_localized_string_locales_default_only() -> None:
+    ls = LocalizedString({"default": "Colorado"})
+    assert ls.locales == {"default"}
 
 
 # ==========================================================================
@@ -270,9 +282,10 @@ def test_profile_from_dict() -> None:
     assert profile.is_active is True
     assert profile.team.id == 22
     assert profile.team.code == "EDM"
-    assert profile.height.height_in == 73
-    assert profile.height.height_cm == 185
-    assert profile.weight.weight_lbs == 193
+    assert profile.height_in_inches == 73
+    assert profile.height_in_centimeters == 185
+    assert profile.weight_in_pounds == 193
+    assert profile.weight_in_kilograms == 88
     assert profile.birth_details.birth_date == "1997-01-13"
     assert profile.birth_details.country == "CAN"
     assert profile.draft.year == 2015

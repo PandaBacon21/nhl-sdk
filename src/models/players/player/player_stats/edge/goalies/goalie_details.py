@@ -164,7 +164,7 @@ class GoalieDetails:
     goal differential per 60, goal support average, point percentage,
     and shot location breakdowns with percentile rankings.
 
-    Instances of this class are accessed via `Stats.edge.goalie.details()`.
+    Instances of this class are accessed via `Stats.edge().details()`.
     """
     player: CatGoaliePlayerSummary
     seasons_with_edge: list

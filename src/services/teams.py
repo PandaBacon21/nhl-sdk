@@ -8,6 +8,8 @@ from typing import TYPE_CHECKING
 from ..core.cache import get_cache
 from ..models.teams.standings import Standings
 from ..models.teams.team.team_stats import TeamStats
+from ..models.teams.team.team_roster import TeamRoster
+from ..models.teams.team.team_schedule import TeamSchedule
 
 if TYPE_CHECKING:
     from nhl_stats.src.client import NhlClient
@@ -42,3 +44,23 @@ class Teams:
         stats, season/game-type metadata, and the current scoreboard.
         """
         return TeamStats(self._client)
+
+    @property
+    def roster(self) -> TeamRoster:
+        """
+        Access per-team roster data.
+
+        Returns a TeamRoster sub-resource with methods for the current/historical
+        roster, available roster seasons, and prospects.
+        """
+        return TeamRoster(self._client)
+
+    @property
+    def schedule(self) -> TeamSchedule:
+        """
+        Access per-team schedule data.
+
+        Returns a TeamSchedule sub-resource with methods for the current or
+        historical full-season schedule.
+        """
+        return TeamSchedule(self._client)

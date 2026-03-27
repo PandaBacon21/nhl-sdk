@@ -4,7 +4,7 @@ SKATER EDGE LANDING MODEL
 from __future__ import annotations
 from dataclasses import dataclass
 
-from ...player.player_stats.edge.player_edge_types import EdgeSeason, LeaderPlayer, EdgeValue, EdgeOverlay
+from ....player.player_stats.edge.player_edge_types import EdgeSeason, LeaderPlayer, EdgeValue, EdgeOverlay
 
 
 @dataclass(slots=True, frozen=True)
@@ -62,7 +62,7 @@ class SkaterSOGLeader:
     """Leader entry for high danger shots on goal."""
     player: LeaderPlayer
     sog: int | None
-    shot_location_details: list
+    shot_location_details: list[SogAreaDetail]
 
     @classmethod
     def from_dict(cls, data: dict) -> SkaterSOGLeader:
@@ -114,7 +114,7 @@ class SkaterLandingLeaders:
 @dataclass(slots=True, frozen=True)
 class SkaterLanding:
     """Top-level model for the skater Edge landing page response."""
-    seasons_with_edge: list
+    seasons_with_edge: list[EdgeSeason]
     leaders: SkaterLandingLeaders
 
     @classmethod

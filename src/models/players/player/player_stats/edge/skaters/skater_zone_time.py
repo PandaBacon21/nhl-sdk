@@ -89,7 +89,7 @@ class ZoneTime:
     Provides zone time percentages with percentile rankings for all/even/power-play/penalty-kill
     situations, plus zone start percentages.
 
-    Instances of this class are accessed via `Stats.edge.skater.zone_time()`.
+    Instances of this class are accessed via `Stats.edge().zone_time()`.
     """
     zone_time_by_strength: list
     zone_starts: ZoneStartsDetail

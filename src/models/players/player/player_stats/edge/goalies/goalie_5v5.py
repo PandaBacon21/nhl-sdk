@@ -43,7 +43,7 @@ class GoalieFiveVFive:
     summary of 5v5 save percentage, close-game save percentage, shots faced,
     and shots per 60 — each with percentile rankings and league averages.
 
-    Instances of this class are accessed via `Stats.edge.goalie.five_v_five()`.
+    Instances of this class are accessed via `Stats.edge().five_v_five()`.
     """
     seasons_with_edge: list
     last_10_games: list

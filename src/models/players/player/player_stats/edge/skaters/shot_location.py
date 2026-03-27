@@ -93,7 +93,7 @@ class ShotLocation:
     specific rink area and by location zone (all/high/long/mid), with
     percentile rankings and league averages.
 
-    Instances of this class are accessed via `Stats.edge.skater.shot_location()`.
+    Instances of this class are accessed via `Stats.edge().shot_location()`.
     """
     area_details: list
     zone_totals: list

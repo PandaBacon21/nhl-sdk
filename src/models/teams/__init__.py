@@ -1,5 +1,7 @@
 from .standings import Standings, StandingsResult, StandingEntry, StandingsTeam, StandingsRecord, SplitRecord, StandingsSequences
 from .team.team_stats import TeamStats, TeamStatsResult, TeamSkaterStat, TeamGoalieStat, TeamSeasonGameTypes, TeamScoreboard, ScoreboardGame, ScoreboardTeam, ScoreboardGamesByDate, ScoreboardTvBroadcast, ScoreboardPeriodDescriptor
+from .team.team_roster import TeamRoster, TeamRosterResult, RosterPlayer, ProspectsResult, Prospect
+from .team.team_schedule import TeamSchedule, TeamScheduleResult, TeamMonthScheduleResult, TeamWeekScheduleResult, ScheduleGame, ScheduleTeam, ScheduleTvBroadcast, SchedulePeriodDescriptor, ScheduleGameOutcome, ScheduleGoalPlayer
 
 __all__ = [
     "Standings",
@@ -20,4 +22,19 @@ __all__ = [
     "ScoreboardGamesByDate",
     "ScoreboardTvBroadcast",
     "ScoreboardPeriodDescriptor",
+    "TeamRoster",
+    "TeamRosterResult",
+    "RosterPlayer",
+    "ProspectsResult",
+    "Prospect",
+    "TeamSchedule",
+    "TeamScheduleResult",
+    "TeamMonthScheduleResult",
+    "TeamWeekScheduleResult",
+    "ScheduleGame",
+    "ScheduleTeam",
+    "ScheduleTvBroadcast",
+    "SchedulePeriodDescriptor",
+    "ScheduleGameOutcome",
+    "ScheduleGoalPlayer",
 ]

@@ -1,3 +1,4 @@
-from .player_edge_stats import EdgeStats
+from .skaters.skater_edge import SkaterEdge
+from .goalies.goalie_edge import GoalieEdge
 
-__all__ = ["EdgeStats"]
+__all__ = ["SkaterEdge", "GoalieEdge"]

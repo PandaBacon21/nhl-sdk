@@ -5,23 +5,23 @@ from src.models.players.player.player_stats.edge.skaters.skater_details import (
     ZoneTimeDetails,
     SkaterDetails,
 )
-from src.models.players.player.player_stats.edge.skaters.skater_distance_10 import (
+from src.models.players.leaders.edge.skaters.skater_distance_10 import (
     DistanceLeaderEntry,
     SkaterDistanceTop10,
 )
-from src.models.players.player.player_stats.edge.skaters.skater_speed_10 import (
+from src.models.players.leaders.edge.skaters.skater_speed_10 import (
     SpeedLeaderEntry,
     SkaterSpeedTop10,
 )
-from src.models.players.player.player_stats.edge.skaters.skater_zone_time_10 import (
+from src.models.players.leaders.edge.skaters.skater_zone_time_10 import (
     ZoneTimeLeaderEntry,
     SkaterZoneTimeTop10,
 )
-from src.models.players.player.player_stats.edge.skaters.skater_shot_speed_10 import (
+from src.models.players.leaders.edge.skaters.skater_shot_speed_10 import (
     ShotSpeedLeaderEntry,
     SkaterShotSpeedTop10,
 )
-from src.models.players.player.player_stats.edge.skaters.skater_shot_location_10 import (
+from src.models.players.leaders.edge.skaters.skater_shot_location_10 import (
     ShotLocationLeaderEntry,
     SkaterShotLocationTop10,
 )

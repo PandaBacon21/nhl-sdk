@@ -71,7 +71,7 @@ class GoalieShotLocation:
     (shotLocationTotals — all/high/long/mid), with percentile rankings and
     league averages.
 
-    Instances of this class are accessed via `Stats.edge.goalie.shot_location()`.
+    Instances of this class are accessed via `Stats.edge().shot_location()`.
     """
     seasons_with_edge: list
     area_details: list

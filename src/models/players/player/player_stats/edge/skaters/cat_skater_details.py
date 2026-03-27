@@ -74,7 +74,7 @@ class CatSkaterDetails:
     top shot speed, skating speed, total distance skated, shot on goal
     details, and zone time percentages.
 
-    Instances of this class are accessed via `Stats.edge.skater.cat_details()`.
+    Instances of this class are accessed via `Stats.edge().cat_details()`.
     """
     player: CatPlayerSummary
     seasons_with_edge: list

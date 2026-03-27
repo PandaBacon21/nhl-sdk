@@ -3,7 +3,7 @@ GOALIE EDGE STATS
 """
 from __future__ import annotations
 import logging
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from .goalie_details import GoalieDetails
 from .goalie_comparison import GoalieComparison
@@ -26,7 +26,7 @@ class GoalieEdge:
     including details, comparison, 5v5 save percentage, shot location,
     overall save percentage, and CAT details.
 
-    Instances of this class are accessed via `Stats.edge.goalie`.
+    Instances of this class are accessed via `Stats.edge()`.
     """
     def __init__(self, pid: int, client: NhlClient):
         self._pid = pid
@@ -56,7 +56,7 @@ class GoalieEdge:
         self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
         return result
 
-    def details(self, season: Optional[int] = None, game_type: Optional[int] = None) -> GoalieDetails:
+    def details(self, season: int | None = None, game_type: int | None = None) -> GoalieDetails:
         """Retrieve NHL Edge ranking and stat summaries for the goalie."""
         return self._fetch(
             "details",
@@ -64,7 +64,7 @@ class GoalieEdge:
             GoalieDetails, season, game_type,
         )
 
-    def comparison(self, season: Optional[int] = None, game_type: Optional[int] = None) -> GoalieComparison:
+    def comparison(self, season: int | None = None, game_type: int | None = None) -> GoalieComparison:
         """Retrieve NHL Edge drill-down comparison data for the goalie."""
         return self._fetch(
             "comparison",
@@ -72,7 +72,7 @@ class GoalieEdge:
             GoalieComparison, season, game_type,
         )
 
-    def five_v_five(self, season: Optional[int] = None, game_type: Optional[int] = None) -> GoalieFiveVFive:
+    def five_v_five(self, season: int | None = None, game_type: int | None = None) -> GoalieFiveVFive:
         """Retrieve 5v5 save percentage detail for the goalie."""
         return self._fetch(
             "five_v_five",
@@ -80,7 +80,7 @@ class GoalieEdge:
             GoalieFiveVFive, season, game_type,
         )
 
-    def shot_location(self, season: Optional[int] = None, game_type: Optional[int] = None) -> GoalieShotLocation:
+    def shot_location(self, season: int | None = None, game_type: int | None = None) -> GoalieShotLocation:
         """Retrieve shot location detail for the goalie."""
         return self._fetch(
             "shot_location",
@@ -88,7 +88,7 @@ class GoalieEdge:
             GoalieShotLocation, season, game_type,
         )
 
-    def save_pctg(self, season: Optional[int] = None, game_type: Optional[int] = None) -> GoalieSavePctg:
+    def save_pctg(self, season: int | None = None, game_type: int | None = None) -> GoalieSavePctg:
         """Retrieve overall save percentage detail for the goalie."""
         return self._fetch(
             "save_pctg",
@@ -96,7 +96,7 @@ class GoalieEdge:
             GoalieSavePctg, season, game_type,
         )
 
-    def cat_details(self, season: Optional[int] = None, game_type: Optional[int] = None) -> CatGoalieDetails:
+    def cat_details(self, season: int | None = None, game_type: int | None = None) -> CatGoalieDetails:
         """Retrieve CAT endpoint NHL Edge details for the goalie."""
         return self._fetch(
             "cat_details",

@@ -82,7 +82,7 @@ class SkatingSpeed:
     Provides the player's top speed instances across the season,
     plus a season summary including max speed ranking and burst counts.
 
-    Instances of this class are accessed via `Stats.edge.skater.skating_speed()`.
+    Instances of this class are accessed via `Stats.edge().skating_speed()`.
     """
     top_speeds: list
     speed_summary: SkatingSpeedSummary
