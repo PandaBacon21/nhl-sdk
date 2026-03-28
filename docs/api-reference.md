@@ -2,6 +2,87 @@
 
 ---
 
+## `NhlClient`
+
+The main entry point for the SDK. All kwargs are optional — defaults are used for any omitted values.
+
+```python
+from nhl_stats.src.client import NhlClient
+
+client = NhlClient()
+```
+
+### Constructor kwargs
+
+| Parameter            | Type         | Default      | Description                                              |
+| -------------------- | ------------ | ------------ | -------------------------------------------------------- |
+| `log_name`           | `str`        | `"nhl_sdk"`  | Logger name                                              |
+| `log_level`          | `str`        | `"DEBUG"`    | Logging level: `"DEBUG"`, `"INFO"`, `"WARNING"`, `"ERROR"` |
+| `log_file`           | `str \| None` | `None`       | File path for log output. `None` writes to stdout only   |
+| `lang`               | `str`        | `"en"`       | API response language                                    |
+| `cache`              | `BaseCache`  | `MemCache()` | Cache backend. Pass a custom `BaseCache` implementation  |
+| `config_from_object` | `BaseConfig` | `None`       | Pass a full config object instead of individual kwargs. Takes precedence over all other kwargs if provided. |
+
+### Top-level properties
+
+| Property   | Returns   | Description          |
+| ---------- | --------- | -------------------- |
+| `.players` | `Players` | Players namespace    |
+| `.teams`   | `Teams`   | Teams namespace      |
+
+---
+
+## `DefaultConfig` / `BaseConfig`
+
+Use a config object to define settings once and reuse across multiple clients, or to keep configuration separate from instantiation.
+
+```python
+from nhl_stats.src.core.config import DefaultConfig
+from nhl_stats.src.client import NhlClient
+
+config = DefaultConfig(log_level="WARNING", log_file="/tmp/nhl.log")
+client = NhlClient(config_from_object=config)
+```
+
+`DefaultConfig` extends `BaseConfig` with no additional fields. Subclass `BaseConfig` directly to define a custom config type.
+
+| Field      | Type         | Default      | Description                              |
+| ---------- | ------------ | ------------ | ---------------------------------------- |
+| `log_name` | `str`        | `"nhl_sdk"`  | Logger name                              |
+| `log_level`| `str`        | `"DEBUG"`    | Logging level                            |
+| `log_file` | `str \| None` | `None`       | Log file path. `None` = stdout only      |
+| `lang`     | `str`        | `"en"`       | API response language                    |
+| `cache`    | `BaseCache`  | `MemCache()` | Cache backend                            |
+
+---
+
+## Custom Cache
+
+Implement `BaseCache` to plug in any cache backend (Redis, file-based, etc.). Pass the instance to `NhlClient` via the `cache` kwarg.
+
+```python
+from nhl_stats.src.core.cache.base_cache import BaseCache
+
+class MyCache(BaseCache):
+    def get(self, key: str): ...
+    def set(self, key: str, data, ttl: int): ...
+    def delete(self, key: str): ...
+    def clear(self): ...
+
+client = NhlClient(cache=MyCache())
+```
+
+| Method              | Description                                              |
+| ------------------- | -------------------------------------------------------- |
+| `.get(key)`         | Return cached value for `key`, or `None` if missing/expired |
+| `.set(key, data, ttl)` | Store `data` under `key` with a TTL in seconds        |
+| `.delete(key)`      | Remove a single entry                                    |
+| `.clear()`          | Purge all cached entries                                 |
+
+The default `MemCache` is an in-process dict-based cache. It does not persist across client instances.
+
+---
+
 ## `client.players`
 
 | Method / Property | Returns           | Description                          |
