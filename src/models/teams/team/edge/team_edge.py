@@ -22,6 +22,6 @@ class TeamEdge:
     """
     def __init__(self, client: NhlClient):
         self._client = client
-        self._logger = logging.getLogger("nhl_sdk.player.stats.edge.team")
+        self._logger = logging.getLogger("nhl_sdk.teams.edge.team")
 
         self._logger.debug("TeamEdge initialized")

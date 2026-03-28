@@ -3,12 +3,20 @@ LEADERS OBJECTS
 """
 from __future__ import annotations
 import logging
-from abc import ABC, abstractmethod
-from typing import Optional, TYPE_CHECKING
+from abc import ABC
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
 
-from .edge.edge_leaders import EdgeLeaders, SkaterEdgeLeaders, GoalieEdgeLeaders
 from .leaders_team import LeadersTeam
+from .edge.skaters.skater_landing import SkaterLanding
+from .edge.goalies.goalie_landing import GoalieLanding
+from .edge.skaters import (
+    SkaterDistanceTop10,
+    SkaterSpeedTop10,
+    SkaterZoneTimeTop10,
+    SkaterShotSpeedTop10,
+    SkaterShotLocationTop10,
+)
 from ....core.utilities import LocalizedString, _check_cache
 from ....core.cache import get_cache
 
@@ -54,12 +62,44 @@ class LeaderPlayer:
 
 
 class PlayerLeaders(ABC):
+    _edge_pos: str    # set by subclass — used in edge cache keys and logger
+    _stat_prefix: str # set by subclass — used in stat leaders cache keys
+
     def __init__(self, client: NhlClient):
         self._client = client
+        self._cache = get_cache()
+        self._logger = logging.getLogger(f"nhl_sdk.leaders.{self._edge_pos}")
+        self._ttl: int = 60 * 60 * 1
 
-    @property
-    @abstractmethod
-    def get_edge_leaders(self) -> EdgeLeaders: ...
+    def _cache_key(self, season: int | None, game_type: int | None,
+                   categories: str | None, limit: int | None) -> str:
+        key = f"leaders:{self._stat_prefix}"
+        key += f":{season}" if season else ":now"
+        if game_type:
+            key += f":{game_type}"
+        if categories:
+            key += f":{categories}"
+        if limit:
+            key += f":{limit}"
+        return key
+
+    def _edge_cache_key(self, name: str, season: int | None, game_type: int | None, *args: str) -> str:
+        base = f"leaders:edge:{self._edge_pos}:{name}"
+        suffix = f":{season}:{game_type}" if season and game_type else ":now"
+        extra = "".join(f":{a}" for a in args if a)
+        return base + suffix + extra
+
+    def _edge_fetch(self, key: str, api_fn, builder=None):
+        cached = _check_cache(cache=self._cache, cache_key=key)
+        if cached is not None:
+            self._logger.debug(f"{key}: Cache Hit")
+            return cached.data
+        self._logger.debug(f"{key}: Cache Miss")
+        res = api_fn()
+        result = builder(res.data) if builder else res.data
+        self._cache.set(key=key, data=result, ttl=self._ttl)
+        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
+        return result
 
 
 # ---------------------------------------------------------------------------
@@ -102,26 +142,11 @@ class GoalieLeaders(PlayerLeaders):
     Accessed via `client.players.leaders.goalies`. Provides stat leaders
     and Edge leaderboard access without requiring a player ID.
     """
-    def __init__(self, client: NhlClient):
-        super().__init__(client=client)
-        self._cache = get_cache()
-        self._logger = logging.getLogger("nhl_sdk.leaders.goalies")
-        self._ttl: int = 60 * 60 * 1
+    _edge_pos = "goalie"
+    _stat_prefix = "g"
 
-    def _cache_key(self, season: int | None, game_type: int | None,
-                   categories: str | None, limit: int | None) -> str:
-        key = "leaders:g"
-        key += f":{season}" if season else ":now"
-        if game_type:
-            key += f":{game_type}"
-        if categories:
-            key += f":{categories}"
-        if limit:
-            key += f":{limit}"
-        return key
-
-    def get_stat_leaders(self, season: Optional[int] = None, game_type: Optional[int] = None,
-                         categories: Optional[str] = None, limit: Optional[int] = None) -> GoalieStatLeaders:
+    def get_stat_leaders(self, season: int | None = None, game_type: int | None = None,
+                         categories: str | None = None, limit: int | None = None) -> GoalieStatLeaders:
         """
         Retrieve goalie statistical leaders.
 
@@ -148,10 +173,49 @@ class GoalieLeaders(PlayerLeaders):
         self._logger.debug(f"{cache_key}: Cached | ttl: {self._ttl}")
         return result
 
-    @property
-    def get_edge_leaders(self) -> GoalieEdgeLeaders:
-        """Access league-wide goalie Edge leaderboards."""
-        return GoalieEdgeLeaders(self._client)
+    def edge_landing(self, season: int | None = None, game_type: int | None = None) -> GoalieLanding:
+        """Retrieve goalie Edge landing leaders."""
+        key = self._edge_cache_key("landing", season, game_type)
+        return self._edge_fetch(
+            key,
+            lambda: self._client._api.api_web.call_nhl_edge_goalies.get_goalie_landing(
+                season=season, game_type=game_type,
+            ),
+            lambda d: GoalieLanding.from_dict(d),
+        )
+
+    def edge_five_v_five_top_10(self, sort: str,
+                                season: int | None = None, game_type: int | None = None) -> list:
+        """Retrieve top 10 goalies by 5v5 save percentage."""
+        key = self._edge_cache_key("5v5_10", season, game_type, sort)
+        return self._edge_fetch(
+            key,
+            lambda: self._client._api.api_web.call_nhl_edge_goalies.get_goalies_5v5_10(
+                sort=sort, season=season, game_type=game_type,
+            ),
+        )
+
+    def edge_shot_location_top_10(self, category: str, sort: str,
+                                  season: int | None = None, game_type: int | None = None) -> list:
+        """Retrieve top 10 goalies by shot location."""
+        key = self._edge_cache_key("shot_location_10", season, game_type, category, sort)
+        return self._edge_fetch(
+            key,
+            lambda: self._client._api.api_web.call_nhl_edge_goalies.get_goalie_shot_location_10(
+                category=category, sort=sort, season=season, game_type=game_type,
+            ),
+        )
+
+    def edge_save_pctg_top_10(self, sort: str,
+                              season: int | None = None, game_type: int | None = None) -> list:
+        """Retrieve top 10 goalies by save percentage."""
+        key = self._edge_cache_key("save_pctg_10", season, game_type, sort)
+        return self._edge_fetch(
+            key,
+            lambda: self._client._api.api_web.call_nhl_edge_goalies.get_goalie_save_pctg_10(
+                sort=sort, season=season, game_type=game_type,
+            ),
+        )
 
 
 class SkaterLeaders(PlayerLeaders):
@@ -161,26 +225,11 @@ class SkaterLeaders(PlayerLeaders):
     Accessed via `client.players.leaders.skaters`. Provides stat leaders
     and Edge leaderboard access without requiring a player ID.
     """
-    def __init__(self, client: NhlClient):
-        super().__init__(client=client)
-        self._cache = get_cache()
-        self._logger = logging.getLogger("nhl_sdk.leaders.skaters")
-        self._ttl: int = 60 * 60 * 1
+    _edge_pos = "skater"
+    _stat_prefix = "s"
 
-    def _cache_key(self, season: int | None, game_type: int | None,
-                   categories: str | None, limit: int | None) -> str:
-        key = "leaders:s"
-        key += f":{season}" if season else ":now"
-        if game_type:
-            key += f":{game_type}"
-        if categories:
-            key += f":{categories}"
-        if limit:
-            key += f":{limit}"
-        return key
-
-    def get_stat_leaders(self, season: Optional[int] = None, game_type: Optional[int] = None,
-                         categories: Optional[str] = None, limit: Optional[int] = None) -> SkaterStatLeaders:
+    def get_stat_leaders(self, season: int | None = None, game_type: int | None = None,
+                         categories: str | None = None, limit: int | None = None) -> SkaterStatLeaders:
         """
         Retrieve skater statistical leaders.
 
@@ -207,7 +256,73 @@ class SkaterLeaders(PlayerLeaders):
         self._logger.debug(f"{cache_key}: Cached | ttl: {self._ttl}")
         return result
 
-    @property
-    def get_edge_leaders(self) -> SkaterEdgeLeaders:
-        """Access league-wide skater Edge leaderboards."""
-        return SkaterEdgeLeaders(self._client)
+    def edge_landing(self, season: int | None = None, game_type: int | None = None) -> SkaterLanding:
+        """Retrieve skater Edge landing leaders."""
+        key = self._edge_cache_key("landing", season, game_type)
+        return self._edge_fetch(
+            key,
+            lambda: self._client._api.api_web.call_nhl_edge_skaters.get_skater_landing(
+                season=season, game_type=game_type,
+            ),
+            lambda d: SkaterLanding.from_dict(d),
+        )
+
+    def edge_distance_top_10(self, pos: str, strength: str, sort: str,
+                             season: int | None = None, game_type: int | None = None) -> SkaterDistanceTop10:
+        """Retrieve top 10 skaters by skating distance."""
+        key = self._edge_cache_key("distance_10", season, game_type, pos, strength, sort)
+        return self._edge_fetch(
+            key,
+            lambda: self._client._api.api_web.call_nhl_edge_skaters.get_skater_distance_10(
+                pos=pos, strength=strength, sort=sort, season=season, game_type=game_type,
+            ),
+            lambda d: SkaterDistanceTop10.from_list(d or []),
+        )
+
+    def edge_speed_top_10(self, pos: str, sort: str,
+                          season: int | None = None, game_type: int | None = None) -> SkaterSpeedTop10:
+        """Retrieve top 10 fastest skaters."""
+        key = self._edge_cache_key("speed_10", season, game_type, pos, sort)
+        return self._edge_fetch(
+            key,
+            lambda: self._client._api.api_web.call_nhl_edge_skaters.get_skating_speed_10(
+                pos=pos, sort=sort, season=season, game_type=game_type,
+            ),
+            lambda d: SkaterSpeedTop10.from_list(d or []),
+        )
+
+    def edge_zone_time_top_10(self, pos: str, strength: str, sort: str,
+                              season: int | None = None, game_type: int | None = None) -> SkaterZoneTimeTop10:
+        """Retrieve top 10 skaters by zone time."""
+        key = self._edge_cache_key("zone_time_10", season, game_type, pos, strength, sort)
+        return self._edge_fetch(
+            key,
+            lambda: self._client._api.api_web.call_nhl_edge_skaters.get_skater_zone_time_10(
+                pos=pos, strength=strength, sort=sort, season=season, game_type=game_type,
+            ),
+            lambda d: SkaterZoneTimeTop10.from_list(d or []),
+        )
+
+    def edge_shot_speed_top_10(self, pos: str, sort: str,
+                               season: int | None = None, game_type: int | None = None) -> SkaterShotSpeedTop10:
+        """Retrieve top 10 skaters by shot speed."""
+        key = self._edge_cache_key("shot_speed_10", season, game_type, pos, sort)
+        return self._edge_fetch(
+            key,
+            lambda: self._client._api.api_web.call_nhl_edge_skaters.get_skater_shot_speed_10(
+                pos=pos, sort=sort, season=season, game_type=game_type,
+            ),
+            lambda d: SkaterShotSpeedTop10.from_list(d or []),
+        )
+
+    def edge_shot_location_top_10(self, category: str, sort: str,
+                                  season: int | None = None, game_type: int | None = None) -> SkaterShotLocationTop10:
+        """Retrieve top 10 skaters by shot location."""
+        key = self._edge_cache_key("shot_location_10", season, game_type, category, sort)
+        return self._edge_fetch(
+            key,
+            lambda: self._client._api.api_web.call_nhl_edge_skaters.get_skater_shot_location_10(
+                category=category, sort=sort, season=season, game_type=game_type,
+            ),
+            lambda d: SkaterShotLocationTop10.from_list(d or []),
+        )

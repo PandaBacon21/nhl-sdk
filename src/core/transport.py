@@ -3,7 +3,7 @@ OBJECT FOR DIRECT API CALLS AND ERROR HANDLING
 """
 from __future__ import annotations
 from dataclasses import dataclass
-from typing import Optional, Any
+from typing import Any
 import time
 import requests
 import logging
@@ -30,7 +30,7 @@ class APICallWeb:
         self.logger = logging.getLogger("nhl_sdk.api_call_web")
         self.logger.info(msg=f"APICallWeb initialized: base_url - {self.base_url}")
 
-    def get(self, endpoint: str, params: Optional[dict] = None, *, raise_on_error: bool = True) -> APIResponse:
+    def get(self, endpoint: str, params: dict | None = None, *, raise_on_error: bool = True) -> APIResponse:
         url = self.base_url+endpoint
         self.logger.debug(f"GET {endpoint} | params={params}")
 

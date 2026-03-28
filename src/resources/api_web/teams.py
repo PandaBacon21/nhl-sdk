@@ -2,7 +2,6 @@
 FUNCTIONS FOR RETRIEVING TEAM DATA FROM API-WEB.NHLE.COM/
 """
 
-from typing import Optional
 
 from ...core.config import V
 from ...core.transport import APICallWeb, APIResponse
@@ -17,7 +16,7 @@ class CallNhlTeams:
     # STANDINGS
     # ==========================================================================
 
-    def get_standings(self, date: Optional[str] = None) -> APIResponse:
+    def get_standings(self, date: str | None = None) -> APIResponse:
         """ 
         Retrieve the standings as of the current moment a specific date
         date: YYYY-MM-DD
@@ -40,7 +39,7 @@ class CallNhlTeams:
     # STATS
     # ==========================================================================
 
-    def get_team_stats(self, team: str, season: Optional[int] = None, g_type: Optional[int] = None) -> APIResponse:
+    def get_team_stats(self, team: str, season: int | None = None, g_type: int | None = None) -> APIResponse:
         """
         Retrieve current statistics for a specific club
         team: three-letter team code
@@ -75,7 +74,7 @@ class CallNhlTeams:
     # ROSTER
     # ==========================================================================
 
-    def get_team_roster(self, team: str, season: Optional[int] = None) -> APIResponse: 
+    def get_team_roster(self, team: str, season: int | None = None) -> APIResponse: 
         """
         Retrieve the roster for a specific team as of the current moment or season
         team: three-letter team code
@@ -109,7 +108,7 @@ class CallNhlTeams:
     # SCHEDULE
     # ==========================================================================
 
-    def get_schedule(self, team: str, season: Optional[int] = None) -> APIResponse: 
+    def get_schedule(self, team: str, season: int | None = None) -> APIResponse: 
         """
         Retrieve the season schedule for a specific team at the current moment or season
         team: three-letter team code
@@ -121,7 +120,7 @@ class CallNhlTeams:
         res: APIResponse = self._http.get(endpoint=endpoint)
         return res
         
-    def get_schedule_month(self, team: str, month: Optional[str] = None) -> APIResponse: 
+    def get_schedule_month(self, team: str, month: str | None = None) -> APIResponse: 
         """
         Retrieve the monthly schedule for a specific team as of the current moment or month
         team: three-letter team code
@@ -134,7 +133,7 @@ class CallNhlTeams:
         res: APIResponse = self._http.get(endpoint=endpoint)
         return res
 
-    def get_schedule_week(self, team: str, week: Optional[str] = None) -> APIResponse: 
+    def get_schedule_week(self, team: str, week: str | None = None) -> APIResponse: 
         """
         Retrieve the weekly schedule for a specific team as of the current moment or date
         team: three-letter team code

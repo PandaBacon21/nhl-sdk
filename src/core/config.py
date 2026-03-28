@@ -3,7 +3,7 @@ BASE CONFIG FILE
 """
 
 from abc import ABC
-from typing import Optional
+
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 from platformdirs import user_log_dir
@@ -29,8 +29,8 @@ class BaseConfig(ABC):
     log_name: str = "nhl_sdk"
     log_level: str = "DEBUG"
     lang: str = LANG
-    # log_file: Optional[str] = str(FILE_PATH)  # default log path; set to None for stdout only
-    log_file: Optional[str] = None # Set to None for stdout only - Currently set just for testing
+    # log_file: str | None = str(FILE_PATH)  # default log path; set to None for stdout only
+    log_file: str | None = None # Set to None for stdout only - Currently set just for testing
     cache: BaseCache = field(default_factory=MemCache)
 
 @dataclass(slots=True, frozen=True)

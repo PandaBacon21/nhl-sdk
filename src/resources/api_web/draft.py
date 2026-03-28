@@ -2,7 +2,6 @@
 FUNCTIONS FOR RETRIEVING DRAFT DATA FROM API-WEB.NHLE.COM/
 """
 
-from typing import Optional
 
 from ...core.config import V
 from ...core.transport import APICallWeb, APIResponse
@@ -15,7 +14,7 @@ class CallNhlDraft:
     def __init__(self, http: APICallWeb): 
         self._http = http
 
-    def get_rankings(self, season: Optional[int] = None, category: Optional[int] = None) -> APIResponse: 
+    def get_rankings(self, season: int | None = None, category: int | None = None) -> APIResponse: 
         """
         Retrieve a list of all draft prospects by category of prospect for the current moment or a specific season
         season: int - YYYY
@@ -36,7 +35,7 @@ class CallNhlDraft:
         res: APIResponse = self._http.get(endpoint=endpoint)
         return res
 
-    def get_picks(self, season: Optional[int] = None, round: Optional[str] = None) -> APIResponse: 
+    def get_picks(self, season: int | None = None, round: str | None = None) -> APIResponse: 
         """
         Retrieve a list of draft picks for the current moment or a specific season
         season: int - YYYY
@@ -51,7 +50,7 @@ class CallNhlDraft:
 
 
 
-# def _get_rankings(season: Optional[int] = None, category: Optional[int] = None) -> dict: 
+# def _get_rankings(season: int | None = None, category: int | None = None) -> dict: 
 #     """
 #     Retrieve a list of all draft prospects by category of prospect for the current moment or a specific season
 #     season: int - YYYY
@@ -74,7 +73,7 @@ class CallNhlDraft:
 #     # print(tracker)
 #     return tracker
 
-# def _get_picks(season: Optional[int] = None, round: Optional[str] = None) -> dict: 
+# def _get_picks(season: int | None = None, round: str | None = None) -> dict: 
 #     """
 #     Retrieve a list of draft picks for the current moment or a specific season
 #     season: int - YYYY

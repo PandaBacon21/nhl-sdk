@@ -1,7 +1,6 @@
 """
 FUNCTIONS FOR RETRIEVING GAME DATA FROM API-WEB.NHLE.COM/
 """
-from typing import Optional
 
 from ...core.config import V
 from ...core.transport import APICallWeb, APIResponse
@@ -15,7 +14,7 @@ class CallNhlGames:
     def __init__(self, http: APICallWeb): 
         self._http = http
 
-    def get_daily_scores(self, date: Optional[str] = None) -> APIResponse: 
+    def get_daily_scores(self, date: str | None = None) -> APIResponse: 
         """
         Retrieve daily scores as of the current moment or by date
         date: YYYY-MM-DD
@@ -90,7 +89,7 @@ class CallNhlGames:
     # NETWORK
     # ==========================================================================
 
-    def get_tv_schedule(self, date: Optional[str] = None) -> APIResponse:
+    def get_tv_schedule(self, date: str | None = None) -> APIResponse:
         """
         Retrieve the TV current schedule or for a specific date
         date: YYYY-MM-DD

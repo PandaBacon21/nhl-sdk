@@ -2,7 +2,6 @@
 FUNCTIONS FOR RETRIEVING NHLEDGE GOALIE DATA FROM API-WEB.NHLE.COM/
 """
 
-from typing import Optional
 
 from ....core.config import V
 from ....core.transport import APICallWeb, APIResponse
@@ -17,7 +16,7 @@ class CallNhlEdgeGoalies:
     def __init__(self, http: APICallWeb): 
         self._http = http
 
-    def get_goalie_details(self, pid: int, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse:
+    def get_goalie_details(self, pid: int, season: int | None = None, game_type: int | None = None) -> APIResponse:
         """
         Retrieve goalie rankings for NHL Edge data. 
         Includes GAA, games above .900, goal differential per 60, average goal support, 
@@ -36,7 +35,7 @@ class CallNhlEdgeGoalies:
         res = self._http.get(endpoint=endpoint)
         return res
 
-    def get_goalie_comparison(self, pid: int, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse: 
+    def get_goalie_comparison(self, pid: int, season: int | None = None, game_type: int | None = None) -> APIResponse: 
         """
         Retrieve NHL Edge data for the specified player. 
         Includes shot location summary/details, 5v5 save percentage in the last 10 games/details, 
@@ -55,7 +54,7 @@ class CallNhlEdgeGoalies:
         res = self._http.get(endpoint=endpoint)
         return res
 
-    def get_goalie_5v5(self, pid: int, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse: 
+    def get_goalie_5v5(self, pid: int, season: int | None = None, game_type: int | None = None) -> APIResponse: 
         """
         5v5 save percentage details for the specified player.
 
@@ -72,7 +71,7 @@ class CallNhlEdgeGoalies:
         res = self._http.get(endpoint=endpoint)
         return res
 
-    def get_shot_location(self, pid:int, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse: 
+    def get_shot_location(self, pid:int, season: int | None = None, game_type: int | None = None) -> APIResponse: 
         """
         Goalie shot location details for the specified player.
 
@@ -89,7 +88,7 @@ class CallNhlEdgeGoalies:
         res = self._http.get(endpoint=endpoint)
         return res
 
-    def get_save_pctg(self, pid:int, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse: 
+    def get_save_pctg(self, pid:int, season: int | None = None, game_type: int | None = None) -> APIResponse: 
         """
         Goalie save percentage details for the specified player. 
         Contains save percentage in last 10 games, games above .900 and percentage of games above .900.
@@ -107,7 +106,7 @@ class CallNhlEdgeGoalies:
         res = self._http.get(endpoint=endpoint)
         return res
 
-    def get_cat_goalie_details(self, pid:int, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse: 
+    def get_cat_goalie_details(self, pid:int, season: int | None = None, game_type: int | None = None) -> APIResponse: 
         """
         Provides information on GAA, games above .900, goal differential per 60, 
         goal support average, point percentage, shot location summary/details.
@@ -129,7 +128,7 @@ class CallNhlEdgeGoalies:
     # GOALIE LEADERS
     # ==========================================================================
 
-    def get_goalie_landing(self, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse:
+    def get_goalie_landing(self, season: int | None = None, game_type: int | None = None) -> APIResponse:
         """
         Retrieve leading goalie for NHL Edge data. 
         Includes high-danger save percentage/saves/goals against, 
@@ -147,7 +146,7 @@ class CallNhlEdgeGoalies:
         res = self._http.get(endpoint=endpoint)
         return res
 
-    def get_goalies_5v5_10(self, sort: str, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse: 
+    def get_goalies_5v5_10(self, sort: str, season: int | None = None, game_type: int | None = None) -> APIResponse: 
         """
         Top 10 goalies based on the specified filters.
         
@@ -162,8 +161,8 @@ class CallNhlEdgeGoalies:
         res = self._http.get(endpoint=endpoint)
         return res
 
-    def get_goalie_shot_location_10(self, category: str, sort: str, season: Optional[int] = None, 
-                                game_type: Optional[int] = None) -> APIResponse: 
+    def get_goalie_shot_location_10(self, category: str, sort: str, season: int | None = None, 
+                                game_type: int | None = None) -> APIResponse: 
         """
         Top 10 goalie based on the specified filters.
         
@@ -181,8 +180,8 @@ class CallNhlEdgeGoalies:
         res = self._http.get(endpoint=endpoint)
         return res
 
-    def get_goalie_save_pctg_10(self, sort: str, season: Optional[int] = None, 
-                                game_type: Optional[int] = None) -> APIResponse: 
+    def get_goalie_save_pctg_10(self, sort: str, season: int | None = None, 
+                                game_type: int | None = None) -> APIResponse: 
         """
         Top 10 goalies based on the available filters. 
         Contains games above .900 and percentage of games above .900.

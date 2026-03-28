@@ -2,7 +2,7 @@
 FUNCTIONS FOR RETRIEVING MISCELLANEOUS DATA FROM API-WEB.NHLE.COM/
 """
 
-from typing import Optional
+
 
 from ...core.config import V
 from ...core.transport import APICallWeb, APIResponse
@@ -16,7 +16,7 @@ class CallNhlMisc:
     # META
     # ==========================================================================
 
-    def get_meta(self, players: Optional[str] = None, teams: Optional[str] = None, season_states: Optional[str] = None) -> APIResponse: 
+    def get_meta(self, players: str | None = None, teams: str | None = None, season_states: str | None = None) -> APIResponse: 
         """
         Retrieve meta information
         Query Params (Optional): 

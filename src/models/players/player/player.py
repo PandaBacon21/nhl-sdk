@@ -127,7 +127,6 @@ class Player:
         """
         if self._stats:
             if _check_cache(self._cache, self._landing_key):
-                self._logger.info(f"{self._landing_key}: Cache Hit")
                 return self._stats
         data = self._get_player_landing()
         self._stats = PlayerStats(pos=self._pos, pid=self._pid, data=data.data, client=self._client)

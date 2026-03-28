@@ -29,7 +29,8 @@ class Leaders:
 
         Returns a SkaterLeaders namespace with:
           - `.get_stat_leaders(season, game_type, categories, limit)` — stat leader lists
-          - `.get_edge_leaders` — league-wide Edge leaderboards
+          - `.edge_landing(season, game_type)` — Edge landing leaders
+          - `.edge_distance_top_10(...)`, `.edge_speed_top_10(...)`, etc. — Edge leaderboards
         """
         self._logger.debug("Retrieve SkaterLeaders")
         return SkaterLeaders(self._client)
@@ -41,7 +42,8 @@ class Leaders:
 
         Returns a GoalieLeaders namespace with:
           - `.get_stat_leaders(season, game_type, categories, limit)` — stat leader lists
-          - `.get_edge_leaders` — league-wide Edge leaderboards
+          - `.edge_landing(season, game_type)` — Edge landing leaders
+          - `.edge_five_v_five_top_10(...)`, `.edge_shot_location_top_10(...)`, etc. — Edge leaderboards
         """
         self._logger.debug("Retrieve GoalieLeaders")
         return GoalieLeaders(self._client)

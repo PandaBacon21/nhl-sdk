@@ -29,7 +29,7 @@ def test_smoke_leaders(nhl) -> None:
     print(f"Current goals leader: {skater_leaders.goals[0].last_name}")
     print(f"Current assists leader: {skater_leaders.assists[0].last_name}")
 
-    edge_landing = leaders.skaters.get_edge_leaders.landing()
+    edge_landing = leaders.skaters.edge_landing()
     assert edge_landing is not None
     print(f"Edge seasons: {edge_landing.seasons_with_edge[0].id}")
     print(f"Hardest shot leader: {edge_landing.leaders.hardest_shot.player.last_name}")

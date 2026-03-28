@@ -2,7 +2,6 @@
 FUNCTIONS FOR RETRIEVING NHLEDGE TEAM DATA FROM API-WEB.NHLE.COM/
 """
 
-from typing import Optional
 
 from ....core.config import V
 from ....core.transport import APICallWeb, APIResponse
@@ -16,7 +15,7 @@ class CallNhlEdgeTeam:
     def __init__(self, http: APICallWeb): 
         self._http = http
 
-    def get_team_details(self, team_id: int, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse:
+    def get_team_details(self, team_id: int, season: int | None = None, game_type: int | None = None) -> APIResponse:
         """
         Retrieve team-based ranking for NHL Edge data
         
@@ -33,7 +32,7 @@ class CallNhlEdgeTeam:
         team = self._http.get(endpoint=endpoint)
         return team
 
-    def get_team_comparison(self, team_id: int, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse: 
+    def get_team_comparison(self, team_id: int, season: int | None = None, game_type: int | None = None) -> APIResponse: 
         """
         General information and comparison to league average for NHL Edge datapoints. 
         Includes shots by location and shooting percentage by location.
@@ -51,7 +50,7 @@ class CallNhlEdgeTeam:
         team = self._http.get(endpoint=endpoint)
         return team
 
-    def get_team_distance(self, team_id:int, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse: 
+    def get_team_distance(self, team_id:int, season: int | None = None, game_type: int | None = None) -> APIResponse: 
         """
         Skating distance details for all situations and positions, both in last 10 games and in the season.
 
@@ -68,7 +67,7 @@ class CallNhlEdgeTeam:
         team = self._http.get(endpoint=endpoint)
         return team
 
-    def get_team_skating_speed(self, team_id:int, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse: 
+    def get_team_skating_speed(self, team_id:int, season: int | None = None, game_type: int | None = None) -> APIResponse: 
         """
         Skating Speed Details for a specific player
 
@@ -85,7 +84,7 @@ class CallNhlEdgeTeam:
         team = self._http.get(endpoint=endpoint)
         return team
 
-    def get_team_zone_time(self, team_id:int, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse: 
+    def get_team_zone_time(self, team_id:int, season: int | None = None, game_type: int | None = None) -> APIResponse: 
         """
         Zone time details by situation (All Situations/Even Strength/Power Play/Penalty Kill)
 
@@ -102,7 +101,7 @@ class CallNhlEdgeTeam:
         team = self._http.get(endpoint=endpoint)
         return team
 
-    def get_team_shot_speed(self, team_id:int, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse: 
+    def get_team_shot_speed(self, team_id:int, season: int | None = None, game_type: int | None = None) -> APIResponse: 
         """
         Team shots speed details
 
@@ -119,7 +118,7 @@ class CallNhlEdgeTeam:
         team = self._http.get(endpoint=endpoint)
         return team
 
-    def get_team_shot_location(self, team_id:int, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse: 
+    def get_team_shot_location(self, team_id:int, season: int | None = None, game_type: int | None = None) -> APIResponse: 
         """
         Provides information on shot location
 
@@ -142,8 +141,8 @@ class CallNhlEdgeTeam:
     # ==========================================================================
 
 
-    def get_team_skating_distance_10(self,  strength: str, sort: str, pos: str = "all", season: Optional[int] = None, 
-                                game_type: Optional[int] = None) -> APIResponse: 
+    def get_team_skating_distance_10(self,  strength: str, sort: str, pos: str = "all", season: int | None = None, 
+                                game_type: int | None = None) -> APIResponse: 
         """
         Retrieve team-based ranking for NHL Edge data
 
@@ -162,8 +161,8 @@ class CallNhlEdgeTeam:
         top_10 = self._http.get(endpoint=endpoint)
         return top_10
 
-    def get_team_skating_speed_10(self, sort: str, pos: str = "all", season: Optional[int] = None, 
-                                game_type: Optional[int] = None) -> APIResponse: 
+    def get_team_skating_speed_10(self, sort: str, pos: str = "all", season: int | None = None, 
+                                game_type: int | None = None) -> APIResponse: 
         """
         Retrieve 10 fastest skaters based on the provided filters.
         
@@ -181,8 +180,8 @@ class CallNhlEdgeTeam:
         top_10 = self._http.get(endpoint=endpoint)
         return top_10
 
-    def get_team_zone_time_10(self, strength: str, sort: str, season: Optional[int] = None, 
-                                game_type: Optional[int] = None) -> APIResponse: 
+    def get_team_zone_time_10(self, strength: str, sort: str, season: int | None = None, 
+                                game_type: int | None = None) -> APIResponse: 
         """
         Top 10 teams by specified zone time
 
@@ -201,8 +200,8 @@ class CallNhlEdgeTeam:
         top_10 = self._http.get(endpoint=endpoint)
         return top_10
 
-    def get_team_shot_speed_10(self, sort: str, pos: str = "all", season: Optional[int] = None, 
-                                game_type: Optional[int] = None) -> APIResponse: 
+    def get_team_shot_speed_10(self, sort: str, pos: str = "all", season: int | None = None, 
+                                game_type: int | None = None) -> APIResponse: 
         """
         Retrieve team-based ranking for NHL Edge data 
         
@@ -220,8 +219,8 @@ class CallNhlEdgeTeam:
         top_10 = self._http.get(endpoint=endpoint)
         return top_10
 
-    def get_team_shot_location_10(self, category: str, sort: str, season: Optional[int] = None, 
-                                game_type: Optional[int] = None) -> APIResponse: 
+    def get_team_shot_location_10(self, category: str, sort: str, season: int | None = None, 
+                                game_type: int | None = None) -> APIResponse: 
         """
         Top 10 teams based on the specified filters.
         

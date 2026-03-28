@@ -3,7 +3,7 @@ STANDINGS SUB-RESOURCE
 """
 from __future__ import annotations
 import logging
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from ....core.cache import get_cache
 from ....core.utilities import _check_cache
@@ -28,7 +28,7 @@ class Standings:
         self._logger = logging.getLogger("nhl_sdk.teams.standings")
         self._ttl: int = 60 * 60 * 1
 
-    def get_standings(self, date: Optional[str] = None) -> StandingsResult:
+    def get_standings(self, date: str | None = None) -> StandingsResult:
         """
         Retrieve NHL standings.
 

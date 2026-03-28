@@ -2,7 +2,6 @@
 FUNCTIONS FOR RETRIEVING NHLEDGE SKATER DATA FROM API-WEB.NHLE.COM/
 """
 
-from typing import Optional
 
 from ....core.config import V
 from ....core.transport import APICallWeb, APIResponse
@@ -17,7 +16,7 @@ class CallNhlEdgeSkaters:
     def __init__(self, http: APICallWeb): 
         self._http = http
 
-    def get_skater_details(self, pid: int, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse:
+    def get_skater_details(self, pid: int, season: int | None = None, game_type: int | None = None) -> APIResponse:
         """
         Retrieve player rankings for NHL Edge data. 
         Includes top shot speed, skating speed, distance skated, 
@@ -36,7 +35,7 @@ class CallNhlEdgeSkaters:
         res = self._http.get(endpoint=endpoint)
         return res
 
-    def get_skater_comparison(self, pid: int, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse: 
+    def get_skater_comparison(self, pid: int, season: int | None = None, game_type: int | None = None) -> APIResponse: 
         """
         Retrieve NHL Edge data for the specified player. 
         Includes skating distance and speed data, 
@@ -55,7 +54,7 @@ class CallNhlEdgeSkaters:
         res = self._http.get(endpoint=endpoint)
         return res
 
-    def get_skating_distance(self, pid:int, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse: 
+    def get_skating_distance(self, pid:int, season: int | None = None, game_type: int | None = None) -> APIResponse: 
         """
         Skating Distance Details for a specific player
 
@@ -72,7 +71,7 @@ class CallNhlEdgeSkaters:
         res = self._http.get(endpoint=endpoint)
         return res
 
-    def get_skating_speed(self, pid:int, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse: 
+    def get_skating_speed(self, pid:int, season: int | None = None, game_type: int | None = None) -> APIResponse: 
         """
         Skating Speed Details for a specific player
 
@@ -89,7 +88,7 @@ class CallNhlEdgeSkaters:
         res = self._http.get(endpoint=endpoint)
         return res
 
-    def get_zone_time(self, pid:int, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse: 
+    def get_zone_time(self, pid:int, season: int | None = None, game_type: int | None = None) -> APIResponse: 
         """
         Zone time details by situation (All Situations/Even Strength/Power Play/Penalty Kill). Includes zone starts.
 
@@ -106,7 +105,7 @@ class CallNhlEdgeSkaters:
         res = self._http.get(endpoint=endpoint)
         return res
 
-    def get_shot_speed(self, pid:int, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse: 
+    def get_shot_speed(self, pid:int, season: int | None = None, game_type: int | None = None) -> APIResponse: 
         """
         Provides the 10 hardest shots for a specified player. Includes top shot speed, 
         average shot speed, shot attempts in the following groups: 100+, 90-100, 80-90, 70-80.
@@ -124,7 +123,7 @@ class CallNhlEdgeSkaters:
         res = self._http.get(endpoint=endpoint)
         return res
 
-    def get_shot_location(self, pid:int, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse: 
+    def get_shot_location(self, pid:int, season: int | None = None, game_type: int | None = None) -> APIResponse: 
         """
         Provides information on shot location
 
@@ -141,7 +140,7 @@ class CallNhlEdgeSkaters:
         res = self._http.get(endpoint=endpoint)
         return res
 
-    def get_cat_skater_details(self, pid:int, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse: 
+    def get_cat_skater_details(self, pid:int, season: int | None = None, game_type: int | None = None) -> APIResponse: 
         """
         Provides information on top shot speed, skating speed/distance, shots on goal summary/details and zone time details.
 
@@ -164,7 +163,7 @@ class CallNhlEdgeSkaters:
     # ==========================================================================
 
 
-    def get_skater_landing(self, season: Optional[int] = None, game_type: Optional[int] = None) -> APIResponse: 
+    def get_skater_landing(self, season: int | None = None, game_type: int | None = None) -> APIResponse: 
         """
         Retrieve leading player for NHL Edge data. 
         Includes top shot speed, skating speed, 
@@ -182,8 +181,8 @@ class CallNhlEdgeSkaters:
         res = self._http.get(endpoint=endpoint)
         return res
 
-    def get_skater_distance_10(self, pos: str, strength: str, sort: str, season: Optional[int] = None, 
-                                game_type: Optional[int] = None) -> APIResponse: 
+    def get_skater_distance_10(self, pos: str, strength: str, sort: str, season: int | None = None, 
+                                game_type: int | None = None) -> APIResponse: 
         """
         Retrieve top 10 skaters in skating distance based on the provided filters
 
@@ -202,8 +201,8 @@ class CallNhlEdgeSkaters:
         res = self._http.get(endpoint=endpoint)
         return res
 
-    def get_skating_speed_10(self, pos: str, sort: str, season: Optional[int] = None, 
-                                game_type: Optional[int] = None) -> APIResponse: 
+    def get_skating_speed_10(self, pos: str, sort: str, season: int | None = None, 
+                                game_type: int | None = None) -> APIResponse: 
         """
         Retrieve 10 fastest skaters based on the provided filters.
         
@@ -221,8 +220,8 @@ class CallNhlEdgeSkaters:
         res = self._http.get(endpoint=endpoint)
         return res
 
-    def get_skater_zone_time_10(self, pos: str, strength: str, sort: str, season: Optional[int] = None, 
-                                game_type: Optional[int] = None) -> APIResponse: 
+    def get_skater_zone_time_10(self, pos: str, strength: str, sort: str, season: int | None = None, 
+                                game_type: int | None = None) -> APIResponse: 
         """
         Retrieve top 10 skaters in zone time based on the provided filters
 
@@ -241,8 +240,8 @@ class CallNhlEdgeSkaters:
         res = self._http.get(endpoint=endpoint)
         return res
 
-    def get_skater_shot_speed_10(self, pos: str, sort: str, season: Optional[int] = None, 
-                                game_type: Optional[int] = None) -> APIResponse: 
+    def get_skater_shot_speed_10(self, pos: str, sort: str, season: int | None = None, 
+                                game_type: int | None = None) -> APIResponse: 
         """
         Retrieve 10 fastest shots based on the provided filters.
         
@@ -260,8 +259,8 @@ class CallNhlEdgeSkaters:
         res = self._http.get(endpoint=endpoint)
         return res
 
-    def get_skater_shot_location_10(self, category: str, sort: str, season: Optional[int] = None, 
-                                game_type: Optional[int] = None) -> APIResponse: 
+    def get_skater_shot_location_10(self, category: str, sort: str, season: int | None = None, 
+                                game_type: int | None = None) -> APIResponse: 
         """
         Top 10 skaters based on the specified filters.
         

@@ -3,7 +3,7 @@ TEAM STATS SUB-RESOURCE
 """
 from __future__ import annotations
 import logging
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from .....core.cache import get_cache
 from .....core.utilities import _check_cache
@@ -33,8 +33,8 @@ class TeamStats:
     def get_team_stats(
         self,
         team: str,
-        season: Optional[int] = None,
-        g_type: Optional[int] = None,
+        season: int | None = None,
+        g_type: int | None = None,
     ) -> TeamStatsResult:
         """
         Retrieve skater and goalie stats for a specific club.

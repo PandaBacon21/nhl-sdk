@@ -3,7 +3,7 @@ FUNCTIONS FOR RETRIEVING PLAYER DATA FROM API-WEB.NHLE.COM/
 """
 
 from __future__ import annotations
-from typing import Optional
+
 
 from ...core.config import V
 from ...core.transport import APICallWeb, APIResponse
@@ -29,7 +29,7 @@ class CallNhlPlayers:
         return res
 
 
-    def get_game_log(self, pid: int, season: Optional[int] = None, g_type: Optional[int] = None) -> APIResponse:
+    def get_game_log(self, pid: int, season: int | None = None, g_type: int | None = None) -> APIResponse:
         """
         Retrieve the game log for a specific player, season, and game type.
         """
@@ -52,8 +52,8 @@ class CallNhlPlayers:
     # SKATERS
     # ==========================================================================
 
-    def get_skater_leaders(self, season: Optional[int] = None, g_type: Optional[int] = None, categories: Optional[str] = None, 
-                            limit: Optional[int] = None) -> APIResponse:
+    def get_skater_leaders(self, season: int | None = None, g_type: int | None = None, categories: str | None = None, 
+                            limit: int | None = None) -> APIResponse:
         """
         Retrieve current skater stats leaders.
         """
@@ -75,8 +75,8 @@ class CallNhlPlayers:
     # GOALIES
     # ==========================================================================
 
-    def get_goalie_leaders(self, season: Optional[int] = None, g_type: Optional[int] = None, 
-                            categories: Optional[str] = None, limit: Optional[int] = None) -> APIResponse: 
+    def get_goalie_leaders(self, season: int | None = None, g_type: int | None = None, 
+                            categories: str | None = None, limit: int | None = None) -> APIResponse: 
         """
         Retrieve current goalie stats leaders
         """
