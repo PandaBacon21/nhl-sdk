@@ -9,13 +9,6 @@ Covers:
 """
 from unittest.mock import MagicMock
 
-from src.models.players.leaders.edge.skaters import (
-    SkaterDistanceTop10,
-    SkaterSpeedTop10,
-    SkaterZoneTimeTop10,
-    SkaterShotSpeedTop10,
-    SkaterShotLocationTop10,
-)
 from src.models.players.leaders.edge.skaters.skater_landing import SkaterLanding
 from src.models.players.leaders.edge.goalies.goalie_landing import GoalieLanding
 from src.models.players.leaders.player_leaders import SkaterLeaders, GoalieLeaders
@@ -186,17 +179,17 @@ def test_skater_distance_top10_returns_model() -> None:
     client = _mock_client(data=[DISTANCE_ENTRY, DISTANCE_ENTRY])
     service = SkaterLeaders(client=client)
     result = service.edge_distance_top_10(pos="all", strength="es", sort="total")
-    assert isinstance(result, SkaterDistanceTop10)
-    assert len(result.entries) == 2
-    assert result.entries[0].player.last_name.default == "McDavid"
-    assert result.entries[0].distance_total.imperial == 185000.0
+    assert isinstance(result, list)
+    assert len(result) == 2
+    assert result[0].player.last_name.default == "McDavid"
+    assert result[0].distance_total.imperial == 185000.0
 
 def test_skater_distance_top10_empty_list() -> None:
     client = _mock_client(data=[])
     service = SkaterLeaders(client=client)
     result = service.edge_distance_top_10(pos="D", strength="pp", sort="per-60")
-    assert isinstance(result, SkaterDistanceTop10)
-    assert result.entries == []
+    assert isinstance(result, list)
+    assert result == []
 
 def test_skater_distance_top10_cache_hit() -> None:
     client = _mock_client(data=[DISTANCE_ENTRY])
@@ -222,10 +215,10 @@ def test_skater_speed_top10_returns_model() -> None:
     client = _mock_client(data=[SPEED_ENTRY])
     service = SkaterLeaders(client=client)
     result = service.edge_speed_top_10(pos="F", sort="max")
-    assert isinstance(result, SkaterSpeedTop10)
-    assert len(result.entries) == 1
-    assert result.entries[0].max_speed.imperial == 24.8
-    assert result.entries[0].bursts_over_22 == 3
+    assert isinstance(result, list)
+    assert len(result) == 1
+    assert result[0].max_speed.imperial == 24.8
+    assert result[0].bursts_over_22 == 3
 
 def test_skater_speed_top10_api_params() -> None:
     client = _mock_client(data=[])
@@ -244,10 +237,10 @@ def test_skater_zone_time_top10_returns_model() -> None:
     client = _mock_client(data=[ZONE_TIME_ENTRY])
     service = SkaterLeaders(client=client)
     result = service.edge_zone_time_top_10(pos="all", strength="all", sort="offensive")
-    assert isinstance(result, SkaterZoneTimeTop10)
-    assert len(result.entries) == 1
-    assert result.entries[0].offensive_zone_time == 38.2
-    assert result.entries[0].neutral_zone_time == 30.1
+    assert isinstance(result, list)
+    assert len(result) == 1
+    assert result[0].offensive_zone_time == 38.2
+    assert result[0].neutral_zone_time == 30.1
 
 def test_skater_zone_time_top10_api_params() -> None:
     client = _mock_client(data=[])
@@ -266,10 +259,10 @@ def test_skater_shot_speed_top10_returns_model() -> None:
     client = _mock_client(data=[SHOT_SPEED_ENTRY])
     service = SkaterLeaders(client=client)
     result = service.edge_shot_speed_top_10(pos="all", sort="max")
-    assert isinstance(result, SkaterShotSpeedTop10)
-    assert len(result.entries) == 1
-    assert result.entries[0].hardest_shot.imperial == 96.2
-    assert result.entries[0].shot_attempts_over_100 == 2
+    assert isinstance(result, list)
+    assert len(result) == 1
+    assert result[0].hardest_shot.imperial == 96.2
+    assert result[0].shot_attempts_over_100 == 2
 
 def test_skater_shot_speed_top10_api_params() -> None:
     client = _mock_client(data=[])
@@ -288,10 +281,10 @@ def test_skater_shot_location_top10_returns_model() -> None:
     client = _mock_client(data=[SHOT_LOCATION_ENTRY])
     service = SkaterLeaders(client=client)
     result = service.edge_shot_location_top_10(category="sog", sort="all")
-    assert isinstance(result, SkaterShotLocationTop10)
-    assert len(result.entries) == 1
-    assert result.entries[0].all == 220
-    assert result.entries[0].high_danger == 85
+    assert isinstance(result, list)
+    assert len(result) == 1
+    assert result[0].all == 220
+    assert result[0].high_danger == 85
 
 def test_skater_shot_location_top10_api_params() -> None:
     client = _mock_client(data=[])

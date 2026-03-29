@@ -1,5 +1,5 @@
 """
-SKATER SHOT LOCATION TOP 10 MODEL
+GOALIE SHOT LOCATION TOP 10 MODEL
 """
 from __future__ import annotations
 from dataclasses import dataclass
@@ -8,8 +8,8 @@ from ....player.player_stats.edge.player_edge_types import LeaderPlayer
 
 
 @dataclass(slots=True, frozen=True)
-class ShotLocationLeaderEntry:
-    """One player's entry in the shot location top 10 leaderboard."""
+class GoalieShotLocationLeaderEntry:
+    """One goalie's entry in the shot location top 10 leaderboard."""
     player: LeaderPlayer
     all: int | None
     high_danger: int | None
@@ -17,7 +17,7 @@ class ShotLocationLeaderEntry:
     long_range: int | None
 
     @classmethod
-    def from_dict(cls, data: dict) -> ShotLocationLeaderEntry:
+    def from_dict(cls, data: dict) -> GoalieShotLocationLeaderEntry:
         return cls(
             player = LeaderPlayer.from_dict(data.get("player") or {}),
             all = data.get("all"),

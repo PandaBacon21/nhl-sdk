@@ -1,3 +1,6 @@
+import pytest
+pytestmark = pytest.mark.smoke
+
 TEAM_CODE = "COL"
 
 

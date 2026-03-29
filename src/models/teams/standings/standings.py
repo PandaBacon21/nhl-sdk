@@ -28,6 +28,18 @@ class Standings:
         self._logger = logging.getLogger("nhl_sdk.teams.standings")
         self._ttl: int = 60 * 60 * 1
 
+    def _fetch(self, key: str, api_fn, builder=None):
+        cached = _check_cache(cache=self._cache, cache_key=key)
+        if cached is not None:
+            self._logger.debug(f"{key}: Cache Hit")
+            return cached.data
+        self._logger.debug(f"{key}: Cache Miss")
+        res = api_fn()
+        result = builder(res.data) if builder else res.data
+        self._cache.set(key=key, data=result, ttl=self._ttl)
+        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
+        return result
+
     def get_standings(self, date: str | None = None) -> StandingsResult:
         """
         Retrieve NHL standings.
@@ -36,29 +48,17 @@ class Standings:
             date (str, optional): Date in YYYY-MM-DD format. Defaults to current standings.
         """
         key = f"teams:standings:{date or 'now'}"
-        cached = _check_cache(cache=self._cache, cache_key=key)
-        if cached is not None:
-            self._logger.debug(f"{key}: Cache Hit")
-            return cached.data
-        self._logger.debug(f"{key}: Cache Miss")
-        res = self._client._api.api_web.call_nhl_teams.get_standings(date=date)
-        result = StandingsResult.from_dict(res.data)
-        self._cache.set(key=key, data=result, ttl=self._ttl)
-        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
-        return result
+        return self._fetch(
+            key,
+            lambda: self._client._api.api_web.call_nhl_teams.get_standings(date=date),
+            StandingsResult.from_dict,
+        )
 
     def get_standings_by_season(self) -> list:
         """
         Retrieve the list of seasons for which standings are available.
         """
-        key = "teams:standings:seasons"
-        cached = _check_cache(cache=self._cache, cache_key=key)
-        if cached is not None:
-            self._logger.debug(f"{key}: Cache Hit")
-            return cached.data
-        self._logger.debug(f"{key}: Cache Miss")
-        res = self._client._api.api_web.call_nhl_teams.get_standings_per_season()
-        result = res.data
-        self._cache.set(key=key, data=result, ttl=self._ttl)
-        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
-        return result
+        return self._fetch(
+            "teams:standings:seasons",
+            lambda: self._client._api.api_web.call_nhl_teams.get_standings_per_season(),
+        )

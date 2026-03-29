@@ -12,10 +12,6 @@ class NotFoundError(NhlApiError):
     """HTTP 404"""
     pass
 
-class ForbiddenError(NhlApiError):
-    """HTTP 403"""
-    pass
-
 class RateLimitError(NhlApiError):
     """HTTP 429"""
     pass

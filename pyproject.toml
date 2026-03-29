@@ -19,7 +19,10 @@ dev = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-q"
+addopts = ["-q", "-m", "not smoke"]
+markers = [
+    "smoke: live API test (requires network, excluded from default run)",
+]
 
 [build-system]
 requires = ["setuptools>=68"]

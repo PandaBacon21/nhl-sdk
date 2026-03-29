@@ -29,7 +29,7 @@ class APIWeb:
         self.call_nhl_teams = CallNhlTeams(http)
         self.call_nhl_edge_goalies = CallNhlEdgeGoalies(http)
         self.call_nhl_edge_skaters = CallNhlEdgeSkaters(http)
-        self.cal_nhl_edge_team = CallNhlEdgeTeam(http)
+        self.call_nhl_edge_team = CallNhlEdgeTeam(http)
 
 
 

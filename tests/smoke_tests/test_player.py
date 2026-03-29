@@ -1,3 +1,6 @@
+import pytest
+pytestmark = pytest.mark.smoke
+
 PID = 8477492  # Nathan MacKinnon
 
 

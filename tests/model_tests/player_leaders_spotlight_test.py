@@ -1,5 +1,5 @@
 from unittest.mock import MagicMock
-from src.models.players.leaders.leaders_team import LeadersTeam
+from src.models.players.leaders.player_leaders import LeadersTeam
 from src.models.players.leaders.player_leaders import LeaderPlayer, GoalieStatLeaders, SkaterStatLeaders
 from src.models.players.spotlight import Spotlight
 

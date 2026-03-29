@@ -39,7 +39,6 @@ class Player:
         """
         self._client = client
         self._cache = get_cache()
-        self._api_web = self._client._api.api_web
         self._logger = logging.getLogger("nhl_sdk.player")
         self._pid: int = player_id
         self._landing_key: str = f"player:{self._pid}:landing"
@@ -76,7 +75,7 @@ class Player:
             return cached
         self._logger.debug(f"{self._landing_key}: Cache Miss")
 
-        res = self._api_web.call_nhl_players.get_player_landing(pid=self._pid)
+        res = self._client._api.api_web.call_nhl_players.get_player_landing(pid=self._pid)
 
         if not res.ok:
             self._logger.warning(f"Player pid {self._pid} failed to fetch player landing")

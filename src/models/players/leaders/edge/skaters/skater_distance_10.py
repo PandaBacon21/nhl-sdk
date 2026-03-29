@@ -34,26 +34,3 @@ class DistanceLeaderEntry:
             "distance_max_per_game": self.distance_max_per_game.to_dict(),
             "distance_max_per_period": self.distance_max_per_period.to_dict(),
         }
-
-
-@dataclass(slots=True, frozen=True)
-class SkaterDistanceTop10:
-    """
-    Top 10 skaters ranked by skating distance.
-
-    Can be retrieved for the current season or a specific season/game type.
-
-    Note: this is a league-wide leaderboard, not a per-player stat.
-    """
-    entries: list
-
-    @classmethod
-    def from_list(cls, data: list) -> SkaterDistanceTop10:
-        return cls(
-            entries = [DistanceLeaderEntry.from_dict(e) for e in data or []],
-        )
-
-    def to_dict(self) -> dict:
-        return {
-            "entries": [e.to_dict() for e in self.entries],
-        }

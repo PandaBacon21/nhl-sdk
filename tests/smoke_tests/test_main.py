@@ -2,8 +2,12 @@
 Master smoke test runner — run directly with: uv run tests/smoke_tests/test_main.py
 For pytest, run: uv run pytest tests/smoke_tests/
 """
+import pytest
+pytestmark = pytest.mark.smoke
+
 import sys
 import os
+import time
 
 sys.path.insert(0, os.path.dirname(__file__))
 
@@ -20,6 +24,12 @@ from test_edge import (
     test_smoke_edge_skater_shot_speed,
     test_smoke_edge_skater_shot_location,
     test_smoke_edge_skater_cat_details,
+    test_smoke_edge_goalie_details,
+    test_smoke_edge_goalie_comparison,
+    test_smoke_edge_goalie_five_v_five,
+    test_smoke_edge_goalie_shot_location,
+    test_smoke_edge_goalie_save_pctg,
+    test_smoke_edge_goalie_cat_details,
 )
 from test_teams import (
     test_smoke_standings,
@@ -38,11 +48,14 @@ from test_teams import (
 
 if __name__ == "__main__":
     client = NhlClient(log_file="logs/nhl.log", log_level="DEBUG")
+
     test_smoke_profile(client)
     test_smoke_stats(client)
     test_smoke_game_log(client)
     test_smoke_spotlight(client)
     test_smoke_leaders(client)
+    time.sleep(1.5)
+
     test_smoke_edge_skater_details(client)
     test_smoke_edge_skater_comparison(client)
     test_smoke_edge_skater_skating_distance(client)
@@ -51,6 +64,16 @@ if __name__ == "__main__":
     test_smoke_edge_skater_shot_speed(client)
     test_smoke_edge_skater_shot_location(client)
     test_smoke_edge_skater_cat_details(client)
+    time.sleep(1.5)
+
+    test_smoke_edge_goalie_details(client)
+    test_smoke_edge_goalie_comparison(client)
+    test_smoke_edge_goalie_five_v_five(client)
+    test_smoke_edge_goalie_shot_location(client)
+    test_smoke_edge_goalie_save_pctg(client)
+    test_smoke_edge_goalie_cat_details(client)
+    time.sleep(1.5)
+
     test_smoke_standings(client)
     test_smoke_standings_by_season(client)
     test_smoke_team_stats(client)

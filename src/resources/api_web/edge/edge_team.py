@@ -44,9 +44,9 @@ class CallNhlEdgeTeam:
 
         Both season and game_type are required to be included or omitted together.
         """
-        endpoint = f"{V}/edge/team-comparison/{team_id}/now"
+        endpoint = f"/{V}/edge/team-comparison/{team_id}/now"
         if season and game_type:
-            endpoint = f"{V}/edge/team-comparison/{team_id}/{season}/{game_type}"
+            endpoint = f"/{V}/edge/team-comparison/{team_id}/{season}/{game_type}"
         team = self._http.get(endpoint=endpoint)
         return team
 

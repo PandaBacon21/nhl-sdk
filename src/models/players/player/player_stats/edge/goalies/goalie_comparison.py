@@ -5,8 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from ..player_edge_types import EdgeSeason
-from .goalie_save_pctg import GoalieSavePctgGame, GoalieSavePctgSummary
-from .goalie_5v5 import GoalieFiveVFiveSummary
+from .goalie_save_pctg import GoalieSavePctgGame
 
 
 @dataclass(slots=True, frozen=True)
@@ -68,6 +67,61 @@ class GoalieComparisonShotDetail:
 
 
 @dataclass(slots=True, frozen=True)
+class GoalieComparison5v5Summary:
+    """5v5 save percentage summary from the comparison endpoint (flat values, no percentile rankings)."""
+    save_pctg: float | None
+    save_pctg_close: float | None
+    shots: int | None
+    shots_per_60: float | None
+
+    @classmethod
+    def from_dict(cls, data: dict) -> GoalieComparison5v5Summary:
+        return cls(
+            save_pctg=data.get("savePctg"),
+            save_pctg_close=data.get("savePctgClose"),
+            shots=data.get("shots"),
+            shots_per_60=data.get("shotsPer60"),
+        )
+
+    def to_dict(self) -> dict:
+        return {
+            "save_pctg": self.save_pctg,
+            "save_pctg_close": self.save_pctg_close,
+            "shots": self.shots,
+            "shots_per_60": self.shots_per_60,
+        }
+
+
+@dataclass(slots=True, frozen=True)
+class GoalieComparisonSavePctgSummary:
+    """Save percentage summary from the comparison endpoint (flat values, no percentile rankings)."""
+    games_above_900: int | None
+    pctg_games_above_900: float | None
+    point_pctg: float | None
+    goals_against_avg: float | None
+    save_pctg: float | None
+
+    @classmethod
+    def from_dict(cls, data: dict) -> GoalieComparisonSavePctgSummary:
+        return cls(
+            games_above_900=data.get("gamesAbove900"),
+            pctg_games_above_900=data.get("pctgGamesAbove900"),
+            point_pctg=data.get("pointPctg"),
+            goals_against_avg=data.get("goalsAgainstAvg"),
+            save_pctg=data.get("savePctg"),
+        )
+
+    def to_dict(self) -> dict:
+        return {
+            "games_above_900": self.games_above_900,
+            "pctg_games_above_900": self.pctg_games_above_900,
+            "point_pctg": self.point_pctg,
+            "goals_against_avg": self.goals_against_avg,
+            "save_pctg": self.save_pctg,
+        }
+
+
+@dataclass(slots=True, frozen=True)
 class GoalieComparison:
     """
     NHL Edge drill-down comparison data for a goalie.
@@ -82,9 +136,9 @@ class GoalieComparison:
     shot_location_summary: list
     shot_location_details: list
     save_pctg_5v5_last_10: list
-    save_pctg_5v5_summary: GoalieFiveVFiveSummary
+    save_pctg_5v5_summary: GoalieComparison5v5Summary
     save_pctg_last_10: list
-    save_pctg_summary: GoalieSavePctgSummary
+    save_pctg_summary: GoalieComparisonSavePctgSummary
 
     @classmethod
     def from_dict(cls, data: dict) -> GoalieComparison:
@@ -93,9 +147,9 @@ class GoalieComparison:
             shot_location_summary=[GoalieComparisonShotSummary.from_dict(s) for s in data.get("shotLocationSummary") or []],
             shot_location_details=[GoalieComparisonShotDetail.from_dict(d) for d in data.get("shotLocationDetails") or []],
             save_pctg_5v5_last_10=[GoalieSavePctgGame.from_dict(g) for g in data.get("savePctg5v5Last10") or []],
-            save_pctg_5v5_summary=GoalieFiveVFiveSummary.from_dict(data.get("savePctg5v5Details") or {}),
+            save_pctg_5v5_summary=GoalieComparison5v5Summary.from_dict(data.get("savePctg5v5Details") or {}),
             save_pctg_last_10=[GoalieSavePctgGame.from_dict(g) for g in data.get("savePctgLast10") or []],
-            save_pctg_summary=GoalieSavePctgSummary.from_dict(data.get("savePctgDetails") or {}),
+            save_pctg_summary=GoalieComparisonSavePctgSummary.from_dict(data.get("savePctgDetails") or {}),
         )
 
     def to_dict(self) -> dict:

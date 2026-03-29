@@ -4,7 +4,6 @@ LEADERS OBJECT
 from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
-
 from .player_leaders import SkaterLeaders, GoalieLeaders
 
 if TYPE_CHECKING:

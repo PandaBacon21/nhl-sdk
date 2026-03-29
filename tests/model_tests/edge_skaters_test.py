@@ -5,26 +5,11 @@ from src.models.players.player.player_stats.edge.skaters.skater_details import (
     ZoneTimeDetails,
     SkaterDetails,
 )
-from src.models.players.leaders.edge.skaters.skater_distance_10 import (
-    DistanceLeaderEntry,
-    SkaterDistanceTop10,
-)
-from src.models.players.leaders.edge.skaters.skater_speed_10 import (
-    SpeedLeaderEntry,
-    SkaterSpeedTop10,
-)
-from src.models.players.leaders.edge.skaters.skater_zone_time_10 import (
-    ZoneTimeLeaderEntry,
-    SkaterZoneTimeTop10,
-)
-from src.models.players.leaders.edge.skaters.skater_shot_speed_10 import (
-    ShotSpeedLeaderEntry,
-    SkaterShotSpeedTop10,
-)
-from src.models.players.leaders.edge.skaters.skater_shot_location_10 import (
-    ShotLocationLeaderEntry,
-    SkaterShotLocationTop10,
-)
+from src.models.players.leaders.edge.skaters.skater_distance_10 import DistanceLeaderEntry
+from src.models.players.leaders.edge.skaters.skater_speed_10 import SpeedLeaderEntry
+from src.models.players.leaders.edge.skaters.skater_zone_time_10 import ZoneTimeLeaderEntry
+from src.models.players.leaders.edge.skaters.skater_shot_speed_10 import ShotSpeedLeaderEntry
+from src.models.players.leaders.edge.skaters.skater_shot_location_10 import ShotLocationLeaderEntry
 
 
 PLAYER_DATA = {
@@ -203,14 +188,6 @@ def test_distance_leader_entry_from_dict() -> None:
     assert entry.distance_max_per_game.overlay.game_date == "2024-01-15"
     assert entry.distance_max_per_period.overlay is None
 
-def test_skater_distance_top10_from_list() -> None:
-    top10 = SkaterDistanceTop10.from_list([DISTANCE_ENTRY, DISTANCE_ENTRY])
-    assert len(top10.entries) == 2
-    assert top10.entries[0].player.sweater_number == 97
-
-def test_skater_distance_top10_empty_list() -> None:
-    top10 = SkaterDistanceTop10.from_list([])
-    assert top10.entries == []
 
 
 # ==========================================================================
@@ -235,10 +212,6 @@ def test_speed_leader_entry_from_dict() -> None:
     assert entry.bursts_20_22 == 18
     assert entry.bursts_18_20 == 42
 
-def test_skater_speed_top10_from_list() -> None:
-    top10 = SkaterSpeedTop10.from_list([SPEED_ENTRY])
-    assert len(top10.entries) == 1
-    assert top10.entries[0].bursts_over_22 == 3
 
 
 # ==========================================================================
@@ -259,9 +232,6 @@ def test_zone_time_leader_entry_from_dict() -> None:
     assert entry.neutral_zone_time == 30.1
     assert entry.defensive_zone_time == 31.7
 
-def test_skater_zone_time_top10_from_list() -> None:
-    top10 = SkaterZoneTimeTop10.from_list([ZONE_TIME_ENTRY, ZONE_TIME_ENTRY])
-    assert len(top10.entries) == 2
 
 
 # ==========================================================================
@@ -288,10 +258,6 @@ def test_shot_speed_leader_entry_from_dict() -> None:
     assert entry.shot_attempts_80_90 == 25
     assert entry.shot_attempts_70_80 == 50
 
-def test_skater_shot_speed_top10_from_list() -> None:
-    top10 = SkaterShotSpeedTop10.from_list([SHOT_SPEED_ENTRY])
-    assert len(top10.entries) == 1
-    assert top10.entries[0].shot_attempts_over_100 == 2
 
 
 # ==========================================================================
@@ -319,7 +285,3 @@ def test_shot_location_leader_entry_missing_fields() -> None:
     assert entry.all is None
     assert entry.high_danger is None
 
-def test_skater_shot_location_top10_from_list() -> None:
-    top10 = SkaterShotLocationTop10.from_list([SHOT_LOCATION_ENTRY, SHOT_LOCATION_ENTRY])
-    assert len(top10.entries) == 2
-    assert top10.entries[1].high_danger == 85

@@ -31,26 +31,3 @@ class ZoneTimeLeaderEntry:
             "neutral_zone_time": self.neutral_zone_time,
             "defensive_zone_time": self.defensive_zone_time,
         }
-
-
-@dataclass(slots=True, frozen=True)
-class SkaterZoneTimeTop10:
-    """
-    Top 10 skaters ranked by zone time percentage.
-
-    Can be retrieved for the current season or a specific season/game type.
-
-    Note: this is a league-wide leaderboard, not a per-player stat.
-    """
-    entries: list
-
-    @classmethod
-    def from_list(cls, data: list) -> SkaterZoneTimeTop10:
-        return cls(
-            entries = [ZoneTimeLeaderEntry.from_dict(e) for e in data or []],
-        )
-
-    def to_dict(self) -> dict:
-        return {
-            "entries": [e.to_dict() for e in self.entries],
-        }

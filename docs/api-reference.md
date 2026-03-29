@@ -186,11 +186,11 @@ Accessed via `client.players.leaders.skaters`. Provides skater stat leaders and 
 | --------------------------------------------------------- | ------------------------ | ------------------------------------ |
 | `.get_stat_leaders(season, game_type, categories, limit)` | `SkaterStatLeaders`      | Skater stat leader lists             |
 | `.edge_landing(season, game_type)`                        | `SkaterLanding`          | Edge landing page leaders summary    |
-| `.edge_distance_top_10(pos, strength, sort, ...)`         | `SkaterDistanceTop10`    | Top 10 skaters by skating distance   |
-| `.edge_speed_top_10(pos, sort, ...)`                      | `SkaterSpeedTop10`       | Top 10 fastest skaters               |
-| `.edge_zone_time_top_10(pos, strength, sort, ...)`        | `SkaterZoneTimeTop10`    | Top 10 skaters by zone time          |
-| `.edge_shot_speed_top_10(pos, sort, ...)`                 | `SkaterShotSpeedTop10`   | Top 10 skaters by shot speed         |
-| `.edge_shot_location_top_10(category, sort, ...)`         | `SkaterShotLocationTop10`| Top 10 skaters by shot location      |
+| `.edge_distance_top_10(pos, strength, sort, ...)`         | `list[DistanceLeaderEntry]`     | Top 10 skaters by skating distance   |
+| `.edge_speed_top_10(pos, sort, ...)`                      | `list[SpeedLeaderEntry]`        | Top 10 fastest skaters               |
+| `.edge_zone_time_top_10(pos, strength, sort, ...)`        | `list[ZoneTimeLeaderEntry]`     | Top 10 skaters by zone time          |
+| `.edge_shot_speed_top_10(pos, sort, ...)`                 | `list[ShotSpeedLeaderEntry]`    | Top 10 skaters by shot speed         |
+| `.edge_shot_location_top_10(category, sort, ...)`         | `list[ShotLocationLeaderEntry]` | Top 10 skaters by shot location      |
 
 All Edge methods accept optional `season` and `game_type` parameters. `season` and `game_type` must be provided together for a historical lookup, or omitted for current-season data.
 
@@ -204,9 +204,9 @@ Accessed via `client.players.leaders.goalies`. Provides goalie stat leaders and 
 | --------------------------------------------------------- | ------------------- | ------------------------------------ |
 | `.get_stat_leaders(season, game_type, categories, limit)` | `GoalieStatLeaders` | Goalie stat leader lists             |
 | `.edge_landing(season, game_type)`                        | `GoalieLanding`     | Edge landing page leaders summary    |
-| `.edge_five_v_five_top_10(sort, ...)`                     | `list`              | Top 10 goalies by 5v5 save pctg      |
-| `.edge_shot_location_top_10(category, sort, ...)`         | `list`              | Top 10 goalies by shot location      |
-| `.edge_save_pctg_top_10(sort, ...)`                       | `list`              | Top 10 goalies by save percentage    |
+| `.edge_five_v_five_top_10(sort, ...)`                     | `list[GoalieFiveVFiveLeaderEntry]`    | Top 10 goalies by 5v5 save pctg      |
+| `.edge_shot_location_top_10(category, sort, ...)`         | `list[GoalieShotLocationLeaderEntry]` | Top 10 goalies by shot location      |
+| `.edge_save_pctg_top_10(sort, ...)`                       | `list[GoalieSavePctgLeaderEntry]`     | Top 10 goalies by save percentage    |
 
 All Edge methods accept optional `season` and `game_type` parameters. `season` and `game_type` must be provided together for a historical lookup, or omitted for current-season data.
 
@@ -280,7 +280,7 @@ All Edge methods accept optional `season` and `game_type`. `season` and `game_ty
 | `season`    | No       | `int` in `YYYYYYYY` format (e.g. `20242025`) |
 | `game_type` | No       | `2` = regular season, `3` = playoffs         |
 
-### `.edge_distance_top_10(pos, strength, sort, season, game_type)` → `SkaterDistanceTop10`
+### `.edge_distance_top_10(pos, strength, sort, season, game_type)` → `list[DistanceLeaderEntry]`
 
 | Parameter   | Required | Valid values                                        |
 | ----------- | -------- | --------------------------------------------------- |
@@ -290,7 +290,7 @@ All Edge methods accept optional `season` and `game_type`. `season` and `game_ty
 | `season`    | No       | `int` in `YYYYYYYY` format (e.g. `20242025`)        |
 | `game_type` | No       | `2` = regular season, `3` = playoffs                |
 
-### `.edge_speed_top_10(pos, sort, season, game_type)` → `SkaterSpeedTop10`
+### `.edge_speed_top_10(pos, sort, season, game_type)` → `list[SpeedLeaderEntry]`
 
 | Parameter   | Required | Valid values                                 |
 | ----------- | -------- | -------------------------------------------- |
@@ -299,7 +299,7 @@ All Edge methods accept optional `season` and `game_type`. `season` and `game_ty
 | `season`    | No       | `int` in `YYYYYYYY` format (e.g. `20242025`) |
 | `game_type` | No       | `2` = regular season, `3` = playoffs         |
 
-### `.edge_zone_time_top_10(pos, strength, sort, season, game_type)` → `SkaterZoneTimeTop10`
+### `.edge_zone_time_top_10(pos, strength, sort, season, game_type)` → `list[ZoneTimeLeaderEntry]`
 
 | Parameter   | Required | Valid values                                 |
 | ----------- | -------- | -------------------------------------------- |
@@ -309,7 +309,7 @@ All Edge methods accept optional `season` and `game_type`. `season` and `game_ty
 | `season`    | No       | `int` in `YYYYYYYY` format (e.g. `20242025`) |
 | `game_type` | No       | `2` = regular season, `3` = playoffs         |
 
-### `.edge_shot_speed_top_10(pos, sort, season, game_type)` → `SkaterShotSpeedTop10`
+### `.edge_shot_speed_top_10(pos, sort, season, game_type)` → `list[ShotSpeedLeaderEntry]`
 
 | Parameter   | Required | Valid values                                            |
 | ----------- | -------- | ------------------------------------------------------- |
@@ -318,7 +318,7 @@ All Edge methods accept optional `season` and `game_type`. `season` and `game_ty
 | `season`    | No       | `int` in `YYYYYYYY` format (e.g. `20242025`)            |
 | `game_type` | No       | `2` = regular season, `3` = playoffs                    |
 
-### `.edge_shot_location_top_10(category, sort, season, game_type)` → `SkaterShotLocationTop10`
+### `.edge_shot_location_top_10(category, sort, season, game_type)` → `list[ShotLocationLeaderEntry]`
 
 | Parameter   | Required | Valid values                                 |
 | ----------- | -------- | -------------------------------------------- |
@@ -340,7 +340,7 @@ All Edge methods accept optional `season` and `game_type`. `season` and `game_ty
 | `season`    | No       | `int` in `YYYYYYYY` format (e.g. `20242025`) |
 | `game_type` | No       | `2` = regular season, `3` = playoffs         |
 
-### `.edge_five_v_five_top_10(sort, season, game_type)` → `list`
+### `.edge_five_v_five_top_10(sort, season, game_type)` → `list[GoalieFiveVFiveLeaderEntry]`
 
 | Parameter   | Required | Valid values                                 |
 | ----------- | -------- | -------------------------------------------- |
@@ -348,7 +348,7 @@ All Edge methods accept optional `season` and `game_type`. `season` and `game_ty
 | `season`    | No       | `int` in `YYYYYYYY` format (e.g. `20242025`) |
 | `game_type` | No       | `2` = regular season, `3` = playoffs         |
 
-### `.edge_shot_location_top_10(category, sort, season, game_type)` → `list`
+### `.edge_shot_location_top_10(category, sort, season, game_type)` → `list[GoalieShotLocationLeaderEntry]`
 
 | Parameter   | Required | Valid values                                 |
 | ----------- | -------- | -------------------------------------------- |
@@ -357,7 +357,7 @@ All Edge methods accept optional `season` and `game_type`. `season` and `game_ty
 | `season`    | No       | `int` in `YYYYYYYY` format (e.g. `20242025`) |
 | `game_type` | No       | `2` = regular season, `3` = playoffs         |
 
-### `.edge_save_pctg_top_10(sort, season, game_type)` → `list`
+### `.edge_save_pctg_top_10(sort, season, game_type)` → `list[GoalieSavePctgLeaderEntry]`
 
 | Parameter   | Required | Valid values                                 |
 | ----------- | -------- | -------------------------------------------- |

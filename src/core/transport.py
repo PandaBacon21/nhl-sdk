@@ -9,7 +9,7 @@ import requests
 import logging
 
 from .config import BASE_URL_API_WEB
-from .errors import NotFoundError, ServerError, ForbiddenError, RateLimitError, NhlApiError
+from .errors import NotFoundError, ServerError, RateLimitError, NhlApiError
 
 session = requests.Session()
 
@@ -48,7 +48,8 @@ class APICallWeb:
             # Retry on 429 with backoff
             if res.status_code == 429 and attempt < self.max_retries:
                 wait = self._retry_wait(res, attempt)
-                self.logger.warning(f"429 {endpoint} | rate limited, retrying in {wait:.1f}s (attempt {attempt + 1}/{self.max_retries})")
+                raw_ra = res.headers.get("Retry-After", "none")
+                self.logger.warning(f"429 {endpoint} | rate limited, Retry-After={raw_ra}, retrying in {wait:.1f}s (attempt {attempt + 1}/{self.max_retries})")
                 time.sleep(wait)
                 continue
 
@@ -83,13 +84,21 @@ class APICallWeb:
         raise NhlApiError(f"Exhausted retries for {url}", status_code=None, url=url)  # pragma: no cover
 
     def _retry_wait(self, res: requests.Response, attempt: int) -> float:
+        # Observed NHL API behaviour:
+        #   - First 429 in a burst: Retry-After=60, counting down each retry.
+        #     Must honour the full value so the window resets before we retry.
+        #   - Subsequent 429s in same window: Retry-After 0  →  we apply a
+        #     1s floor so we never busy-loop against a still-throttled server.
+        # Observed rate limit: 35 requests per 60-second fixed window.
+        fallback = float(2 ** attempt)  # 1s, 2s, 4s
         retry_after = res.headers.get("Retry-After")
         if retry_after:
             try:
-                return float(retry_after)
+                server_wait = min(float(retry_after), 60.0)
+                return max(server_wait, 1.0)
             except ValueError:
                 pass
-        return float(2 ** attempt)  # 1s, 2s, 4s
+        return fallback
 
     def _raise_for_status(self, res: requests.Response, *, endpoint: str, url: str, payload: object) -> None:
         status = res.status_code
@@ -101,8 +110,6 @@ class APICallWeb:
 
         if status == 404:
             raise NotFoundError(msg, status_code=status, url=url)
-        if status == 403:
-            raise ForbiddenError(msg, status_code=status, url=url)
         if status == 429:
             raise RateLimitError(msg, status_code=status, url=url)
         if 500 <= status <= 599:

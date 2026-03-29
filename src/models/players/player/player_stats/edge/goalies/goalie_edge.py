@@ -43,63 +43,80 @@ class GoalieEdge:
             return f"{self._base_key}:{name}:{season}:{game_type}"
         return f"{self._base_key}:{name}:now"
 
-    def _fetch(self, name: str, api_fn, model_cls, season: int | None, game_type: int | None):
-        key = self._cache_key(name, season, game_type)
+    def _fetch(self, key: str, api_fn, builder):
         cached = _check_cache(cache=self._cache, cache_key=key)
         if cached is not None:
             self._logger.debug(f"{key}: Cache Hit")
             return cached.data
         self._logger.debug(f"{key}: Cache Miss")
-        res = api_fn(pid=self._pid, season=season, game_type=game_type)
-        result = model_cls.from_dict(res.data)
+        res = api_fn()
+        result = builder(res.data)
         self._cache.set(key=key, data=result, ttl=self._ttl)
         self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
         return result
 
     def details(self, season: int | None = None, game_type: int | None = None) -> GoalieDetails:
         """Retrieve NHL Edge ranking and stat summaries for the goalie."""
+        key = self._cache_key("details", season, game_type)
         return self._fetch(
-            "details",
-            self._client._api.api_web.call_nhl_edge_goalies.get_goalie_details,
-            GoalieDetails, season, game_type,
+            key,
+            lambda: self._client._api.api_web.call_nhl_edge_goalies.get_goalie_details(
+                pid=self._pid, season=season, game_type=game_type
+            ),
+            GoalieDetails.from_dict,
         )
 
     def comparison(self, season: int | None = None, game_type: int | None = None) -> GoalieComparison:
         """Retrieve NHL Edge drill-down comparison data for the goalie."""
+        key = self._cache_key("comparison", season, game_type)
         return self._fetch(
-            "comparison",
-            self._client._api.api_web.call_nhl_edge_goalies.get_goalie_comparison,
-            GoalieComparison, season, game_type,
+            key,
+            lambda: self._client._api.api_web.call_nhl_edge_goalies.get_goalie_comparison(
+                pid=self._pid, season=season, game_type=game_type
+            ),
+            GoalieComparison.from_dict,
         )
 
     def five_v_five(self, season: int | None = None, game_type: int | None = None) -> GoalieFiveVFive:
         """Retrieve 5v5 save percentage detail for the goalie."""
+        key = self._cache_key("five_v_five", season, game_type)
         return self._fetch(
-            "five_v_five",
-            self._client._api.api_web.call_nhl_edge_goalies.get_goalie_5v5,
-            GoalieFiveVFive, season, game_type,
+            key,
+            lambda: self._client._api.api_web.call_nhl_edge_goalies.get_goalie_5v5(
+                pid=self._pid, season=season, game_type=game_type
+            ),
+            GoalieFiveVFive.from_dict,
         )
 
     def shot_location(self, season: int | None = None, game_type: int | None = None) -> GoalieShotLocation:
         """Retrieve shot location detail for the goalie."""
+        key = self._cache_key("shot_location", season, game_type)
         return self._fetch(
-            "shot_location",
-            self._client._api.api_web.call_nhl_edge_goalies.get_shot_location,
-            GoalieShotLocation, season, game_type,
+            key,
+            lambda: self._client._api.api_web.call_nhl_edge_goalies.get_shot_location(
+                pid=self._pid, season=season, game_type=game_type
+            ),
+            GoalieShotLocation.from_dict,
         )
 
     def save_pctg(self, season: int | None = None, game_type: int | None = None) -> GoalieSavePctg:
         """Retrieve overall save percentage detail for the goalie."""
+        key = self._cache_key("save_pctg", season, game_type)
         return self._fetch(
-            "save_pctg",
-            self._client._api.api_web.call_nhl_edge_goalies.get_save_pctg,
-            GoalieSavePctg, season, game_type,
+            key,
+            lambda: self._client._api.api_web.call_nhl_edge_goalies.get_save_pctg(
+                pid=self._pid, season=season, game_type=game_type
+            ),
+            GoalieSavePctg.from_dict,
         )
 
     def cat_details(self, season: int | None = None, game_type: int | None = None) -> CatGoalieDetails:
         """Retrieve CAT endpoint NHL Edge details for the goalie."""
+        key = self._cache_key("cat_details", season, game_type)
         return self._fetch(
-            "cat_details",
-            self._client._api.api_web.call_nhl_edge_goalies.get_cat_goalie_details,
-            CatGoalieDetails, season, game_type,
+            key,
+            lambda: self._client._api.api_web.call_nhl_edge_goalies.get_cat_goalie_details(
+                pid=self._pid, season=season, game_type=game_type
+            ),
+            CatGoalieDetails.from_dict,
         )

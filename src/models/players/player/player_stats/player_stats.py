@@ -14,7 +14,7 @@ from .edge.goalies.goalie_edge import GoalieEdge
 from .....core.cache import get_cache
 from .....core.utilities import _check_cache
 
-if TYPE_CHECKING: 
+if TYPE_CHECKING:
     from nhl_stats.src.client import NhlClient
 
 class PlayerStats:
@@ -44,7 +44,7 @@ class PlayerStats:
         self._client = client
         self._cache = get_cache()
         self._logger = logging.getLogger("nhl_sdk.player.stats")
-        
+
         self._game_key: str = f"player:{pid}:game-log"
         self._ttl: int = 60 * 60 * 1
 
@@ -53,6 +53,18 @@ class PlayerStats:
         self.seasons = [Season.from_dict(season) for season in data.get("seasonTotals") or []]
         self.last_5_games = [FeaturedGame.from_dict(game) for game in data.get("last5Games") or []]
         self._logger.debug(f"{self._pid} Stats initialized")
+
+    def _fetch(self, key: str, api_fn, builder):
+        cached = _check_cache(cache=self._cache, cache_key=key)
+        if cached is not None:
+            self._logger.debug(f"{key}: Cache Hit")
+            return cached.data
+        self._logger.debug(f"{key}: Cache Miss")
+        res = api_fn()
+        result = builder(res.data)
+        self._cache.set(key=key, data=result, ttl=self._ttl)
+        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
+        return result
 
     def edge(self) -> SkaterEdge | GoalieEdge:
         """
@@ -71,30 +83,18 @@ class PlayerStats:
         If no season or game_type specified, defaults to current or most recent season (if player not currently active).
         If season specified but not game_type, game_type defaults to 2 (regular season).
         """
-
         if season and game_type:
-            cache_key = f"{self._game_key}:{season}:{game_type}"
-            cached = _check_cache(cache=self._cache, cache_key=cache_key)
-            if cached is not None:
-                self._logger.debug(f"{cache_key}: Cache Hit")
-                return cached.data
-            self._logger.debug(f"{cache_key}: Cache Miss")
-            res = self._client._api.api_web.call_nhl_players.get_game_log(pid=self._pid, season=season, g_type=game_type)
-            game_logs = GameLogs.from_dict(data=res.data)
-            self._cache.set(key=cache_key, data=game_logs, ttl=self._ttl)
-            self._logger.debug(f"{cache_key}: Cached | ttl: {self._ttl}")
-            return game_logs
-        else:
-            cache_key = f"{self._game_key}:now"
-            cached = _check_cache(cache=self._cache, cache_key=cache_key)
-            if cached is not None:
-                self._logger.debug(f"{cache_key}: Cache Hit")
-                return cached.data
-            self._logger.debug(f"{cache_key}: Cache Miss")
-            res = self._client._api.api_web.call_nhl_players.get_game_log(pid=self._pid)
-            game_logs = GameLogs.from_dict(data=res.data)
-            self._cache.set(key=cache_key, data=game_logs, ttl=self._ttl)
-            self._logger.debug(f"{cache_key}: Cached | ttl: {self._ttl}")
-            return game_logs
-            
-        
+            key = f"{self._game_key}:{season}:{game_type}"
+            return self._fetch(
+                key,
+                lambda: self._client._api.api_web.call_nhl_players.get_game_log(
+                    pid=self._pid, season=season, g_type=game_type
+                ),
+                lambda d: GameLogs.from_dict(data=d),
+            )
+        key = f"{self._game_key}:now"
+        return self._fetch(
+            key,
+            lambda: self._client._api.api_web.call_nhl_players.get_game_log(pid=self._pid),
+            lambda d: GameLogs.from_dict(data=d),
+        )

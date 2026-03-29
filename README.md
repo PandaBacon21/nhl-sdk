@@ -55,7 +55,7 @@ speed   = player.stats.edge().skating_speed()
 # Spotlight + leaders
 spotlight = client.players.spotlight
 leaders   = client.players.leaders
-skater_leaders = leaders.skaters(categories="goals", limit=10)
+skater_leaders = leaders.skaters.get_stat_leaders(categories="goals", limit=10)
 
 # --- Teams ---
 # Standings
@@ -131,7 +131,7 @@ Full method and property documentation is in [docs/api-reference.md](docs/api-re
 
 The NHL API is public and requires no authentication. As this is an unofficial SDK against an undocumented API, there is no guarantee that endpoints or response structures won't change, and unexpected errors outside those listed below may occur.
 
-On HTTP 429, the SDK automatically retries up to 3 times with backoff (respecting the `Retry-After` header when present) before raising `RateLimitError`.
+On HTTP 429, the SDK automatically retries up to 3 times with exponential backoff. The `Retry-After` response header is respected when present, capped at 15s with a minimum of 1s per retry. `RateLimitError` is raised only after all retries are exhausted.
 
 ```python
 from nhl_stats.src.core.errors import NotFoundError, RateLimitError, NhlApiError

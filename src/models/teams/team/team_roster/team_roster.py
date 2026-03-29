@@ -29,6 +29,18 @@ class TeamRoster:
         self._logger = logging.getLogger("nhl_sdk.teams.roster")
         self._ttl: int = 60 * 60 * 6
 
+    def _fetch(self, key: str, api_fn, builder=None):
+        cached = _check_cache(cache=self._cache, cache_key=key)
+        if cached is not None:
+            self._logger.debug(f"{key}: Cache Hit")
+            return cached.data
+        self._logger.debug(f"{key}: Cache Miss")
+        res = api_fn()
+        result = builder(res.data) if builder else res.data
+        self._cache.set(key=key, data=result, ttl=self._ttl)
+        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
+        return result
+
     def get_team_prospects(self, team: str) -> ProspectsResult:
         """
         Retrieve the prospect list for a specific club.
@@ -36,17 +48,11 @@ class TeamRoster:
         Args:
             team (str): Three-letter team code (e.g. ``"COL"``).
         """
-        key = f"teams:roster:{team}:prospects"
-        cached = _check_cache(cache=self._cache, cache_key=key)
-        if cached is not None:
-            self._logger.debug(f"{key}: Cache Hit")
-            return cached.data
-        self._logger.debug(f"{key}: Cache Miss")
-        res = self._client._api.api_web.call_nhl_teams.get_team_prospects(team=team)
-        result = ProspectsResult.from_dict(res.data)
-        self._cache.set(key=key, data=result, ttl=self._ttl)
-        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
-        return result
+        return self._fetch(
+            f"teams:roster:{team}:prospects",
+            lambda: self._client._api.api_web.call_nhl_teams.get_team_prospects(team=team),
+            ProspectsResult.from_dict,
+        )
 
     def get_team_roster(self, team: str, season: int | None = None) -> TeamRosterResult:
         """
@@ -57,17 +63,11 @@ class TeamRoster:
             season (int, optional): Eight-digit season identifier (e.g. ``20242025``).
                 Defaults to the current roster.
         """
-        key = f"teams:roster:{team}:{season or 'now'}"
-        cached = _check_cache(cache=self._cache, cache_key=key)
-        if cached is not None:
-            self._logger.debug(f"{key}: Cache Hit")
-            return cached.data
-        self._logger.debug(f"{key}: Cache Miss")
-        res = self._client._api.api_web.call_nhl_teams.get_team_roster(team=team, season=season)
-        result = TeamRosterResult.from_dict(res.data)
-        self._cache.set(key=key, data=result, ttl=self._ttl)
-        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
-        return result
+        return self._fetch(
+            f"teams:roster:{team}:{season or 'now'}",
+            lambda: self._client._api.api_web.call_nhl_teams.get_team_roster(team=team, season=season),
+            TeamRosterResult.from_dict,
+        )
 
     def get_roster_seasons(self, team: str) -> list[int]:
         """
@@ -76,14 +76,8 @@ class TeamRoster:
         Args:
             team (str): Three-letter team code (e.g. ``"COL"``).
         """
-        key = f"teams:roster:{team}:seasons"
-        cached = _check_cache(cache=self._cache, cache_key=key)
-        if cached is not None:
-            self._logger.debug(f"{key}: Cache Hit")
-            return cached.data
-        self._logger.debug(f"{key}: Cache Miss")
-        res = self._client._api.api_web.call_nhl_teams.get_roster_season_by_team(team=team)
-        result: list[int] = res.data or []
-        self._cache.set(key=key, data=result, ttl=self._ttl)
-        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
-        return result
+        return self._fetch(
+            f"teams:roster:{team}:seasons",
+            lambda: self._client._api.api_web.call_nhl_teams.get_roster_season_by_team(team=team),
+            lambda d: d or [],
+        )

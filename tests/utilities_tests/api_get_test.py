@@ -3,7 +3,7 @@ import responses
 import pytest
 
 import src.core.transport as transport_test
-from src.core.errors import NotFoundError, ForbiddenError, RateLimitError, ServerError, NhlApiError
+from src.core.errors import NotFoundError, RateLimitError, ServerError, NhlApiError
 
 BASE_URL_TEST: str = "https://api.test"
 PLAYER_ID: int = 8477492
@@ -40,19 +40,6 @@ def test_call_api_get_404_http_error() -> None:
 
     assert len(responses.calls) == 1
     assert exc.value.status_code == 404
-
-@responses.activate
-def test_call_api_get_403_forbidden() -> None:
-    http = make_http()
-    endpoint = "/v1/restricted"
-    url = BASE_URL_TEST+endpoint
-
-    responses.add(responses.GET, url, json={"message": "Forbidden"}, status=403)
-
-    with pytest.raises(ForbiddenError) as exc:
-        http.get(endpoint=endpoint)
-
-    assert exc.value.status_code == 403
 
 @responses.activate
 def test_call_api_get_429_rate_limit() -> None:

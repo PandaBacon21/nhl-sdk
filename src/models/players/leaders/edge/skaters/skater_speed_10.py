@@ -34,26 +34,3 @@ class SpeedLeaderEntry:
             "bursts_20_22": self.bursts_20_22,
             "bursts_18_20": self.bursts_18_20,
         }
-
-
-@dataclass(slots=True, frozen=True)
-class SkaterSpeedTop10:
-    """
-    Top 10 skaters ranked by skating speed.
-
-    Can be retrieved for the current season or a specific season/game type.
-
-    Note: this is a league-wide leaderboard, not a per-player stat.
-    """
-    entries: list
-
-    @classmethod
-    def from_list(cls, data: list) -> SkaterSpeedTop10:
-        return cls(
-            entries = [SpeedLeaderEntry.from_dict(e) for e in data or []],
-        )
-
-    def to_dict(self) -> dict:
-        return {
-            "entries": [e.to_dict() for e in self.entries],
-        }

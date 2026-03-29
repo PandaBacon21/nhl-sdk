@@ -1,3 +1,6 @@
+import pytest
+pytestmark = pytest.mark.smoke
+
 PID = 8477492  # Nathan MacKinnon
 
 
@@ -101,3 +104,88 @@ def test_smoke_edge_skater_cat_details(nhl) -> None:
     assert cat is not None
     cat_dict = cat.to_dict()
     print(f"Cat details: {cat_dict}")
+
+
+# ==========================================================================
+# EDGE GOALIE
+# ==========================================================================
+
+GOALIE_PID = 8475809
+
+
+def test_smoke_edge_goalie_details(nhl) -> None:
+    edge = nhl.players.get(pid=GOALIE_PID).stats.edge()
+
+    details = edge.details()
+    assert details is not None
+    assert len(details.seasons_with_edge) > 0
+    print(f"Edge seasons: {[s.id for s in details.seasons_with_edge]}")
+    print(f"Player: {details.player.first_name} {details.player.last_name}")
+    print(f"GAA value: {details.goals_against_avg.value} | percentile: {details.goals_against_avg.percentile}")
+    print(f"Games above .900: {details.games_above_900.value}")
+    print(f"Shot location summary count: {len(details.shot_location_summary)}")
+    print(f"Shot location detail count: {len(details.shot_location_details)}")
+
+
+def test_smoke_edge_goalie_comparison(nhl) -> None:
+    edge = nhl.players.get(pid=GOALIE_PID).stats.edge()
+
+    comparison = edge.comparison()
+    assert comparison is not None
+    assert comparison.save_pctg_5v5_summary is not None
+    print(f"Shot location summary count: {len(comparison.shot_location_summary)}")
+    print(f"5v5 last 10 games count: {len(comparison.save_pctg_5v5_last_10)}")
+    print(f"5v5 save pctg: {comparison.save_pctg_5v5_summary.save_pctg}")
+    print(f"Overall last 10 games count: {len(comparison.save_pctg_last_10)}")
+    print(f"Games above .900: {comparison.save_pctg_summary.games_above_900}")
+
+
+def test_smoke_edge_goalie_five_v_five(nhl) -> None:
+    edge = nhl.players.get(pid=GOALIE_PID).stats.edge()
+
+    five_v_five = edge.five_v_five()
+    assert five_v_five is not None
+    assert five_v_five.save_pctg_5v5_summary is not None
+    print(f"Last 10 games count: {len(five_v_five.last_10_games)}")
+    if five_v_five.last_10_games:
+        g = five_v_five.last_10_games[0]
+        print(f"Most recent 5v5 game: {g.game_date} | sv%: {g.save_pctg}")
+    print(f"5v5 save pctg: {five_v_five.save_pctg_5v5_summary.save_pctg.value}")
+    print(f"5v5 shots per 60: {five_v_five.save_pctg_5v5_summary.shots_per_60.value}")
+
+
+def test_smoke_edge_goalie_shot_location(nhl) -> None:
+    edge = nhl.players.get(pid=GOALIE_PID).stats.edge()
+
+    shot_loc = edge.shot_location()
+    assert shot_loc is not None
+    assert len(shot_loc.area_details) > 0
+    assert len(shot_loc.zone_totals) > 0
+    print(f"Area details count: {len(shot_loc.area_details)}")
+    print(f"First area: {shot_loc.area_details[0].area} | sv%: {shot_loc.area_details[0].save_pctg}")
+    print(f"Zone totals count: {len(shot_loc.zone_totals)}")
+    print(f"First zone: {shot_loc.zone_totals[0].location_code} | sv%: {shot_loc.zone_totals[0].save_pctg}")
+
+
+def test_smoke_edge_goalie_save_pctg(nhl) -> None:
+    edge = nhl.players.get(pid=GOALIE_PID).stats.edge()
+
+    save_pctg = edge.save_pctg()
+    assert save_pctg is not None
+    assert save_pctg.save_pctg_summary is not None
+    print(f"Last 10 games count: {len(save_pctg.last_10_games)}")
+    if save_pctg.last_10_games:
+        g = save_pctg.last_10_games[0]
+        print(f"Most recent game: {g.game_date} | sv%: {g.save_pctg} | decision: {g.decision}")
+    print(f"Games above .900: {save_pctg.save_pctg_summary.games_above_900.value}")
+    print(f"Pctg games above .900: {save_pctg.save_pctg_summary.pctg_games_above_900.value}")
+
+
+def test_smoke_edge_goalie_cat_details(nhl) -> None:
+    edge = nhl.players.get(pid=GOALIE_PID).stats.edge()
+
+    cat = edge.cat_details()
+    assert cat is not None
+    print(f"Player: {cat.player.first_name} {cat.player.last_name}")
+    print(f"Wins: {cat.player.wins} | GAA: {cat.player.gaa} | SV%: {cat.player.save_pctg}")
+    print(f"Cat details: {cat.to_dict()}")

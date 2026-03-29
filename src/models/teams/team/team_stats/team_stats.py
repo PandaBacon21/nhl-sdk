@@ -30,6 +30,18 @@ class TeamStats:
         self._logger = logging.getLogger("nhl_sdk.teams.stats")
         self._ttl: int = 60 * 60 * 1
 
+    def _fetch(self, key: str, api_fn, builder):
+        cached = _check_cache(cache=self._cache, cache_key=key)
+        if cached is not None:
+            self._logger.debug(f"{key}: Cache Hit")
+            return cached.data
+        self._logger.debug(f"{key}: Cache Miss")
+        res = api_fn()
+        result = builder(res.data)
+        self._cache.set(key=key, data=result, ttl=self._ttl)
+        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
+        return result
+
     def get_team_stats(
         self,
         team: str,
@@ -44,20 +56,12 @@ class TeamStats:
             season (int, optional): Season in YYYYYYYY format. Defaults to current season.
             g_type (int, optional): Game type (e.g. ``2`` for regular season). Required when ``season`` is provided.
         """
-        if season and g_type:
-            key = f"teams:stats:{team}:{season}:{g_type}"
-        else:
-            key = f"teams:stats:{team}:now"
-        cached = _check_cache(cache=self._cache, cache_key=key)
-        if cached is not None:
-            self._logger.debug(f"{key}: Cache Hit")
-            return cached.data
-        self._logger.debug(f"{key}: Cache Miss")
-        res = self._client._api.api_web.call_nhl_teams.get_team_stats(team=team, season=season, g_type=g_type)
-        result = TeamStatsResult.from_dict(res.data)
-        self._cache.set(key=key, data=result, ttl=self._ttl)
-        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
-        return result
+        key = f"teams:stats:{team}:{season}:{g_type}" if season and g_type else f"teams:stats:{team}:now"
+        return self._fetch(
+            key,
+            lambda: self._client._api.api_web.call_nhl_teams.get_team_stats(team=team, season=season, g_type=g_type),
+            TeamStatsResult.from_dict,
+        )
 
     def get_game_types_per_season(self, team: str) -> list[TeamSeasonGameTypes]:
         """
@@ -66,17 +70,11 @@ class TeamStats:
         Args:
             team (str): Three-letter team code (e.g. ``"TOR"``).
         """
-        key = f"teams:stats:{team}:seasons"
-        cached = _check_cache(cache=self._cache, cache_key=key)
-        if cached is not None:
-            self._logger.debug(f"{key}: Cache Hit")
-            return cached.data
-        self._logger.debug(f"{key}: Cache Miss")
-        res = self._client._api.api_web.call_nhl_teams.get_game_types_per_season(team=team)
-        result = [TeamSeasonGameTypes.from_dict(s) for s in res.data or []]
-        self._cache.set(key=key, data=result, ttl=self._ttl)
-        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
-        return result
+        return self._fetch(
+            f"teams:stats:{team}:seasons",
+            lambda: self._client._api.api_web.call_nhl_teams.get_game_types_per_season(team=team),
+            lambda d: [TeamSeasonGameTypes.from_dict(s) for s in d or []],
+        )
 
     def get_team_scoreboard(self, team: str) -> TeamScoreboard:
         """
@@ -85,14 +83,8 @@ class TeamStats:
         Args:
             team (str): Three-letter team code (e.g. ``"TOR"``).
         """
-        key = f"teams:scoreboard:{team}:now"
-        cached = _check_cache(cache=self._cache, cache_key=key)
-        if cached is not None:
-            self._logger.debug(f"{key}: Cache Hit")
-            return cached.data
-        self._logger.debug(f"{key}: Cache Miss")
-        res = self._client._api.api_web.call_nhl_teams.get_team_scoreboard(team=team)
-        result = TeamScoreboard.from_dict(res.data)
-        self._cache.set(key=key, data=result, ttl=self._ttl)
-        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
-        return result
+        return self._fetch(
+            f"teams:scoreboard:{team}:now",
+            lambda: self._client._api.api_web.call_nhl_teams.get_team_scoreboard(team=team),
+            TeamScoreboard.from_dict,
+        )
