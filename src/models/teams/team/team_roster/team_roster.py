@@ -6,7 +6,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from .....core.cache import get_cache
-from .....core.utilities import _check_cache
+from .....core.utilities import CacheFetchMixin
 from .team_prospects import ProspectsResult
 from .team_roster_result import TeamRosterResult
 
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from nhl_stats.src.client import NhlClient
 
 
-class TeamRoster:
+class TeamRoster(CacheFetchMixin):
     """
     TeamRoster sub-resource.
 
@@ -29,18 +29,6 @@ class TeamRoster:
         self._logger = logging.getLogger("nhl_sdk.teams.roster")
         self._ttl: int = 60 * 60 * 6
 
-    def _fetch(self, key: str, api_fn, builder=None):
-        cached = _check_cache(cache=self._cache, cache_key=key)
-        if cached is not None:
-            self._logger.debug(f"{key}: Cache Hit")
-            return cached.data
-        self._logger.debug(f"{key}: Cache Miss")
-        res = api_fn()
-        result = builder(res.data) if builder else res.data
-        self._cache.set(key=key, data=result, ttl=self._ttl)
-        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
-        return result
-
     def get_team_prospects(self, team: str) -> ProspectsResult:
         """
         Retrieve the prospect list for a specific club.
@@ -51,6 +39,7 @@ class TeamRoster:
         return self._fetch(
             f"teams:roster:{team}:prospects",
             lambda: self._client._api.api_web.call_nhl_teams.get_team_prospects(team=team),
+            self._logger, self._cache, self._ttl,
             ProspectsResult.from_dict,
         )
 
@@ -66,6 +55,7 @@ class TeamRoster:
         return self._fetch(
             f"teams:roster:{team}:{season or 'now'}",
             lambda: self._client._api.api_web.call_nhl_teams.get_team_roster(team=team, season=season),
+            self._logger, self._cache, self._ttl,
             TeamRosterResult.from_dict,
         )
 
@@ -79,5 +69,6 @@ class TeamRoster:
         return self._fetch(
             f"teams:roster:{team}:seasons",
             lambda: self._client._api.api_web.call_nhl_teams.get_roster_season_by_team(team=team),
+            self._logger, self._cache, self._ttl,
             lambda d: d or [],
         )

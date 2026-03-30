@@ -14,13 +14,13 @@ from .shot_speed import ShotSpeed
 from .shot_location import ShotLocation
 from .cat_skater_details import CatSkaterDetails
 from .......core.cache import get_cache
-from .......core.utilities import _check_cache
+from .......core.utilities import CacheFetchMixin
 
 if TYPE_CHECKING:
     from nhl_stats.src.client import NhlClient
 
 
-class SkaterEdge:
+class SkaterEdge(CacheFetchMixin):
     """
     Per-player skater NHL Edge sub-resource.
 
@@ -45,18 +45,6 @@ class SkaterEdge:
             return f"{self._base_key}:{name}:{season}:{game_type}"
         return f"{self._base_key}:{name}:now"
 
-    def _fetch(self, key: str, api_fn, builder):
-        cached = _check_cache(cache=self._cache, cache_key=key)
-        if cached is not None:
-            self._logger.debug(f"{key}: Cache Hit")
-            return cached.data
-        self._logger.debug(f"{key}: Cache Miss")
-        res = api_fn()
-        result = builder(res.data)
-        self._cache.set(key=key, data=result, ttl=self._ttl)
-        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
-        return result
-
     def details(self, season: int | None = None, game_type: int | None = None) -> SkaterDetails:
         """Retrieve NHL Edge ranking and stat summaries for the skater."""
         key = self._cache_key("details", season, game_type)
@@ -65,6 +53,7 @@ class SkaterEdge:
             lambda: self._client._api.api_web.call_nhl_edge_skaters.get_skater_details(
                 pid=self._pid, season=season, game_type=game_type
             ),
+            self._logger, self._cache, self._ttl,
             SkaterDetails.from_dict,
         )
 
@@ -76,6 +65,7 @@ class SkaterEdge:
             lambda: self._client._api.api_web.call_nhl_edge_skaters.get_skater_comparison(
                 pid=self._pid, season=season, game_type=game_type
             ),
+            self._logger, self._cache, self._ttl,
             SkaterComparison.from_dict,
         )
 
@@ -87,6 +77,7 @@ class SkaterEdge:
             lambda: self._client._api.api_web.call_nhl_edge_skaters.get_skating_distance(
                 pid=self._pid, season=season, game_type=game_type
             ),
+            self._logger, self._cache, self._ttl,
             SkatingDistance.from_dict,
         )
 
@@ -98,6 +89,7 @@ class SkaterEdge:
             lambda: self._client._api.api_web.call_nhl_edge_skaters.get_skating_speed(
                 pid=self._pid, season=season, game_type=game_type
             ),
+            self._logger, self._cache, self._ttl,
             SkatingSpeed.from_dict,
         )
 
@@ -109,6 +101,7 @@ class SkaterEdge:
             lambda: self._client._api.api_web.call_nhl_edge_skaters.get_zone_time(
                 pid=self._pid, season=season, game_type=game_type
             ),
+            self._logger, self._cache, self._ttl,
             ZoneTime.from_dict,
         )
 
@@ -120,6 +113,7 @@ class SkaterEdge:
             lambda: self._client._api.api_web.call_nhl_edge_skaters.get_shot_speed(
                 pid=self._pid, season=season, game_type=game_type
             ),
+            self._logger, self._cache, self._ttl,
             ShotSpeed.from_dict,
         )
 
@@ -131,6 +125,7 @@ class SkaterEdge:
             lambda: self._client._api.api_web.call_nhl_edge_skaters.get_shot_location(
                 pid=self._pid, season=season, game_type=game_type
             ),
+            self._logger, self._cache, self._ttl,
             ShotLocation.from_dict,
         )
 
@@ -142,5 +137,6 @@ class SkaterEdge:
             lambda: self._client._api.api_web.call_nhl_edge_skaters.get_cat_skater_details(
                 pid=self._pid, season=season, game_type=game_type
             ),
+            self._logger, self._cache, self._ttl,
             CatSkaterDetails.from_dict,
         )

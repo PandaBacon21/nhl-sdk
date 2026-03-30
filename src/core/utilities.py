@@ -2,8 +2,15 @@
 UTILITY CLASSES AND FUNCTIONS
 """
 from __future__ import annotations
+import logging
+from typing import TYPE_CHECKING
 from dataclasses import dataclass
 from .cache.cache_item import CacheItem
+
+if TYPE_CHECKING:
+    from .cache.base_cache import BaseCache
+
+
 
 class LocalizedString:
     """
@@ -71,3 +78,25 @@ def _check_cache(cache, cache_key: str) -> CacheItem | None:
     if cached is None:
         return None
     return cached
+
+
+class CacheFetchMixin:
+    """
+    Mixin providing a cache-backed fetch helper.
+
+    Requires the subclass to define:
+      self._cache   — a BaseCache instance
+      self._logger  — a logging.Logger
+      self._ttl     — int TTL in seconds
+    """
+    def _fetch(self, key: str, api_fn, logger: logging.Logger, cache: BaseCache, ttl: int, builder=None):
+        cached = _check_cache(cache=cache, cache_key=key)
+        if cached is not None:
+            logger.debug(f"{key}: Cache Hit")
+            return cached.data
+        logger.debug(f"{key}: Cache Miss")
+        res = api_fn()
+        result = builder(res.data) if builder else res.data
+        cache.set(key=key, data=result, ttl=ttl)
+        logger.debug(f"{key}: Cached | ttl: {ttl}")
+        return result

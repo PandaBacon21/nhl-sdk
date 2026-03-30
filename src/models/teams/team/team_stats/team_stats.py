@@ -6,7 +6,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from .....core.cache import get_cache
-from .....core.utilities import _check_cache
+from .....core.utilities import CacheFetchMixin
 from .team_stats_result import TeamStatsResult
 from .team_season_game_types import TeamSeasonGameTypes
 from .team_scoreboard import TeamScoreboard
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from nhl_stats.src.client import NhlClient
 
 
-class TeamStats:
+class TeamStats(CacheFetchMixin):
     """
     TeamStats sub-resource.
 
@@ -29,18 +29,6 @@ class TeamStats:
         self._cache = get_cache()
         self._logger = logging.getLogger("nhl_sdk.teams.stats")
         self._ttl: int = 60 * 60 * 1
-
-    def _fetch(self, key: str, api_fn, builder):
-        cached = _check_cache(cache=self._cache, cache_key=key)
-        if cached is not None:
-            self._logger.debug(f"{key}: Cache Hit")
-            return cached.data
-        self._logger.debug(f"{key}: Cache Miss")
-        res = api_fn()
-        result = builder(res.data)
-        self._cache.set(key=key, data=result, ttl=self._ttl)
-        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
-        return result
 
     def get_team_stats(
         self,
@@ -60,6 +48,7 @@ class TeamStats:
         return self._fetch(
             key,
             lambda: self._client._api.api_web.call_nhl_teams.get_team_stats(team=team, season=season, g_type=g_type),
+            self._logger, self._cache, self._ttl,
             TeamStatsResult.from_dict,
         )
 
@@ -73,6 +62,7 @@ class TeamStats:
         return self._fetch(
             f"teams:stats:{team}:seasons",
             lambda: self._client._api.api_web.call_nhl_teams.get_game_types_per_season(team=team),
+            self._logger, self._cache, self._ttl,
             lambda d: [TeamSeasonGameTypes.from_dict(s) for s in d or []],
         )
 
@@ -86,5 +76,6 @@ class TeamStats:
         return self._fetch(
             f"teams:scoreboard:{team}:now",
             lambda: self._client._api.api_web.call_nhl_teams.get_team_scoreboard(team=team),
+            self._logger, self._cache, self._ttl,
             TeamScoreboard.from_dict,
         )

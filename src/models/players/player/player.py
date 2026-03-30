@@ -23,9 +23,6 @@ class Player:
     statistical data for an individual player. Data is fetched lazily
     from the NHL API and cached for the lifetime of the object.
 
-    Use `refresh()` to clear cached data and retrieve the latest
-    information from the API.
-
     Use the Players collection to obtain Player instances.
     """
     def __init__(self, player_id: int, client: NhlClient):
@@ -84,15 +81,6 @@ class Player:
         cache_item = self._cache.set(key=self._landing_key, data=res.data, ttl=self._ttl)
         self._logger.debug(f"{self._landing_key}: Cached | ttl: {self._ttl}")
         return cache_item
-
-    def _clear(self) -> None:
-        """
-        Clear any cached data for the particular player
-        For internal use only
-        """
-        self._profile = None
-        self._stats = None
-        self._logger.info(f"Player {self._pid}:  data cleared")
 
     @property
     def profile(self) -> Profile:

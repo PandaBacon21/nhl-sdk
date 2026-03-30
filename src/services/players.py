@@ -5,14 +5,14 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from ..core.utilities import _check_cache
+from ..core.utilities import CacheFetchMixin
 from ..core.cache import get_cache
 from ..models.players import Spotlight, Leaders, Player
 
 if TYPE_CHECKING:
     from nhl_stats.src.client import NhlClient
 
-class Players:
+class Players(CacheFetchMixin):
     """
     Players Collection
 
@@ -27,19 +27,6 @@ class Players:
         self._cache = get_cache()
         self._logger = logging.getLogger("nhl_sdk.players")
         self._ttl: int = 60 * 60 * 6
-        self._spotlight_key: str = "players:spotlight"
-
-    def _fetch(self, key: str, api_fn, builder):
-        cached = _check_cache(cache=self._cache, cache_key=key)
-        if cached is not None:
-            self._logger.debug(f"{key}: Cache Hit")
-            return cached.data
-        self._logger.debug(f"{key}: Cache Miss")
-        res = api_fn()
-        result = builder(res.data)
-        self._cache.set(key=key, data=result, ttl=self._ttl)
-        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
-        return result
 
     def get(self, pid: int) -> Player:
         """
@@ -47,7 +34,7 @@ class Players:
 
         Parameters
         ----------
-        data : int
+        pid : int
             Unique player Id
         """
         self._logger.debug(f"GET Player({pid})")
@@ -59,8 +46,9 @@ class Players:
         Return a list of currently Spotlighted Players
         """
         return self._fetch(
-            self._spotlight_key,
+            "players:spotlight",
             lambda: self._client._api.api_web.call_nhl_players.get_player_spotlight(),
+            self._logger, self._cache, self._ttl,
             lambda d: [Spotlight.from_dict(p) for p in d or []],
         )
 
@@ -69,5 +57,5 @@ class Players:
         """
         Return leaders of various statistics for skaters and goalies
         """
-        self._logger.debug(f"Retrieve Players Leaders")
+        self._logger.debug("Retrieve Players Leaders")
         return Leaders(self._client)

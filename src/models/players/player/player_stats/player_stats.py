@@ -12,12 +12,12 @@ from .games import GameLogs
 from .edge.skaters.skater_edge import SkaterEdge
 from .edge.goalies.goalie_edge import GoalieEdge
 from .....core.cache import get_cache
-from .....core.utilities import _check_cache
+from .....core.utilities import CacheFetchMixin
 
 if TYPE_CHECKING:
     from nhl_stats.src.client import NhlClient
 
-class PlayerStats:
+class PlayerStats(CacheFetchMixin):
     """
     Player statistical sub-resource.
 
@@ -54,18 +54,6 @@ class PlayerStats:
         self.last_5_games = [FeaturedGame.from_dict(game) for game in data.get("last5Games") or []]
         self._logger.debug(f"{self._pid} Stats initialized")
 
-    def _fetch(self, key: str, api_fn, builder):
-        cached = _check_cache(cache=self._cache, cache_key=key)
-        if cached is not None:
-            self._logger.debug(f"{key}: Cache Hit")
-            return cached.data
-        self._logger.debug(f"{key}: Cache Miss")
-        res = api_fn()
-        result = builder(res.data)
-        self._cache.set(key=key, data=result, ttl=self._ttl)
-        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
-        return result
-
     def edge(self) -> SkaterEdge | GoalieEdge:
         """
         Player NHL Edge stats.
@@ -90,11 +78,13 @@ class PlayerStats:
                 lambda: self._client._api.api_web.call_nhl_players.get_game_log(
                     pid=self._pid, season=season, g_type=game_type
                 ),
+                self._logger, self._cache, self._ttl,
                 lambda d: GameLogs.from_dict(data=d),
             )
         key = f"{self._game_key}:now"
         return self._fetch(
             key,
             lambda: self._client._api.api_web.call_nhl_players.get_game_log(pid=self._pid),
+            self._logger, self._cache, self._ttl,
             lambda d: GameLogs.from_dict(data=d),
         )

@@ -131,7 +131,7 @@ Full method and property documentation is in [docs/api-reference.md](docs/api-re
 
 The NHL API is public and requires no authentication. As this is an unofficial SDK against an undocumented API, there is no guarantee that endpoints or response structures won't change, and unexpected errors outside those listed below may occur.
 
-On HTTP 429, the SDK automatically retries up to 3 times with exponential backoff. The `Retry-After` response header is respected when present, capped at 15s with a minimum of 1s per retry. `RateLimitError` is raised only after all retries are exhausted.
+On HTTP 429, the SDK automatically retries up to 3 times with exponential backoff. The `Retry-After` response header is respected when present, capped at 60s with a minimum of 1s per retry. `RateLimitError` is raised only after all retries are exhausted. In practice, the NHL API returns `Retry-After: 60` on rate limit and counts it down across successive 429 responses in the same window.
 
 ```python
 from nhl_stats.src.core.errors import NotFoundError, RateLimitError, NhlApiError

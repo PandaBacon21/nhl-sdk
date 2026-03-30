@@ -6,14 +6,14 @@ import logging
 from typing import TYPE_CHECKING
 
 from .....core.cache import get_cache
-from .....core.utilities import _check_cache
+from .....core.utilities import CacheFetchMixin
 from .team_schedule_result import TeamScheduleResult, TeamMonthScheduleResult, TeamWeekScheduleResult
 
 if TYPE_CHECKING:
     from nhl_stats.src.client import NhlClient
 
 
-class TeamSchedule:
+class TeamSchedule(CacheFetchMixin):
     """
     TeamSchedule sub-resource.
 
@@ -27,18 +27,6 @@ class TeamSchedule:
         self._logger = logging.getLogger("nhl_sdk.teams.schedule")
         self._ttl: int = 60 * 60
 
-    def _fetch(self, key: str, api_fn, builder):
-        cached = _check_cache(cache=self._cache, cache_key=key)
-        if cached is not None:
-            self._logger.debug(f"{key}: Cache Hit")
-            return cached.data
-        self._logger.debug(f"{key}: Cache Miss")
-        res = api_fn()
-        result = builder(res.data)
-        self._cache.set(key=key, data=result, ttl=self._ttl)
-        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
-        return result
-
     def get_schedule(self, team: str, season: int | None = None) -> TeamScheduleResult:
         """
         Retrieve the full-season schedule for a team.
@@ -51,6 +39,7 @@ class TeamSchedule:
         return self._fetch(
             f"teams:schedule:{team}:{season or 'now'}",
             lambda: self._client._api.api_web.call_nhl_teams.get_schedule(team=team, season=season),
+            self._logger, self._cache, self._ttl,
             TeamScheduleResult.from_dict,
         )
 
@@ -66,6 +55,7 @@ class TeamSchedule:
         return self._fetch(
             f"teams:schedule:{team}:month:{month or 'now'}",
             lambda: self._client._api.api_web.call_nhl_teams.get_schedule_month(team=team, month=month),
+            self._logger, self._cache, self._ttl,
             TeamMonthScheduleResult.from_dict,
         )
 
@@ -81,5 +71,6 @@ class TeamSchedule:
         return self._fetch(
             f"teams:schedule:{team}:week:{week or 'now'}",
             lambda: self._client._api.api_web.call_nhl_teams.get_schedule_week(team=team, week=week),
+            self._logger, self._cache, self._ttl,
             TeamWeekScheduleResult.from_dict,
         )

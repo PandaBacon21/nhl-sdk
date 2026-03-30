@@ -6,14 +6,14 @@ import logging
 from typing import TYPE_CHECKING
 
 from ....core.cache import get_cache
-from ....core.utilities import _check_cache
+from ....core.utilities import CacheFetchMixin
 from .standings_result import StandingsResult
 
 if TYPE_CHECKING:
     from nhl_stats.src.client import NhlClient
 
 
-class Standings:
+class Standings(CacheFetchMixin):
     """
     Standings sub-resource.
 
@@ -28,18 +28,6 @@ class Standings:
         self._logger = logging.getLogger("nhl_sdk.teams.standings")
         self._ttl: int = 60 * 60 * 1
 
-    def _fetch(self, key: str, api_fn, builder=None):
-        cached = _check_cache(cache=self._cache, cache_key=key)
-        if cached is not None:
-            self._logger.debug(f"{key}: Cache Hit")
-            return cached.data
-        self._logger.debug(f"{key}: Cache Miss")
-        res = api_fn()
-        result = builder(res.data) if builder else res.data
-        self._cache.set(key=key, data=result, ttl=self._ttl)
-        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
-        return result
-
     def get_standings(self, date: str | None = None) -> StandingsResult:
         """
         Retrieve NHL standings.
@@ -51,6 +39,7 @@ class Standings:
         return self._fetch(
             key,
             lambda: self._client._api.api_web.call_nhl_teams.get_standings(date=date),
+            self._logger, self._cache, self._ttl,
             StandingsResult.from_dict,
         )
 
@@ -61,4 +50,5 @@ class Standings:
         return self._fetch(
             "teams:standings:seasons",
             lambda: self._client._api.api_web.call_nhl_teams.get_standings_per_season(),
+            self._logger, self._cache, self._ttl,
         )

@@ -12,13 +12,13 @@ from .goalie_shot_location import GoalieShotLocation
 from .goalie_save_pctg import GoalieSavePctg
 from .cat_goalie_details import CatGoalieDetails
 from .......core.cache import get_cache
-from .......core.utilities import _check_cache
+from .......core.utilities import CacheFetchMixin
 
 if TYPE_CHECKING:
     from nhl_stats.src.client import NhlClient
 
 
-class GoalieEdge:
+class GoalieEdge(CacheFetchMixin):
     """
     Per-player goalie NHL Edge sub-resource.
 
@@ -43,18 +43,6 @@ class GoalieEdge:
             return f"{self._base_key}:{name}:{season}:{game_type}"
         return f"{self._base_key}:{name}:now"
 
-    def _fetch(self, key: str, api_fn, builder):
-        cached = _check_cache(cache=self._cache, cache_key=key)
-        if cached is not None:
-            self._logger.debug(f"{key}: Cache Hit")
-            return cached.data
-        self._logger.debug(f"{key}: Cache Miss")
-        res = api_fn()
-        result = builder(res.data)
-        self._cache.set(key=key, data=result, ttl=self._ttl)
-        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
-        return result
-
     def details(self, season: int | None = None, game_type: int | None = None) -> GoalieDetails:
         """Retrieve NHL Edge ranking and stat summaries for the goalie."""
         key = self._cache_key("details", season, game_type)
@@ -63,6 +51,7 @@ class GoalieEdge:
             lambda: self._client._api.api_web.call_nhl_edge_goalies.get_goalie_details(
                 pid=self._pid, season=season, game_type=game_type
             ),
+            self._logger, self._cache, self._ttl,
             GoalieDetails.from_dict,
         )
 
@@ -74,6 +63,7 @@ class GoalieEdge:
             lambda: self._client._api.api_web.call_nhl_edge_goalies.get_goalie_comparison(
                 pid=self._pid, season=season, game_type=game_type
             ),
+            self._logger, self._cache, self._ttl,
             GoalieComparison.from_dict,
         )
 
@@ -85,6 +75,7 @@ class GoalieEdge:
             lambda: self._client._api.api_web.call_nhl_edge_goalies.get_goalie_5v5(
                 pid=self._pid, season=season, game_type=game_type
             ),
+            self._logger, self._cache, self._ttl,
             GoalieFiveVFive.from_dict,
         )
 
@@ -96,6 +87,7 @@ class GoalieEdge:
             lambda: self._client._api.api_web.call_nhl_edge_goalies.get_shot_location(
                 pid=self._pid, season=season, game_type=game_type
             ),
+            self._logger, self._cache, self._ttl,
             GoalieShotLocation.from_dict,
         )
 
@@ -107,6 +99,7 @@ class GoalieEdge:
             lambda: self._client._api.api_web.call_nhl_edge_goalies.get_save_pctg(
                 pid=self._pid, season=season, game_type=game_type
             ),
+            self._logger, self._cache, self._ttl,
             GoalieSavePctg.from_dict,
         )
 
@@ -118,5 +111,6 @@ class GoalieEdge:
             lambda: self._client._api.api_web.call_nhl_edge_goalies.get_cat_goalie_details(
                 pid=self._pid, season=season, game_type=game_type
             ),
+            self._logger, self._cache, self._ttl,
             CatGoalieDetails.from_dict,
         )

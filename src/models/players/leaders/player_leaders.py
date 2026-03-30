@@ -21,7 +21,7 @@ from .edge.goalies import (
     GoalieShotLocationLeaderEntry,
     GoalieSavePctgLeaderEntry,
 )
-from ....core.utilities import LocalizedString, _check_cache
+from ....core.utilities import LocalizedString, CacheFetchMixin
 from ....core.cache import get_cache
 
 if TYPE_CHECKING:
@@ -87,7 +87,7 @@ class LeaderPlayer:
         }
 
 
-class PlayerLeaders(ABC):
+class PlayerLeaders(CacheFetchMixin, ABC):
     _edge_pos: str    # set by subclass — used in edge cache keys and logger
     _stat_prefix: str # set by subclass — used in stat leaders cache keys
 
@@ -114,18 +114,6 @@ class PlayerLeaders(ABC):
         suffix = f":{season}:{game_type}" if season and game_type else ":now"
         extra = "".join(f":{a}" for a in args if a)
         return base + suffix + extra
-
-    def _fetch(self, key: str, api_fn, builder=None):
-        cached = _check_cache(cache=self._cache, cache_key=key)
-        if cached is not None:
-            self._logger.debug(f"{key}: Cache Hit")
-            return cached.data
-        self._logger.debug(f"{key}: Cache Miss")
-        res = api_fn()
-        result = builder(res.data) if builder else res.data
-        self._cache.set(key=key, data=result, ttl=self._ttl)
-        self._logger.debug(f"{key}: Cached | ttl: {self._ttl}")
-        return result
 
 
 # ---------------------------------------------------------------------------
@@ -191,6 +179,7 @@ class GoalieLeaders(PlayerLeaders):
             lambda: self._client._api.api_web.call_nhl_players.get_goalie_leaders(
                 season=season, g_type=game_type, categories=categories, limit=limit
             ),
+            self._logger, self._cache, self._ttl,
             GoalieStatLeaders,
         )
 
@@ -202,6 +191,7 @@ class GoalieLeaders(PlayerLeaders):
             lambda: self._client._api.api_web.call_nhl_edge_goalies.get_goalie_landing(
                 season=season, game_type=game_type,
             ),
+            self._logger, self._cache, self._ttl,
             lambda d: GoalieLanding.from_dict(d),
         )
 
@@ -214,6 +204,7 @@ class GoalieLeaders(PlayerLeaders):
             lambda: self._client._api.api_web.call_nhl_edge_goalies.get_goalies_5v5_10(
                 sort=sort, season=season, game_type=game_type,
             ),
+            self._logger, self._cache, self._ttl,
             lambda d: [GoalieFiveVFiveLeaderEntry.from_dict(e) for e in (d or [])],
         )
 
@@ -226,6 +217,7 @@ class GoalieLeaders(PlayerLeaders):
             lambda: self._client._api.api_web.call_nhl_edge_goalies.get_goalie_shot_location_10(
                 category=category, sort=sort, season=season, game_type=game_type,
             ),
+            self._logger, self._cache, self._ttl,
             lambda d: [GoalieShotLocationLeaderEntry.from_dict(e) for e in (d or [])],
         )
 
@@ -238,6 +230,7 @@ class GoalieLeaders(PlayerLeaders):
             lambda: self._client._api.api_web.call_nhl_edge_goalies.get_goalie_save_pctg_10(
                 sort=sort, season=season, game_type=game_type,
             ),
+            self._logger, self._cache, self._ttl,
             lambda d: [GoalieSavePctgLeaderEntry.from_dict(e) for e in (d or [])],
         )
 
@@ -272,6 +265,7 @@ class SkaterLeaders(PlayerLeaders):
             lambda: self._client._api.api_web.call_nhl_players.get_skater_leaders(
                 season=season, g_type=game_type, categories=categories, limit=limit
             ),
+            self._logger, self._cache, self._ttl,
             SkaterStatLeaders,
         )
 
@@ -283,6 +277,7 @@ class SkaterLeaders(PlayerLeaders):
             lambda: self._client._api.api_web.call_nhl_edge_skaters.get_skater_landing(
                 season=season, game_type=game_type,
             ),
+            self._logger, self._cache, self._ttl,
             lambda d: SkaterLanding.from_dict(d),
         )
 
@@ -295,6 +290,7 @@ class SkaterLeaders(PlayerLeaders):
             lambda: self._client._api.api_web.call_nhl_edge_skaters.get_skater_distance_10(
                 pos=pos, strength=strength, sort=sort, season=season, game_type=game_type,
             ),
+            self._logger, self._cache, self._ttl,
             lambda d: [DistanceLeaderEntry.from_dict(e) for e in (d or [])],
         )
 
@@ -307,6 +303,7 @@ class SkaterLeaders(PlayerLeaders):
             lambda: self._client._api.api_web.call_nhl_edge_skaters.get_skating_speed_10(
                 pos=pos, sort=sort, season=season, game_type=game_type,
             ),
+            self._logger, self._cache, self._ttl,
             lambda d: [SpeedLeaderEntry.from_dict(e) for e in (d or [])],
         )
 
@@ -319,6 +316,7 @@ class SkaterLeaders(PlayerLeaders):
             lambda: self._client._api.api_web.call_nhl_edge_skaters.get_skater_zone_time_10(
                 pos=pos, strength=strength, sort=sort, season=season, game_type=game_type,
             ),
+            self._logger, self._cache, self._ttl,
             lambda d: [ZoneTimeLeaderEntry.from_dict(e) for e in (d or [])],
         )
 
@@ -331,6 +329,7 @@ class SkaterLeaders(PlayerLeaders):
             lambda: self._client._api.api_web.call_nhl_edge_skaters.get_skater_shot_speed_10(
                 pos=pos, sort=sort, season=season, game_type=game_type,
             ),
+            self._logger, self._cache, self._ttl,
             lambda d: [ShotSpeedLeaderEntry.from_dict(e) for e in (d or [])],
         )
 
@@ -343,5 +342,6 @@ class SkaterLeaders(PlayerLeaders):
             lambda: self._client._api.api_web.call_nhl_edge_skaters.get_skater_shot_location_10(
                 category=category, sort=sort, season=season, game_type=game_type,
             ),
+            self._logger, self._cache, self._ttl,
             lambda d: [ShotLocationLeaderEntry.from_dict(e) for e in (d or [])],
         )
