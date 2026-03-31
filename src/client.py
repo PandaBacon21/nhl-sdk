@@ -1,7 +1,7 @@
 """
 NHL CLIENT
 """
-from .services import Players, Teams, League, Games
+from .services import Players, Teams, League, Games, Draft
 from .resources import API
 
 from .core.config import BaseConfig, _build_config
@@ -15,7 +15,7 @@ class NhlClient:
     Main NHL Client
 
     This is the main interface for NHL Client. 
-    Exposes Players and Teams collections (will expand to League, Edge, etc over time)
+    Exposes Players, Draft, Teams, League, Games, Playoffs, and Miscellaneous Services. 
 
     """
     def __init__(self, *, config_from_object: BaseConfig | None = None, log_name: str | None = None, 
@@ -26,10 +26,12 @@ class NhlClient:
         cache = self._config.cache 
         init_cache(cache)
         self._logger = NhlLogger(self._config)
+        
         self.players = Players(self)
         self.teams = Teams(self)
         self.league = League(self)
         self.games = Games(self)
+        self.draft = Draft(self)
         self._api = API()
 
 

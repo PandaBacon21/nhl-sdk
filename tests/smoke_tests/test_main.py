@@ -45,6 +45,26 @@ from test_teams import (
     test_smoke_schedule_month,
     test_smoke_schedule_week,
 )
+from test_games import (
+    test_smoke_network_tv_schedule_now,
+    test_smoke_network_tv_schedule_with_date,
+    test_smoke_daily_scores_now,
+    test_smoke_daily_scores_with_date,
+    test_smoke_scoreboard_now,
+    test_smoke_pbp,
+    test_smoke_landing,
+    test_smoke_boxscore,
+    test_smoke_story,
+    test_smoke_odds_us,
+)
+from test_draft import (
+    test_smoke_picks_now,
+    test_smoke_picks_by_season_and_round,
+    test_smoke_picks_all_rounds,
+    test_smoke_tracker_now,
+    test_smoke_rankings_now,
+    test_smoke_rankings_by_season_and_category,
+)
 
 
 if __name__ == "__main__":
@@ -86,3 +106,25 @@ if __name__ == "__main__":
     test_smoke_schedule(client)
     test_smoke_schedule_month(client)
     test_smoke_schedule_week(client)
+    time.sleep(1.5)
+
+    test_smoke_network_tv_schedule_now(client)
+    test_smoke_network_tv_schedule_with_date(client)
+    test_smoke_daily_scores_now(client)
+    test_smoke_daily_scores_with_date(client)
+    test_smoke_scoreboard_now(client)
+    time.sleep(1.5)
+
+    test_smoke_pbp(client)
+    test_smoke_landing(client)
+    test_smoke_boxscore(client)
+    test_smoke_story(client)
+    test_smoke_odds_us(client)
+    time.sleep(1.5)
+
+    test_smoke_picks_now(client)
+    test_smoke_picks_by_season_and_round(client)
+    test_smoke_picks_all_rounds(client)
+    test_smoke_tracker_now(client)
+    test_smoke_rankings_now(client)
+    test_smoke_rankings_by_season_and_category(client)
