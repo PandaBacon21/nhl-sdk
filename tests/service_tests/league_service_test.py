@@ -96,6 +96,27 @@ def test_get_schedule_calendar_date_and_now_separate_cache_keys(mock_client) -> 
     assert mock_client._api.api_web.call_nhl_league.get_schedule_calendar.call_count == 2
 
 
+# ==========================================================================
+# GET SEASONS
+# ==========================================================================
+
+def test_get_seasons_cache_miss(mock_client) -> None:
+    mock_client._api.api_web.call_nhl_seasons.get_seasons.return_value = ok([19171918, 20252026])
+    svc = League(mock_client)
+    result = svc.get_seasons()
+    assert isinstance(result, list)
+    assert result == [19171918, 20252026]
+    mock_client._api.api_web.call_nhl_seasons.get_seasons.assert_called_once_with()
+
+
+def test_get_seasons_cache_hit(mock_client) -> None:
+    mock_client._api.api_web.call_nhl_seasons.get_seasons.return_value = ok([19171918, 20252026])
+    svc = League(mock_client)
+    _ = svc.get_seasons()
+    _ = svc.get_seasons()
+    mock_client._api.api_web.call_nhl_seasons.get_seasons.assert_called_once()
+
+
 def test_get_schedule_calendar_result_populated(mock_client) -> None:
     mock_client._api.api_web.call_nhl_league.get_schedule_calendar.return_value = ok({
         "startDate": "2026-03-29",
@@ -122,3 +143,13 @@ def test_get_schedule_calendar_result_populated(mock_client) -> None:
     assert len(result.teams) == 1
     assert result.teams[0].abbrev == "NJD"
     assert result.teams[0].french is False
+
+
+def test_get_seasons_result_populated(mock_client) -> None:
+    seasons = [19171918, 19181919, 20242025, 20252026]
+    mock_client._api.api_web.call_nhl_seasons.get_seasons.return_value = ok(seasons)
+    svc = League(mock_client)
+    result = svc.get_seasons()
+    assert result == seasons
+    assert result[0] == 19171918
+    assert result[-1] == 20252026

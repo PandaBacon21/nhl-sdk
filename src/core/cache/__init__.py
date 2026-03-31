@@ -8,13 +8,11 @@ _cache = None
 
 
 
-def init_cache(cache: BaseCache) -> None:
+def init_cache(cache: BaseCache | None) -> None:
     global _cache
     _cache = cache
 
-def get_cache() -> BaseCache: 
-    if _cache is None:
-        raise RuntimeError("Cache not initialized. Call init_cache() first.")
+def get_cache() -> BaseCache | None:
     return _cache
 
 

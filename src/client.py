@@ -1,7 +1,7 @@
 """
 NHL CLIENT
 """
-from .services import Players, Teams, League
+from .services import Players, Teams, League, Games
 from .resources import API
 
 from .core.config import BaseConfig, _build_config
@@ -29,6 +29,7 @@ class NhlClient:
         self.players = Players(self)
         self.teams = Teams(self)
         self.league = League(self)
+        self.games = Games(self)
         self._api = API()
 
 

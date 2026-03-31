@@ -55,3 +55,14 @@ class League(CacheFetchMixin):
             self._logger, self._cache, self._ttl,
             LeagueCalendarResult.from_dict,
         )
+
+    def get_seasons(self) -> list[int]:
+        """
+        Retrieve the list of all NHL season IDs, past and present.
+        """
+        return self._fetch(
+            "league:seasons",
+            lambda: self._client._api.api_web.call_nhl_seasons.get_seasons(),
+            self._logger, self._cache, self._ttl,
+            lambda d: d or [],
+        )

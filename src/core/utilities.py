@@ -89,7 +89,10 @@ class CacheFetchMixin:
       self._logger  — a logging.Logger
       self._ttl     — int TTL in seconds
     """
-    def _fetch(self, key: str, api_fn, logger: logging.Logger, cache: BaseCache, ttl: int, builder=None):
+    def _fetch(self, key: str, api_fn, logger: logging.Logger, cache: BaseCache | None, ttl: int, builder=None):
+        if cache is None:
+            res = api_fn()
+            return builder(res.data) if builder else res.data
         cached = _check_cache(cache=cache, cache_key=key)
         if cached is not None:
             logger.debug(f"{key}: Cache Hit")

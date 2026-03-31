@@ -12,6 +12,7 @@ import time
 sys.path.insert(0, os.path.dirname(__file__))
 
 from src.client import NhlClient
+from src.core.cache.mem_cache import MemCache
 
 from test_player import test_smoke_profile, test_smoke_stats, test_smoke_game_log
 from test_leaders import test_smoke_spotlight, test_smoke_leaders
@@ -47,7 +48,7 @@ from test_teams import (
 
 
 if __name__ == "__main__":
-    client = NhlClient(log_file="logs/nhl.log", log_level="DEBUG")
+    client = NhlClient(log_file="logs/nhl.log", log_level="DEBUG", cache=MemCache())
 
     test_smoke_profile(client)
     test_smoke_stats(client)

@@ -8,7 +8,6 @@ from dataclasses import dataclass, field, replace
 from pathlib import Path
 from platformdirs import user_log_dir
 from .cache.base_cache import BaseCache
-from .cache.mem_cache import MemCache
 
 # api-web.nhle.com/
 BASE_URL_API_WEB: str = "https://api-web.nhle.com"
@@ -31,7 +30,7 @@ class BaseConfig(ABC):
     lang: str = LANG
     # log_file: str | None = str(FILE_PATH)  # default log path; set to None for stdout only
     log_file: str | None = None # Set to None for stdout only - Currently set just for testing
-    cache: BaseCache = field(default_factory=MemCache)
+    cache: BaseCache | None = None
 
 @dataclass(slots=True, frozen=True)
 class DefaultConfig(BaseConfig):

@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING
 from ....core.utilities import _check_cache
 from .profile import Profile
 from .player_stats import PlayerStats
-from ....core.cache.cache_item import CacheItem
 from ....core.cache import get_cache
 
 if TYPE_CHECKING:
@@ -60,17 +59,18 @@ class Player:
         else:
             return f"Player Id: {self._pid}. Call .profile() to retrieve name."
 
-    def _get_player_landing(self) -> CacheItem:
+    def _get_player_landing(self):
         """
         Retrieve from cache or NHL landing API for the specific player
         For internal use only
         """
-        cached = _check_cache(self._cache, self._landing_key)
-        if cached is not None:
-            self._logger.debug(f"{self._landing_key}: Cache Hit")
-            self._pos = "G" if cached.data.get("position") == "G" else "S"
-            return cached
-        self._logger.debug(f"{self._landing_key}: Cache Miss")
+        if self._cache is not None:
+            cached = _check_cache(self._cache, self._landing_key)
+            if cached is not None:
+                self._logger.debug(f"{self._landing_key}: Cache Hit")
+                self._pos = "G" if cached.data.get("position") == "G" else "S"
+                return cached
+            self._logger.debug(f"{self._landing_key}: Cache Miss")
 
         res = self._client._api.api_web.call_nhl_players.get_player_landing(pid=self._pid)
 
@@ -78,9 +78,13 @@ class Player:
             self._logger.warning(f"Player pid {self._pid} failed to fetch player landing")
             raise RuntimeError(res.data["error"] or f"Failed to fetch player landing: {self._pid}")
         self._pos = "G" if res.data.get("position") == "G" else "S"
-        cache_item = self._cache.set(key=self._landing_key, data=res.data, ttl=self._ttl)
-        self._logger.debug(f"{self._landing_key}: Cached | ttl: {self._ttl}")
-        return cache_item
+
+        if self._cache is not None:
+            cache_item = self._cache.set(key=self._landing_key, data=res.data, ttl=self._ttl)
+            self._logger.debug(f"{self._landing_key}: Cached | ttl: {self._ttl}")
+            return cache_item
+
+        return res
 
     @property
     def profile(self) -> Profile:
@@ -94,7 +98,7 @@ class Player:
             physical attributes, position, and awards.
         """
         if self._profile:
-            if _check_cache(self._cache, self._landing_key):
+            if self._cache is None or _check_cache(self._cache, self._landing_key):
                 return self._profile
         data = self._get_player_landing()
         self._profile = Profile.from_dict(data=data.data)
@@ -113,7 +117,7 @@ class Player:
             featured stats, and recent games.
         """
         if self._stats:
-            if _check_cache(self._cache, self._landing_key):
+            if self._cache is None or _check_cache(self._cache, self._landing_key):
                 return self._stats
         data = self._get_player_landing()
         self._stats = PlayerStats(pos=self._pos, pid=self._pid, data=data.data, client=self._client)

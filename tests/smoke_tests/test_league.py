@@ -65,3 +65,21 @@ def test_smoke_league_calendar_cache(nhl) -> None:
     result1 = nhl.league.get_schedule_calendar(date=DATE)
     result2 = nhl.league.get_schedule_calendar(date=DATE)
     assert result1 is result2
+
+
+def test_smoke_league_seasons(nhl) -> None:
+    result = nhl.league.get_seasons()
+
+    assert isinstance(result, list)
+    assert len(result) > 0
+    assert all(isinstance(s, int) for s in result)
+    assert 19171918 in result
+    assert 20252026 in result
+    print(f"Total seasons: {len(result)}")
+    print(f"First: {result[0]} | Last: {result[-1]}")
+
+
+def test_smoke_league_seasons_cache(nhl) -> None:
+    result1 = nhl.league.get_seasons()
+    result2 = nhl.league.get_seasons()
+    assert result1 is result2
