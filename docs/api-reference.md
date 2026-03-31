@@ -25,10 +25,14 @@ client = NhlClient()
 
 ### Top-level properties
 
-| Property   | Returns   | Description          |
-| ---------- | --------- | -------------------- |
-| `.players` | `Players` | Players namespace    |
-| `.teams`   | `Teams`   | Teams namespace      |
+| Property    | Returns    | Description        |
+| ----------- | ---------- | ------------------ |
+| `.players`  | `Players`  | Players namespace  |
+| `.teams`    | `Teams`    | Teams namespace    |
+| `.league`   | `League`   | League namespace   |
+| `.games`    | `Games`    | Games namespace    |
+| `.draft`    | `Draft`    | Draft namespace    |
+| `.playoffs` | `Playoffs` | Playoffs namespace |
 
 ---
 
@@ -454,3 +458,251 @@ Accessed via `client.teams.schedule`. Results are cached with a 1hr TTL.
 | `week`    | No       | `YYYY-MM-DD` | `"2025-01-06"` |
 
 `season`, `month`, and `week` are optional and default to the current period. `team` is required for all three methods.
+
+---
+
+## `client.league`
+
+Accessed directly as `client.league`. Results are cached with a 1hr TTL.
+
+| Method                            | Returns                  | Description                                         |
+| --------------------------------- | ------------------------ | --------------------------------------------------- |
+| `.get_schedule(date)`             | `LeagueScheduleResult`   | League-wide game schedule for the current week or a specific date |
+| `.get_schedule_calendar(date)`    | `LeagueCalendarResult`   | Calendar of scheduled game dates for the current window or a specific date |
+| `.get_seasons()`                  | `list[int]`              | All NHL season IDs, past and present                |
+
+| Parameter | Required | Format       | Example        |
+| --------- | -------- | ------------ | -------------- |
+| `date`    | No       | `YYYY-MM-DD` | `"2025-01-06"` |
+
+`date` is optional for both schedule methods. Omit for the current period.
+
+---
+
+## `client.games`
+
+| Property      | Returns          | Description                          |
+| ------------- | ---------------- | ------------------------------------ |
+| `.network`    | `GameNetwork`    | TV broadcast schedule sub-resource   |
+| `.scores`     | `GameScores`     | Daily scores sub-resource            |
+| `.scoreboard` | `GameScoreboard` | Current scoreboard sub-resource      |
+| `.pbp`        | `GamePlayByPlay` | Play-by-play sub-resource            |
+| `.landing`    | `GameLanding`    | Game landing sub-resource            |
+| `.boxscore`   | `GameBoxscore`   | Boxscore sub-resource                |
+| `.story`      | `GameStory`      | Game story sub-resource              |
+| `.odds`       | `PartnerOdds`    | Partner betting odds sub-resource    |
+
+---
+
+## `GameNetwork`
+
+Accessed via `client.games.network`. Results are cached with a 1hr TTL.
+
+| Method                      | Returns                 | Description                                         |
+| --------------------------- | ----------------------- | --------------------------------------------------- |
+| `.get_tv_schedule(date)`    | `NetworkScheduleResult` | TV broadcast schedule for the current date or a specific date |
+
+| Parameter | Required | Format       | Example        |
+| --------- | -------- | ------------ | -------------- |
+| `date`    | No       | `YYYY-MM-DD` | `"2025-01-15"` |
+
+---
+
+## `GameScores`
+
+Accessed via `client.games.scores`. Results are cached with a 1hr TTL.
+
+| Method                        | Returns           | Description                                         |
+| ----------------------------- | ----------------- | --------------------------------------------------- |
+| `.get_daily_scores(date)`     | `DailyScoreResult` | Game scores including goals and clock state for the current date or a specific date |
+
+| Parameter | Required | Format       | Example        |
+| --------- | -------- | ------------ | -------------- |
+| `date`    | No       | `YYYY-MM-DD` | `"2025-01-15"` |
+
+---
+
+## `GameScoreboard`
+
+Accessed via `client.games.scoreboard`. Results are cached with a 1hr TTL.
+
+| Method               | Returns            | Description                              |
+| -------------------- | ------------------ | ---------------------------------------- |
+| `.get_scoreboard()`  | `ScoreboardResult` | Current NHL scoreboard grouped by date   |
+
+---
+
+## `GamePlayByPlay`
+
+Accessed via `client.games.pbp`. Results are cached with a 1hr TTL.
+
+| Method                          | Returns           | Description                          |
+| ------------------------------- | ----------------- | ------------------------------------ |
+| `.get_play_by_play(game_id)`    | `PlayByPlayResult` | Full event-by-event play-by-play for a game |
+
+| Parameter | Required | Description                                      |
+| --------- | -------- | ------------------------------------------------ |
+| `game_id` | Yes      | NHL game ID (e.g. `2024020001`)                  |
+
+---
+
+## `GameLanding`
+
+Accessed via `client.games.landing`. Results are cached with a 1hr TTL.
+
+| Method                   | Returns             | Description                                                  |
+| ------------------------ | ------------------- | ------------------------------------------------------------ |
+| `.get_landing(game_id)`  | `GameLandingResult` | Scoring by period, three stars, and penalties for a game     |
+
+| Parameter | Required | Description                      |
+| --------- | -------- | -------------------------------- |
+| `game_id` | Yes      | NHL game ID (e.g. `2024020001`)  |
+
+---
+
+## `GameBoxscore`
+
+Accessed via `client.games.boxscore`. Results are cached with a 1hr TTL.
+
+| Method                      | Returns               | Description                                               |
+| --------------------------- | --------------------- | --------------------------------------------------------- |
+| `.get_boxscore(game_id)`    | `GameBoxscoreResult`  | Per-player stats for forwards, defense, and goalies for both teams |
+
+| Parameter | Required | Description                      |
+| --------- | -------- | -------------------------------- |
+| `game_id` | Yes      | NHL game ID (e.g. `2024020001`)  |
+
+---
+
+## `GameStory`
+
+Accessed via `client.games.story`. Results are cached with a 1hr TTL.
+
+| Method                        | Returns           | Description                                                        |
+| ----------------------------- | ----------------- | ------------------------------------------------------------------ |
+| `.get_game_story(game_id)`    | `GameStoryResult` | Scoring summary, three stars, and team game stats for a game       |
+
+| Parameter | Required | Description                      |
+| --------- | -------- | -------------------------------- |
+| `game_id` | Yes      | NHL game ID (e.g. `2024020001`)  |
+
+---
+
+## `PartnerOdds`
+
+Accessed via `client.games.odds`. Results are cached with a 1hr TTL.
+
+| Method                          | Returns             | Description                                          |
+| ------------------------------- | ------------------- | ---------------------------------------------------- |
+| `.get_odds(country_code)`       | `PartnerOddsResult` | Current partner betting odds for the given country   |
+
+| Parameter      | Required | Description                                   |
+| -------------- | -------- | --------------------------------------------- |
+| `country_code` | Yes      | Two-letter country code (e.g. `"US"`, `"CA"`) |
+
+---
+
+## `client.draft`
+
+| Property     | Returns          | Description                        |
+| ------------ | ---------------- | ---------------------------------- |
+| `.rankings`  | `DraftRankings`  | Prospect rankings sub-resource     |
+| `.tracker`   | `DraftTracker`   | Live draft tracker sub-resource    |
+| `.picks`     | `DraftPicks`     | Draft picks sub-resource           |
+
+---
+
+## `DraftRankings`
+
+Accessed via `client.draft.rankings`. Results are cached with a 6hr TTL.
+
+| Method                                    | Returns               | Description                                                    |
+| ----------------------------------------- | --------------------- | -------------------------------------------------------------- |
+| `.get_rankings(season, category)`         | `DraftRankingsResult` | Current midterm rankings, or rankings for a specific draft year and category |
+
+| Parameter  | Required | Description                                                                          |
+| ---------- | -------- | ------------------------------------------------------------------------------------ |
+| `season`   | No       | Draft year as `int` (e.g. `2024`). Must be paired with `category`.                  |
+| `category` | No       | Category as `int`: `1` = NA Skaters, `2` = Intl Skaters, `3` = NA Goalies, `4` = Intl Goalies |
+
+Omit both for the current midterm rankings. `season` and `category` must be provided together.
+
+---
+
+## `DraftTracker`
+
+Accessed via `client.draft.tracker`. Results are cached with a 1min TTL.
+
+| Method                  | Returns              | Description                                         |
+| ----------------------- | -------------------- | --------------------------------------------------- |
+| `.get_tracker_now()`    | `DraftTrackerResult` | Current draft round state, picks, and TV broadcasts |
+
+---
+
+## `DraftPicks`
+
+Accessed via `client.draft.picks`. Results are cached with a 6hr TTL.
+
+| Method                          | Returns           | Description                                                         |
+| ------------------------------- | ----------------- | ------------------------------------------------------------------- |
+| `.get_picks(season, round)`     | `DraftPicksResult` | Picks for the current draft cycle, or for a specific season and round |
+
+| Parameter | Required | Description                                                                       |
+| --------- | -------- | --------------------------------------------------------------------------------- |
+| `season`  | No       | Draft year as `int` (e.g. `2025`). Must be paired with `round`.                   |
+| `round`   | No       | Round as `str`: `"1"`–`"7"` for a specific round, or `"all"` for all rounds. Must be paired with `season`. |
+
+Omit both for the current draft cycle's picks.
+
+---
+
+## `client.playoffs`
+
+| Property          | Returns                 | Description                               |
+| ----------------- | ----------------------- | ----------------------------------------- |
+| `.carousel`       | `PlayoffCarousel`       | Series carousel sub-resource              |
+| `.series_schedule` | `PlayoffSeriesSchedule` | Series game schedule sub-resource         |
+| `.bracket`        | `PlayoffBracket`        | Full playoff bracket sub-resource         |
+
+---
+
+## `PlayoffCarousel`
+
+Accessed via `client.playoffs.carousel`. Results are cached with a 1hr TTL.
+
+| Method                       | Returns                  | Description                                                   |
+| ---------------------------- | ------------------------ | ------------------------------------------------------------- |
+| `.get_carousel(season)`      | `PlayoffCarouselResult`  | Overview of all series in a season with win counts and seeds  |
+
+| Parameter | Required | Description                                      |
+| --------- | -------- | ------------------------------------------------ |
+| `season`  | Yes      | Season in `YYYYYYYY` format (e.g. `20242025`)    |
+
+---
+
+## `PlayoffSeriesSchedule`
+
+Accessed via `client.playoffs.series_schedule`. Results are cached with a 1hr TTL.
+
+| Method                                           | Returns                  | Description                                               |
+| ------------------------------------------------ | ------------------------ | --------------------------------------------------------- |
+| `.get_series_schedule(season, series_letter)`    | `SeriesScheduleResult`   | Game-by-game schedule and results for a specific series   |
+
+| Parameter       | Required | Description                                                   |
+| --------------- | -------- | ------------------------------------------------------------- |
+| `season`        | Yes      | Season in `YYYYYYYY` format (e.g. `20242025`)                 |
+| `series_letter` | Yes      | Series letter (e.g. `"A"`, `"B"`, ..., `"O"`). Round 1 uses A–H, Round 2 uses I–L, Conference Finals use M–N, Stanley Cup Final uses O. |
+
+---
+
+## `PlayoffBracket`
+
+Accessed via `client.playoffs.bracket`. Results are cached with a 6hr TTL.
+
+| Method                  | Returns                 | Description                                                          |
+| ----------------------- | ----------------------- | -------------------------------------------------------------------- |
+| `.get_bracket(year)`    | `PlayoffBracketResult`  | Full bracket for a playoff year — all series across all rounds as a flat list |
+
+| Parameter | Required | Description                          |
+| --------- | -------- | ------------------------------------ |
+| `year`    | Yes      | Year in `YYYY` format (e.g. `2024`)  |

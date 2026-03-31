@@ -65,6 +65,11 @@ from test_draft import (
     test_smoke_rankings_now,
     test_smoke_rankings_by_season_and_category,
 )
+from test_playoffs import (
+    test_smoke_carousel,
+    test_smoke_series_schedule,
+    test_smoke_bracket,
+)
 
 
 if __name__ == "__main__":
@@ -128,3 +133,8 @@ if __name__ == "__main__":
     test_smoke_tracker_now(client)
     test_smoke_rankings_now(client)
     test_smoke_rankings_by_season_and_category(client)
+    time.sleep(1.5)
+
+    test_smoke_carousel(client)
+    test_smoke_series_schedule(client)
+    test_smoke_bracket(client)

@@ -73,6 +73,33 @@ roster = client.teams.roster.get_team_roster("COL")
 schedule      = client.teams.schedule.get_schedule("COL")
 month_sched   = client.teams.schedule.get_schedule_month("COL", month="2025-01")
 week_sched    = client.teams.schedule.get_schedule_week("COL", week="2025-01-06")
+
+# --- League ---
+league_schedule  = client.league.get_schedule()
+league_calendar  = client.league.get_schedule_calendar(date="2025-01-06")
+seasons          = client.league.get_seasons()
+
+# --- Games ---
+tv_schedule  = client.games.network.get_tv_schedule()
+daily_scores = client.games.scores.get_daily_scores(date="2025-01-15")
+scoreboard   = client.games.scoreboard.get_scoreboard()
+pbp          = client.games.pbp.get_play_by_play(game_id=2024020001)
+landing      = client.games.landing.get_landing(game_id=2024020001)
+boxscore     = client.games.boxscore.get_boxscore(game_id=2024020001)
+story        = client.games.story.get_game_story(game_id=2024020001)
+odds         = client.games.odds.get_odds(country_code="US")
+
+# --- Draft ---
+rankings     = client.draft.rankings.get_rankings()
+rankings_by  = client.draft.rankings.get_rankings(season=2024, category=1)
+tracker      = client.draft.tracker.get_tracker_now()
+picks        = client.draft.picks.get_picks()
+picks_by     = client.draft.picks.get_picks(season=2025, round="1")
+
+# --- Playoffs ---
+carousel        = client.playoffs.carousel.get_carousel(season=20242025)
+series_schedule = client.playoffs.series_schedule.get_series_schedule(season=20242025, series_letter="A")
+bracket         = client.playoffs.bracket.get_bracket(year=2024)
 ```
 
 ---
@@ -164,9 +191,12 @@ except NhlApiError as e:
 - [x] Stat leaders (skaters + goalies)
 - [x] NHL Edge — skater stats
 - [x] NHL Edge — goalie stats
-- [x] Teams namespace (standings, stats, roster, schedule)
 - [ ] NHL Edge — team stats
-- [ ] League / schedule / standings
+- [x] Teams namespace (standings, stats, roster, schedule)
+- [x] League (schedule, calendar, seasons)
+- [x] Games (network schedule, daily scores, scoreboard, PBP, landing, boxscore, story, odds)
+- [x] Draft (prospect rankings, live tracker, picks)
+- [x] Playoffs (series carousel, series schedule, bracket)
 
 ---
 

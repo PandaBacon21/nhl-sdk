@@ -259,13 +259,13 @@ class CallNhlEdgeSkaters:
         res = self._http.get(endpoint=endpoint)
         return res
 
-    def get_skater_shot_location_10(self, category: str, sort: str, season: int | None = None, 
-                                game_type: int | None = None) -> APIResponse: 
+    def get_skater_shot_location_10(self, category: str, sort: str, season: int | None = None,
+                                game_type: int | None = None) -> APIResponse:
         """
         Top 10 skaters based on the specified filters.
-        
+
         Parameters:
-        pos - str
+        category - str
         sort - str
         season - Optional - int
         game_type - Optional - int

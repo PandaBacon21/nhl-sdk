@@ -43,12 +43,11 @@ class CallNhlPlayoffs:
     # BRACKET
     # ==========================================================================
 
-    # Need to add handling for empty bracket 
     def get_bracket(self, year: int) -> APIResponse:
         """
         Retrieve the current bracket for a specific year's playoffs
-        season: int - YYYY format
-        """ 
+        year: int - YYYY format
+        """
         endpoint = f"/{V}/playoff-bracket/{year}"
         res: APIResponse = self._http.get(endpoint=endpoint)
         return res

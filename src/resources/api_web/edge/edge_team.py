@@ -69,7 +69,7 @@ class CallNhlEdgeTeam:
 
     def get_team_skating_speed(self, team_id:int, season: int | None = None, game_type: int | None = None) -> APIResponse: 
         """
-        Skating Speed Details for a specific player
+        Skating Speed Details for a specific team
 
         Parameters:
         team_id - int
@@ -180,13 +180,12 @@ class CallNhlEdgeTeam:
         top_10 = self._http.get(endpoint=endpoint)
         return top_10
 
-    def get_team_zone_time_10(self, strength: str, sort: str, season: int | None = None, 
-                                game_type: int | None = None) -> APIResponse: 
+    def get_team_zone_time_10(self, strength: str, sort: str, season: int | None = None,
+                                game_type: int | None = None) -> APIResponse:
         """
         Top 10 teams by specified zone time
 
         Parameters:
-        pos - str
         strength - str
         sort - str
         season - Optional - int
@@ -219,13 +218,13 @@ class CallNhlEdgeTeam:
         top_10 = self._http.get(endpoint=endpoint)
         return top_10
 
-    def get_team_shot_location_10(self, category: str, sort: str, season: int | None = None, 
-                                game_type: int | None = None) -> APIResponse: 
+    def get_team_shot_location_10(self, category: str, sort: str, season: int | None = None,
+                                game_type: int | None = None) -> APIResponse:
         """
         Top 10 teams based on the specified filters.
-        
+
         Parameters:
-        pos - str
+        category - str
         sort - str
         season - Optional - int
         game_type - Optional - int
