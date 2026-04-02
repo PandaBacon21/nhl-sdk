@@ -260,13 +260,20 @@ def test_smoke_odds_us(nhl) -> None:
     print(f"Odds date: {result.current_odds_date} | Updated: {result.last_updated_utc}")
     print(f"Games with odds: {len(result.games)}")
 
-    # Canary: this endpoint currently returns no games regardless of country.
-    # If this assertion starts failing, the API is now returning real odds data
-    # and the games structure should be modelled properly.
-    assert result.games == [], (
-        f"Partner odds API returned {len(result.games)} games — "
-        "the endpoint appears to be active. Model the game structure in PartnerOddsResult."
-    )
+    assert isinstance(result.games, list)
+    if result.games:
+        game = result.games[0]
+        assert game.game_id is not None
+        assert game.game_type is not None
+        assert game.start_time_utc is not None
+        assert game.home_team.abbrev is not None
+        assert game.away_team.abbrev is not None
+        assert isinstance(game.home_team.odds, list)
+        assert isinstance(game.away_team.odds, list)
+        if game.home_team.odds:
+            entry = game.home_team.odds[0]
+            assert entry.description is not None
+            assert entry.value is not None
 
 
 def test_smoke_odds_cache(nhl) -> None:

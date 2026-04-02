@@ -10,6 +10,7 @@ from .....core.utilities import CacheFetchMixin
 from .team_stats_result import TeamStatsResult
 from .team_season_game_types import TeamSeasonGameTypes
 from .team_scoreboard import TeamScoreboard
+from ..edge import TeamEdge
 
 if TYPE_CHECKING:
     from nhl_stats.src.client import NhlClient
@@ -79,3 +80,13 @@ class TeamStats(CacheFetchMixin):
             self._logger, self._cache, self._ttl,
             TeamScoreboard.from_dict,
         )
+
+    @property
+    def edge(self) -> TeamEdge:
+        """
+        Access NHL Edge stats for teams.
+
+        Returns a TeamEdge sub-resource with methods for team Edge data.
+        Each method accepts a ``team_id`` parameter.
+        """
+        return TeamEdge(self._client)

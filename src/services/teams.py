@@ -10,6 +10,7 @@ from ..models.teams.standings import Standings
 from ..models.teams.team.team_stats import TeamStats
 from ..models.teams.team.team_roster import TeamRoster
 from ..models.teams.team.team_schedule import TeamSchedule
+from ..models.teams.edge import TeamsEdge
 
 if TYPE_CHECKING:
     from nhl_stats.src.client import NhlClient
@@ -64,3 +65,13 @@ class Teams:
         historical full-season schedule.
         """
         return TeamSchedule(self._client)
+
+    @property
+    def edge(self) -> TeamsEdge:
+        """
+        Access league-wide team NHL Edge data.
+
+        Returns a TeamsEdge sub-resource with methods for retrieving
+        landing leaders and top-10 leaderboards across all NHL Edge categories.
+        """
+        return TeamsEdge(self._client)

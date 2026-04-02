@@ -14,7 +14,7 @@ from .story import (
     GameStory, GameStoryResult, GameStorySummary,
     StoryTeam, StoryThreeStar, TeamGameStat,
 )
-from .odds import PartnerOdds, PartnerOddsResult
+from .odds import PartnerOdds, PartnerOddsResult, OddsGame, OddsTeam, OddsEntry
 
 __all__ = [
     "GameNetwork", "NetworkScheduleResult", "NetworkBroadcast",
@@ -27,5 +27,5 @@ __all__ = [
     "PlayerByGameStats", "BoxscoreTeam", "BoxscoreSkater", "BoxscoreGoalie",
     "GameStory", "GameStoryResult", "GameStorySummary",
     "StoryTeam", "StoryThreeStar", "TeamGameStat",
-    "PartnerOdds", "PartnerOddsResult",
+    "PartnerOdds", "PartnerOddsResult", "OddsGame", "OddsTeam", "OddsEntry",
 ]

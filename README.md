@@ -74,6 +74,24 @@ schedule      = client.teams.schedule.get_schedule("COL")
 month_sched   = client.teams.schedule.get_schedule_month("COL", month="2025-01")
 week_sched    = client.teams.schedule.get_schedule_week("COL", week="2025-01-06")
 
+# NHL Edge — team-specific (via client.teams.stats.edge)
+edge          = client.teams.stats.edge
+details       = edge.details.get_details(team_id=21)
+comparison    = edge.comparison.get_comparison(team_id=21)
+distance      = edge.skating_distance.get_skating_distance(team_id=21)
+speed         = edge.skating_speed.get_skating_speed(team_id=21)
+zone          = edge.zone_time.get_zone_time(team_id=21)
+shot_speed    = edge.shot_speed.get_shot_speed(team_id=21)
+shot_loc      = edge.shot_location.get_shot_location(team_id=21)
+
+# NHL Edge — league-wide leaderboards (via client.teams.edge)
+landing       = client.teams.edge.landing.get_landing()
+dist_top_10   = client.teams.edge.skating_distance_top_10.get_top_10(strength="all", sort="per-60")
+speed_top_10  = client.teams.edge.skating_speed_top_10.get_top_10(sort="max")
+zone_top_10   = client.teams.edge.zone_time_top_10.get_top_10(strength="all", sort="offensive")
+shot_spd_top  = client.teams.edge.shot_speed_top_10.get_top_10(sort="max")
+shot_loc_top  = client.teams.edge.shot_location_top_10.get_top_10(category="sog", sort="all")
+
 # --- League ---
 league_schedule  = client.league.get_schedule()
 league_calendar  = client.league.get_schedule_calendar(date="2025-01-06")
@@ -191,12 +209,14 @@ except NhlApiError as e:
 - [x] Stat leaders (skaters + goalies)
 - [x] NHL Edge — skater stats
 - [x] NHL Edge — goalie stats
-- [ ] NHL Edge — team stats
+- [x] NHL Edge — team stats (team-specific detail + league-wide leaderboards)
 - [x] Teams namespace (standings, stats, roster, schedule)
 - [x] League (schedule, calendar, seasons)
 - [x] Games (network schedule, daily scores, scoreboard, PBP, landing, boxscore, story, odds)
 - [x] Draft (prospect rankings, live tracker, picks)
 - [x] Playoffs (series carousel, series schedule, bracket)
+- [ ] api-web.nhle.com miscellaneous endpoints (TBD)
+- [ ] api.nhle.com/stats/rest (TBD)
 
 ---
 

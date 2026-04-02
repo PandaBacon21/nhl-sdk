@@ -136,6 +136,23 @@ class CallNhlEdgeTeam:
         return team
 
 
+    def get_team_landing(self, season: int | None = None, game_type: int | None = None) -> APIResponse:
+        """
+        Retrieve leading team for each NHL Edge category.
+        Includes top shot speed, skating speed, distance skated, high danger SOG, zone time.
+
+        Parameters:
+        season - Optional - int
+        game_type - Optional - int
+
+        Both season and game_type are required to be included or omitted together.
+        """
+        endpoint = f"/{V}/edge/team-landing/now"
+        if season and game_type:
+            endpoint = f"/{V}/edge/team-landing/{season}/{game_type}"
+        res = self._http.get(endpoint=endpoint)
+        return res
+
     # ==========================================================================
     # TEAM LEADERS
     # ==========================================================================

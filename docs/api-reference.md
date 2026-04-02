@@ -375,12 +375,130 @@ All Edge methods accept optional `season` and `game_type`. `season` and `game_ty
 
 ## `client.teams`
 
-| Property     | Returns        | Description                    |
-| ------------ | -------------- | ------------------------------ |
-| `.standings` | `Standings`    | NHL standings sub-resource     |
-| `.stats`     | `TeamStats`    | Per-team stats sub-resource    |
-| `.roster`    | `TeamRoster`   | Per-team roster sub-resource   |
-| `.schedule`  | `TeamSchedule` | Per-team schedule sub-resource |
+| Property     | Returns        | Description                                    |
+| ------------ | -------------- | ---------------------------------------------- |
+| `.standings` | `Standings`    | NHL standings sub-resource                     |
+| `.stats`     | `TeamStats`    | Per-team stats sub-resource                    |
+| `.roster`    | `TeamRoster`   | Per-team roster sub-resource                   |
+| `.schedule`  | `TeamSchedule` | Per-team schedule sub-resource                 |
+| `.edge`      | `TeamsEdge`    | League-wide NHL Edge leaderboards sub-resource |
+
+---
+
+## `TeamStats`
+
+Accessed via `client.teams.stats`. Results are cached with a 1hr TTL.
+
+| Method                                  | Returns                     | Description                                   |
+| --------------------------------------- | --------------------------- | --------------------------------------------- |
+| `.get_team_stats(team, season, g_type)` | `TeamStatsResult`           | Club skater and goalie stats                  |
+| `.get_game_types_per_season(team)`      | `list[TeamSeasonGameTypes]` | Seasons and game types available for the club |
+| `.get_team_scoreboard(team)`            | `TeamScoreboard`            | Current scoreboard for the club               |
+| `.edge`                                 | `TeamEdge`                  | Team-specific NHL Edge sub-resource           |
+
+`get_team_stats()` parameters:
+
+| Parameter | Required | Valid values                                 |
+| --------- | -------- | -------------------------------------------- |
+| `team`    | Yes      | Three-letter team code (e.g. `"COL"`)        |
+| `season`  | No       | `int` in `YYYYYYYY` format (e.g. `20242025`) |
+| `g_type`  | No       | `2` = regular season, `3` = playoffs         |
+
+`season` and `g_type` must be provided together for a historical lookup, or omitted for current stats. `team` is required for all three methods.
+
+---
+
+## `TeamEdge`
+
+Accessed via `client.teams.stats.edge`. Each property returns a sub-resource with a single method. All methods accept optional `season` and `game_type` — omit both for current-season data, or provide both for a historical lookup. Results are cached with a 1hr TTL.
+
+| Property           | Sub-resource             | Method                                                 | Returns                    | Description                                        |
+| ------------------ | ------------------------ | ------------------------------------------------------ | -------------------------- | -------------------------------------------------- |
+| `.details`         | `TeamDetails`            | `.get_details(team_id, season, game_type)`             | `TeamDetailResult`         | Full Edge stat summary for a team                  |
+| `.comparison`      | `TeamComparison`         | `.get_comparison(team_id, season, game_type)`          | `TeamComparisonResult`     | Shot/skating speed, distance, zone time, shot diff |
+| `.skating_distance`| `TeamSkatingDistance`    | `.get_skating_distance(team_id, season, game_type)`    | `TeamSkatingDistanceResult`| Per-situation distance breakdowns by strength/pos  |
+| `.skating_speed`   | `TeamSkatingSpeedDetails`| `.get_skating_speed(team_id, season, game_type)`       | `TeamSkatingSpeedResult`   | Top speed instances and burst count breakdowns     |
+| `.zone_time`       | `TeamZoneDetails`        | `.get_zone_time(team_id, season, game_type)`           | `TeamZoneDetailResult`     | Zone time percentages by strength, shot diffs      |
+| `.shot_speed`      | `TeamShotSpeedDetails`   | `.get_shot_speed(team_id, season, game_type)`          | `TeamShotSpeedResult`      | Hardest shot instances and attempt bucket breakdown|
+| `.shot_location`   | `TeamShotLocationDetails`| `.get_shot_location(team_id, season, game_type)`       | `TeamShotLocationResult`   | Per-area shot breakdowns and totals by location    |
+
+All methods share the same parameter signature:
+
+| Parameter   | Required | Valid values                                 |
+| ----------- | -------- | -------------------------------------------- |
+| `team_id`   | Yes      | NHL team ID as `int` (e.g. `21` for Colorado)|
+| `season`    | No       | `int` in `YYYYYYYY` format (e.g. `20242025`) |
+| `game_type` | No       | `2` = regular season, `3` = playoffs         |
+
+---
+
+## `TeamsEdge`
+
+Accessed via `client.teams.edge`. Provides league-wide NHL Edge leaderboards. Each property returns a sub-resource. Results are cached with a 1hr TTL.
+
+| Property                   | Sub-resource          | Description                                       |
+| -------------------------- | --------------------- | ------------------------------------------------- |
+| `.landing`                 | `TeamLanding`         | League-leading team per Edge category             |
+| `.skating_distance_top_10` | `TeamSkatingDistance10` | Top 10 teams by skating distance                |
+| `.skating_speed_top_10`    | `TeamSkatingSpeed10`  | Top 10 teams by skating speed                     |
+| `.zone_time_top_10`        | `TeamZoneTime10`      | Top 10 teams by zone time                         |
+| `.shot_speed_top_10`       | `TeamShotSpeed10`     | Top 10 teams by shot speed                        |
+| `.shot_location_top_10`    | `TeamShotLocation10`  | Top 10 teams by shot location                     |
+
+All `get_top_10()` methods accept optional `season` and `game_type`. Omit both for current-season data; provide both for a historical lookup.
+
+### `.landing.get_landing(season, game_type)` → `TeamEdgeLandingResult`
+
+| Parameter   | Required | Valid values                                 |
+| ----------- | -------- | -------------------------------------------- |
+| `season`    | No       | `int` in `YYYYYYYY` format (e.g. `20242025`) |
+| `game_type` | No       | `2` = regular season, `3` = playoffs         |
+
+### `.skating_distance_top_10.get_top_10(strength, sort, pos, season, game_type)` → `list[TeamDistanceLeaderEntry]`
+
+| Parameter   | Required | Valid values                                        |
+| ----------- | -------- | --------------------------------------------------- |
+| `strength`  | Yes      | `"all"`, `"es"`, `"pp"`, `"pk"`                     |
+| `sort`      | Yes      | `"total"`, `"per-60"`, `"max-game"`, `"max-period"` |
+| `pos`       | No       | `"all"`, `"F"`, `"D"`. Defaults to `"all"`          |
+| `season`    | No       | `int` in `YYYYYYYY` format (e.g. `20242025`)        |
+| `game_type` | No       | `2` = regular season, `3` = playoffs                |
+
+### `.skating_speed_top_10.get_top_10(sort, pos, season, game_type)` → `list[TeamSpeedLeaderEntry]`
+
+| Parameter   | Required | Valid values                                 |
+| ----------- | -------- | -------------------------------------------- |
+| `sort`      | Yes      | `"max"`, `"over-22"`, `"20-22"`, `"18-20"`   |
+| `pos`       | No       | `"all"`, `"F"`, `"D"`. Defaults to `"all"`   |
+| `season`    | No       | `int` in `YYYYYYYY` format (e.g. `20242025`) |
+| `game_type` | No       | `2` = regular season, `3` = playoffs         |
+
+### `.zone_time_top_10.get_top_10(strength, sort, season, game_type)` → `list[TeamZoneTimeLeaderEntry]`
+
+| Parameter   | Required | Valid values                              |
+| ----------- | -------- | ----------------------------------------- |
+| `strength`  | Yes      | `"all"`, `"es"`, `"pp"`, `"pk"`           |
+| `sort`      | Yes      | `"offensive"`, `"neutral"`, `"defensive"` |
+| `season`    | No       | `int` in `YYYYYYYY` format                |
+| `game_type` | No       | `2` = regular season, `3` = playoffs      |
+
+### `.shot_speed_top_10.get_top_10(sort, pos, season, game_type)` → `list[TeamShotSpeedLeaderEntry]`
+
+| Parameter   | Required | Valid values                                            |
+| ----------- | -------- | ------------------------------------------------------- |
+| `sort`      | Yes      | `"max"`, `"over-100"`, `"90-99"`, `"80-89"`, `"70-79"` |
+| `pos`       | No       | `"all"`, `"F"`, `"D"`. Defaults to `"all"`              |
+| `season`    | No       | `int` in `YYYYYYYY` format (e.g. `20242025`)            |
+| `game_type` | No       | `2` = regular season, `3` = playoffs                    |
+
+### `.shot_location_top_10.get_top_10(category, sort, season, game_type)` → `list[TeamShotLocationLeaderEntry]`
+
+| Parameter   | Required | Valid values                                 |
+| ----------- | -------- | -------------------------------------------- |
+| `category`  | Yes      | `"sog"`, `"goals"`, `"shooting-pctg"`        |
+| `sort`      | Yes      | `"all"`, `"high"`, `"mid"`, `"long"`         |
+| `season`    | No       | `int` in `YYYYYYYY` format (e.g. `20242025`) |
+| `game_type` | No       | `2` = regular season, `3` = playoffs         |
 
 ---
 
@@ -394,28 +512,6 @@ Accessed via `client.teams.standings`. Results are cached with a 1hr TTL.
 | `.get_standings_by_season()` | `list`            | Seasons for which standings data is available |
 
 `date` is optional; format `YYYY-MM-DD` (e.g. `"2025-01-15"`). Defaults to current standings.
-
----
-
-## `TeamStats`
-
-Accessed via `client.teams.stats`. Results are cached with a 1hr TTL.
-
-| Method                                  | Returns                     | Description                                   |
-| --------------------------------------- | --------------------------- | --------------------------------------------- |
-| `.get_team_stats(team, season, g_type)` | `TeamStatsResult`           | Club skater and goalie stats                  |
-| `.get_game_types_per_season(team)`      | `list[TeamSeasonGameTypes]` | Seasons and game types available for the club |
-| `.get_team_scoreboard(team)`            | `TeamScoreboard`            | Current scoreboard for the club               |
-
-`get_team_stats()` parameters:
-
-| Parameter | Required | Valid values                                 |
-| --------- | -------- | -------------------------------------------- |
-| `team`    | Yes      | Three-letter team code (e.g. `"COL"`)        |
-| `season`  | No       | `int` in `YYYYYYYY` format (e.g. `20242025`) |
-| `g_type`  | No       | `2` = regular season, `3` = playoffs         |
-
-`season` and `g_type` must be provided together for a historical lookup, or omitted for current stats. `team` is required for all three methods.
 
 ---
 
