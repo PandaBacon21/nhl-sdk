@@ -62,27 +62,30 @@ skater_leaders = leaders.skaters.get_stat_leaders(categories="goals", limit=10)
 standings = client.teams.standings.get_standings()
 standings_by_date = client.teams.standings.get_standings(date="2025-01-15")
 
+# Get a team object (identifier baked in)
+team = client.teams.get("COL")
+
 # Stats
-team_stats = client.teams.stats.get_team_stats("COL")
-scoreboard = client.teams.stats.get_team_scoreboard("COL")
+team_stats = team.stats.get_team_stats()
+scoreboard = team.stats.get_team_scoreboard()
 
 # Roster
-roster = client.teams.roster.get_team_roster("COL")
+roster = team.roster.get_team_roster()
 
 # Schedule
-schedule      = client.teams.schedule.get_schedule("COL")
-month_sched   = client.teams.schedule.get_schedule_month("COL", month="2025-01")
-week_sched    = client.teams.schedule.get_schedule_week("COL", week="2025-01-06")
+schedule      = team.schedule.get_schedule()
+month_sched   = team.schedule.get_schedule_month(month="2025-01")
+week_sched    = team.schedule.get_schedule_week(week="2025-01-06")
 
-# NHL Edge — team-specific (via client.teams.stats.edge)
-edge          = client.teams.stats.edge
-details       = edge.details.get_details(team_id=21)
-comparison    = edge.comparison.get_comparison(team_id=21)
-distance      = edge.skating_distance.get_skating_distance(team_id=21)
-speed         = edge.skating_speed.get_skating_speed(team_id=21)
-zone          = edge.zone_time.get_zone_time(team_id=21)
-shot_speed    = edge.shot_speed.get_shot_speed(team_id=21)
-shot_loc      = edge.shot_location.get_shot_location(team_id=21)
+# NHL Edge — team-specific (via team.stats.edge)
+edge          = team.stats.edge
+details       = edge.details.get_details()
+comparison    = edge.comparison.get_comparison()
+distance      = edge.skating_distance.get_skating_distance()
+speed         = edge.skating_speed.get_skating_speed()
+zone          = edge.zone_time.get_zone_time()
+shot_speed    = edge.shot_speed.get_shot_speed()
+shot_loc      = edge.shot_location.get_shot_location()
 
 # NHL Edge — league-wide leaderboards (via client.teams.edge)
 landing       = client.teams.edge.landing.get_landing()

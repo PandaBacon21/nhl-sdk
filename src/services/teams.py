@@ -5,11 +5,8 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from ..core.cache import get_cache
 from ..models.teams.standings import Standings
-from ..models.teams.team.team_stats import TeamStats
-from ..models.teams.team.team_roster import TeamRoster
-from ..models.teams.team.team_schedule import TeamSchedule
+from ..models.teams.team.team import Team, _NHL_TEAM_IDS
 from ..models.teams.edge import TeamsEdge
 
 if TYPE_CHECKING:
@@ -23,8 +20,23 @@ class Teams:
     """
     def __init__(self, client: NhlClient):
         self._client = client
-        self._cache = get_cache()
         self._logger = logging.getLogger("nhl_sdk.teams")
+
+    def get(self, abbrev: str) -> Team:
+        """
+        Retrieve a team gateway object for the given abbreviation.
+
+        Args:
+            abbrev (str): Three-letter team code (e.g. ``"COL"``). Case-insensitive.
+
+        Raises:
+            ValueError: If the abbreviation is not recognized.
+        """
+        abbrev = abbrev.upper()
+        team_id = _NHL_TEAM_IDS.get(abbrev)
+        if team_id is None:
+            raise ValueError(f"Unknown team abbreviation: {abbrev!r}")
+        return Team(self._client, abbrev, team_id)
 
     @property
     def standings(self) -> Standings:
@@ -35,36 +47,6 @@ class Teams:
         and per-season standings metadata.
         """
         return Standings(self._client)
-
-    @property
-    def stats(self) -> TeamStats:
-        """
-        Access per-team stats data.
-
-        Returns a TeamStats sub-resource with methods for club skater/goalie
-        stats, season/game-type metadata, and the current scoreboard.
-        """
-        return TeamStats(self._client)
-
-    @property
-    def roster(self) -> TeamRoster:
-        """
-        Access per-team roster data.
-
-        Returns a TeamRoster sub-resource with methods for the current/historical
-        roster, available roster seasons, and prospects.
-        """
-        return TeamRoster(self._client)
-
-    @property
-    def schedule(self) -> TeamSchedule:
-        """
-        Access per-team schedule data.
-
-        Returns a TeamSchedule sub-resource with methods for the current or
-        historical full-season schedule.
-        """
-        return TeamSchedule(self._client)
 
     @property
     def edge(self) -> TeamsEdge:

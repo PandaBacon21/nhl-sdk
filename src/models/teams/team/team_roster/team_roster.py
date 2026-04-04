@@ -21,21 +21,20 @@ class TeamRoster(CacheFetchMixin):
     Provides access to team roster data including current/historical rosters,
     season availability, and prospects.
 
-    Accessed via `teams.roster`.
+    Accessed via ``team.roster`` on a ``Team`` object.
     """
-    def __init__(self, client: NhlClient) -> None:
+    def __init__(self, client: NhlClient, abbrev: str) -> None:
         self._client = client
+        self._abbrev = abbrev
         self._cache = get_cache()
         self._logger = logging.getLogger("nhl_sdk.teams.roster")
         self._ttl: int = 60 * 60 * 6
 
-    def get_team_prospects(self, team: str) -> ProspectsResult:
+    def get_team_prospects(self) -> ProspectsResult:
         """
-        Retrieve the prospect list for a specific club.
-
-        Args:
-            team (str): Three-letter team code (e.g. ``"COL"``).
+        Retrieve the prospect list for the team.
         """
+        team = self._abbrev
         return self._fetch(
             f"teams:roster:{team}:prospects",
             lambda: self._client._api.api_web.call_nhl_teams.get_team_prospects(team=team),
@@ -43,15 +42,15 @@ class TeamRoster(CacheFetchMixin):
             ProspectsResult.from_dict,
         )
 
-    def get_team_roster(self, team: str, season: int | None = None) -> TeamRosterResult:
+    def get_team_roster(self, season: int | None = None) -> TeamRosterResult:
         """
-        Retrieve the roster for a specific team.
+        Retrieve the roster for the team.
 
         Args:
-            team (str): Three-letter team code (e.g. ``"COL"``).
             season (int, optional): Eight-digit season identifier (e.g. ``20242025``).
                 Defaults to the current roster.
         """
+        team = self._abbrev
         return self._fetch(
             f"teams:roster:{team}:{season or 'now'}",
             lambda: self._client._api.api_web.call_nhl_teams.get_team_roster(team=team, season=season),
@@ -59,13 +58,11 @@ class TeamRoster(CacheFetchMixin):
             TeamRosterResult.from_dict,
         )
 
-    def get_roster_seasons(self, team: str) -> list[int]:
+    def get_roster_seasons(self) -> list[int]:
         """
-        Retrieve the list of seasons for which a team has roster data.
-
-        Args:
-            team (str): Three-letter team code (e.g. ``"COL"``).
+        Retrieve the list of seasons for which the team has roster data.
         """
+        team = self._abbrev
         return self._fetch(
             f"teams:roster:{team}:seasons",
             lambda: self._client._api.api_web.call_nhl_teams.get_roster_season_by_team(team=team),

@@ -119,7 +119,7 @@ class TeamSkatingSpeedResult:
     Contains the top speed instances for the season and per-position breakdowns
     with burst counts and league ranks.
 
-    Instances of this class are accessed via `client.teams.stats.edge.skating_speed`.
+    Accessed via ``team.stats.edge.skating_speed`` on a ``Team`` object.
     """
     top_skating_speeds: list[TeamTopSpeedEntry]
     skating_speed_details: list[TeamSpeedDetail]

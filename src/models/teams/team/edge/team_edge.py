@@ -22,15 +22,16 @@ class TeamEdge:
     Team NHL Edge sub-resource.
 
     Provides structured access to a team's NHL Edge statistical data.
-    Each property returns a dedicated sub-resource with its own methods.
+    Each property returns a dedicated sub-resource with the team ID baked in.
 
-    Instances of this class are accessed via `client.teams.stats.edge`.
+    Accessed via ``team.stats.edge`` on a ``Team`` object.
     """
-    def __init__(self, client: NhlClient):
+    def __init__(self, client: NhlClient, team_id: int):
         self._client = client
+        self._team_id = team_id
         self._logger = logging.getLogger("nhl_sdk.teams.edge.team")
 
-        self._logger.debug("TeamEdge initialized")
+        self._logger.debug("TeamEdge initialized (team_id=%d)", team_id)
 
     @property
     def details(self) -> TeamDetails:
@@ -40,7 +41,7 @@ class TeamEdge:
         Returns a TeamDetails sub-resource with methods for retrieving
         a team's full Edge stat summary.
         """
-        return TeamDetails(self._client)
+        return TeamDetails(self._client, self._team_id)
 
     @property
     def comparison(self) -> TeamComparison:
@@ -51,7 +52,7 @@ class TeamEdge:
         shot speed/skating speed breakdowns, last-10 skating distance,
         shot location data, zone time comparisons, and shot differentials.
         """
-        return TeamComparison(self._client)
+        return TeamComparison(self._client, self._team_id)
 
     @property
     def skating_distance(self) -> TeamSkatingDistance:
@@ -61,7 +62,7 @@ class TeamEdge:
         Returns a TeamSkatingDistance sub-resource with methods for retrieving
         per-situation distance breakdowns by strength and position.
         """
-        return TeamSkatingDistance(self._client)
+        return TeamSkatingDistance(self._client, self._team_id)
 
     @property
     def skating_speed(self) -> TeamSkatingSpeedDetails:
@@ -71,7 +72,7 @@ class TeamEdge:
         Returns a TeamSkatingSpeedDetails sub-resource with methods for retrieving
         top speed instances and per-position burst count breakdowns.
         """
-        return TeamSkatingSpeedDetails(self._client)
+        return TeamSkatingSpeedDetails(self._client, self._team_id)
 
     @property
     def zone_time(self) -> TeamZoneDetails:
@@ -81,7 +82,7 @@ class TeamEdge:
         Returns a TeamZoneDetails sub-resource with methods for retrieving
         zone time percentages by strength code and shot differentials with ranks.
         """
-        return TeamZoneDetails(self._client)
+        return TeamZoneDetails(self._client, self._team_id)
 
     @property
     def shot_speed(self) -> TeamShotSpeedDetails:
@@ -91,7 +92,7 @@ class TeamEdge:
         Returns a TeamShotSpeedDetails sub-resource with methods for retrieving
         hardest shot instances and per-position attempt bucket breakdowns.
         """
-        return TeamShotSpeedDetails(self._client)
+        return TeamShotSpeedDetails(self._client, self._team_id)
 
     @property
     def shot_location(self) -> TeamShotLocationDetails:
@@ -101,4 +102,4 @@ class TeamEdge:
         Returns a TeamShotLocationDetails sub-resource with methods for retrieving
         per-area breakdowns and aggregated totals by location code and position.
         """
-        return TeamShotLocationDetails(self._client)
+        return TeamShotLocationDetails(self._client, self._team_id)

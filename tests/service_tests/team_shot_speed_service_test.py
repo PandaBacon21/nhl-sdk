@@ -44,8 +44,8 @@ SHOT_SPEED_RESPONSE = {
 
 def test_get_shot_speed_cache_miss(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_shot_speed.return_value = ok(SHOT_SPEED_RESPONSE)
-    svc = TeamShotSpeedDetails(mock_client)
-    result = svc.get_shot_speed(team_id=21)
+    svc = TeamShotSpeedDetails(mock_client, 21)
+    result = svc.get_shot_speed()
     assert isinstance(result, TeamShotSpeedResult)
     mock_client._api.api_web.call_nhl_edge_team.get_team_shot_speed.assert_called_once_with(
         team_id=21, season=None, game_type=None
@@ -54,16 +54,16 @@ def test_get_shot_speed_cache_miss(mock_client) -> None:
 
 def test_get_shot_speed_cache_hit(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_shot_speed.return_value = ok(SHOT_SPEED_RESPONSE)
-    svc = TeamShotSpeedDetails(mock_client)
-    _ = svc.get_shot_speed(team_id=21)
-    _ = svc.get_shot_speed(team_id=21)
+    svc = TeamShotSpeedDetails(mock_client, 21)
+    _ = svc.get_shot_speed()
+    _ = svc.get_shot_speed()
     mock_client._api.api_web.call_nhl_edge_team.get_team_shot_speed.assert_called_once()
 
 
 def test_get_shot_speed_with_season_and_game_type(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_shot_speed.return_value = ok(SHOT_SPEED_RESPONSE)
-    svc = TeamShotSpeedDetails(mock_client)
-    result = svc.get_shot_speed(team_id=21, season=20242025, game_type=2)
+    svc = TeamShotSpeedDetails(mock_client, 21)
+    result = svc.get_shot_speed(season=20242025, game_type=2)
     assert isinstance(result, TeamShotSpeedResult)
     mock_client._api.api_web.call_nhl_edge_team.get_team_shot_speed.assert_called_once_with(
         team_id=21, season=20242025, game_type=2
@@ -72,16 +72,17 @@ def test_get_shot_speed_with_season_and_game_type(mock_client) -> None:
 
 def test_get_shot_speed_different_teams_separate_cache_keys(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_shot_speed.return_value = ok(SHOT_SPEED_RESPONSE)
-    svc = TeamShotSpeedDetails(mock_client)
-    _ = svc.get_shot_speed(team_id=21)
-    _ = svc.get_shot_speed(team_id=10)
+    svc1 = TeamShotSpeedDetails(mock_client, 21)
+    svc2 = TeamShotSpeedDetails(mock_client, 10)
+    _ = svc1.get_shot_speed()
+    _ = svc2.get_shot_speed()
     assert mock_client._api.api_web.call_nhl_edge_team.get_team_shot_speed.call_count == 2
 
 
 def test_get_shot_speed_result_populated(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_shot_speed.return_value = ok(SHOT_SPEED_RESPONSE)
-    svc = TeamShotSpeedDetails(mock_client)
-    result = svc.get_shot_speed(team_id=21)
+    svc = TeamShotSpeedDetails(mock_client, 21)
+    result = svc.get_shot_speed()
     assert len(result.hardest_shots) == 1
     assert result.hardest_shots[0].player.id == 8480069
     assert result.hardest_shots[0].shot_speed.imperial == 98.21

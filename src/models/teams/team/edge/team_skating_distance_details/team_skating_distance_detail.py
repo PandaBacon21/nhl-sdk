@@ -126,7 +126,7 @@ class TeamSkatingDistanceResult:
     season summaries across strength codes (all/pp/pk/es) x position codes
     (all/F/D), each with ranks and league averages.
 
-    Instances of this class are accessed via `client.teams.stats.edge.skating_distance`.
+    Accessed via ``team.stats.edge.skating_distance`` on a ``Team`` object.
     """
     skating_distance_last_10: list[TeamDistanceLast10Game]
     skating_distance_details: list[TeamDistanceEntry]

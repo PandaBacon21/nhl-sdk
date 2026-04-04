@@ -20,23 +20,23 @@ class TeamShotLocationDetails(CacheFetchMixin):
     Provides per-area shot location breakdowns and aggregated totals
     by location code × position, each with league ranks and averages.
 
-    Accessed via `client.teams.stats.edge.shot_location`.
+    Accessed via ``team.stats.edge.shot_location`` on a ``Team`` object.
     """
-    def __init__(self, client: NhlClient):
+    def __init__(self, client: NhlClient, team_id: int):
         self._client = client
+        self._team_id = team_id
         self._cache = get_cache()
         self._logger = logging.getLogger("nhl_sdk.teams.edge.shot_location")
         self._ttl: int = 60 * 60 * 1
 
-    def get_shot_location(self, team_id: int, season: int | None = None, game_type: int | None = None) -> TeamShotLocationResult:
+    def get_shot_location(self, season: int | None = None, game_type: int | None = None) -> TeamShotLocationResult:
         """
         Retrieve shot location detail stats for the team.
 
-        Args:
-            team_id (int): Numeric team ID.
-            season (int, optional): Season in YYYYYYYY format.
+        Args:            season (int, optional): Season in YYYYYYYY format.
             game_type (int, optional): Game type (e.g. ``2`` for regular season). Required when ``season`` is provided.
         """
+        team_id = self._team_id
         if season and game_type:
             key = f"teams:edge:shot_location:{team_id}:{season}:{game_type}"
         else:

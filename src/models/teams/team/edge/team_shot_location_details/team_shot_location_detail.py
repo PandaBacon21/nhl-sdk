@@ -96,7 +96,7 @@ class TeamShotLocationResult:
     totals by location code (all/high/long/mid) × position (all/F/D)
     with league averages and ranks.
 
-    Instances of this class are accessed via `client.teams.stats.edge.shot_location`.
+    Accessed via ``team.stats.edge.shot_location`` on a ``Team`` object.
     """
     shot_location_details: list[ShotLocationEntry]
     shot_location_totals: list[ShotLocationTotal]

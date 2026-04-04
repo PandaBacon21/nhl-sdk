@@ -40,8 +40,8 @@ COMPARISON_RESPONSE = {
 
 def test_get_comparison_cache_miss(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_comparison.return_value = ok(COMPARISON_RESPONSE)
-    svc = TeamComparison(mock_client)
-    result = svc.get_comparison(team_id=21)
+    svc = TeamComparison(mock_client, 21)
+    result = svc.get_comparison()
     assert isinstance(result, TeamComparisonResult)
     mock_client._api.api_web.call_nhl_edge_team.get_team_comparison.assert_called_once_with(
         team_id=21, season=None, game_type=None
@@ -50,16 +50,16 @@ def test_get_comparison_cache_miss(mock_client) -> None:
 
 def test_get_comparison_cache_hit(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_comparison.return_value = ok(COMPARISON_RESPONSE)
-    svc = TeamComparison(mock_client)
-    _ = svc.get_comparison(team_id=21)
-    _ = svc.get_comparison(team_id=21)
+    svc = TeamComparison(mock_client, 21)
+    _ = svc.get_comparison()
+    _ = svc.get_comparison()
     mock_client._api.api_web.call_nhl_edge_team.get_team_comparison.assert_called_once()
 
 
 def test_get_comparison_with_season_and_game_type(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_comparison.return_value = ok(COMPARISON_RESPONSE)
-    svc = TeamComparison(mock_client)
-    result = svc.get_comparison(team_id=21, season=20242025, game_type=2)
+    svc = TeamComparison(mock_client, 21)
+    result = svc.get_comparison(season=20242025, game_type=2)
     assert isinstance(result, TeamComparisonResult)
     mock_client._api.api_web.call_nhl_edge_team.get_team_comparison.assert_called_once_with(
         team_id=21, season=20242025, game_type=2
@@ -68,16 +68,17 @@ def test_get_comparison_with_season_and_game_type(mock_client) -> None:
 
 def test_get_comparison_different_teams_separate_cache_keys(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_comparison.return_value = ok(COMPARISON_RESPONSE)
-    svc = TeamComparison(mock_client)
-    _ = svc.get_comparison(team_id=21)
-    _ = svc.get_comparison(team_id=10)
+    svc1 = TeamComparison(mock_client, 21)
+    svc2 = TeamComparison(mock_client, 10)
+    _ = svc1.get_comparison()
+    _ = svc2.get_comparison()
     assert mock_client._api.api_web.call_nhl_edge_team.get_team_comparison.call_count == 2
 
 
 def test_get_comparison_result_populated(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_comparison.return_value = ok(COMPARISON_RESPONSE)
-    svc = TeamComparison(mock_client)
-    result = svc.get_comparison(team_id=21)
+    svc = TeamComparison(mock_client, 21)
+    result = svc.get_comparison()
     assert result.team.abbrev == "COL"
     assert result.team.wins == 49
     assert len(result.seasons_with_edge) == 1

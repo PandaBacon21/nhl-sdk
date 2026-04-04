@@ -21,23 +21,23 @@ class TeamSkatingDistance(CacheFetchMixin):
     season summaries across strength codes and position codes, each with
     ranks and league averages.
 
-    Accessed via `client.teams.stats.edge.skating_distance`.
+    Accessed via ``team.stats.edge.skating_distance`` on a ``Team`` object.
     """
-    def __init__(self, client: NhlClient):
+    def __init__(self, client: NhlClient, team_id: int):
         self._client = client
+        self._team_id = team_id
         self._cache = get_cache()
         self._logger = logging.getLogger("nhl_sdk.teams.edge.skating_distance")
         self._ttl: int = 60 * 60 * 1
 
-    def get_skating_distance(self, team_id: int, season: int | None = None, game_type: int | None = None) -> TeamSkatingDistanceResult:
+    def get_skating_distance(self, season: int | None = None, game_type: int | None = None) -> TeamSkatingDistanceResult:
         """
         Retrieve skating distance detail stats for the team.
 
-        Args:
-            team_id (int): Numeric team ID.
-            season (int, optional): Season in YYYYYYYY format.
+        Args:            season (int, optional): Season in YYYYYYYY format.
             game_type (int, optional): Game type (e.g. ``2`` for regular season). Required when ``season`` is provided.
         """
+        team_id = self._team_id
         if season and game_type:
             key = f"teams:edge:skating_distance:{team_id}:{season}:{game_type}"
         else:

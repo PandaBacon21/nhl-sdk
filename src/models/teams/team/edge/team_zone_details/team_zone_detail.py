@@ -81,7 +81,7 @@ class TeamZoneDetailResult:
     Team zone time detail stats by strength code (all/es/pp/pk),
     plus shot differential with league ranks.
 
-    Instances of this class are accessed via `client.teams.stats.edge.zone_time`.
+    Accessed via ``team.stats.edge.zone_time`` on a ``Team`` object.
     """
     zone_time_details: list[ZoneTimeEntry]
     shot_differential: ZoneShotDifferential

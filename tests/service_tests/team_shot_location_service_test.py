@@ -49,8 +49,8 @@ SHOT_LOCATION_RESPONSE = {
 
 def test_get_shot_location_cache_miss(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_shot_location.return_value = ok(SHOT_LOCATION_RESPONSE)
-    svc = TeamShotLocationDetails(mock_client)
-    result = svc.get_shot_location(team_id=21)
+    svc = TeamShotLocationDetails(mock_client, 21)
+    result = svc.get_shot_location()
     assert isinstance(result, TeamShotLocationResult)
     mock_client._api.api_web.call_nhl_edge_team.get_team_shot_location.assert_called_once_with(
         team_id=21, season=None, game_type=None
@@ -59,16 +59,16 @@ def test_get_shot_location_cache_miss(mock_client) -> None:
 
 def test_get_shot_location_cache_hit(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_shot_location.return_value = ok(SHOT_LOCATION_RESPONSE)
-    svc = TeamShotLocationDetails(mock_client)
-    _ = svc.get_shot_location(team_id=21)
-    _ = svc.get_shot_location(team_id=21)
+    svc = TeamShotLocationDetails(mock_client, 21)
+    _ = svc.get_shot_location()
+    _ = svc.get_shot_location()
     mock_client._api.api_web.call_nhl_edge_team.get_team_shot_location.assert_called_once()
 
 
 def test_get_shot_location_with_season_and_game_type(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_shot_location.return_value = ok(SHOT_LOCATION_RESPONSE)
-    svc = TeamShotLocationDetails(mock_client)
-    result = svc.get_shot_location(team_id=21, season=20242025, game_type=2)
+    svc = TeamShotLocationDetails(mock_client, 21)
+    result = svc.get_shot_location(season=20242025, game_type=2)
     assert isinstance(result, TeamShotLocationResult)
     mock_client._api.api_web.call_nhl_edge_team.get_team_shot_location.assert_called_once_with(
         team_id=21, season=20242025, game_type=2
@@ -77,16 +77,17 @@ def test_get_shot_location_with_season_and_game_type(mock_client) -> None:
 
 def test_get_shot_location_different_teams_separate_cache_keys(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_shot_location.return_value = ok(SHOT_LOCATION_RESPONSE)
-    svc = TeamShotLocationDetails(mock_client)
-    _ = svc.get_shot_location(team_id=21)
-    _ = svc.get_shot_location(team_id=10)
+    svc1 = TeamShotLocationDetails(mock_client, 21)
+    svc2 = TeamShotLocationDetails(mock_client, 10)
+    _ = svc1.get_shot_location()
+    _ = svc2.get_shot_location()
     assert mock_client._api.api_web.call_nhl_edge_team.get_team_shot_location.call_count == 2
 
 
 def test_get_shot_location_result_populated(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_shot_location.return_value = ok(SHOT_LOCATION_RESPONSE)
-    svc = TeamShotLocationDetails(mock_client)
-    result = svc.get_shot_location(team_id=21)
+    svc = TeamShotLocationDetails(mock_client, 21)
+    result = svc.get_shot_location()
     assert len(result.shot_location_details) == 2
     assert result.shot_location_details[0].area == "High Slot"
     assert result.shot_location_details[0].sog_rank == 1

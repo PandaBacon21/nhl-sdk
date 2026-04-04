@@ -269,7 +269,7 @@ class TeamComparisonResult:
     skating distance, season distance details, shot location data by
     rink area and zone, zone time comparisons, and shot differentials.
 
-    Instances of this class are accessed via `client.teams.stats.edge.comparison`.
+    Accessed via ``team.stats.edge.comparison`` on a ``Team`` object.
     """
     team: TeamDetailTeam
     seasons_with_edge: list[EdgeSeason]

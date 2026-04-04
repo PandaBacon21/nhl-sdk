@@ -40,8 +40,8 @@ SKATING_DISTANCE_RESPONSE = {
 
 def test_get_skating_distance_cache_miss(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_distance.return_value = ok(SKATING_DISTANCE_RESPONSE)
-    svc = TeamSkatingDistance(mock_client)
-    result = svc.get_skating_distance(team_id=21)
+    svc = TeamSkatingDistance(mock_client, 21)
+    result = svc.get_skating_distance()
     assert isinstance(result, TeamSkatingDistanceResult)
     mock_client._api.api_web.call_nhl_edge_team.get_team_distance.assert_called_once_with(
         team_id=21, season=None, game_type=None
@@ -50,16 +50,16 @@ def test_get_skating_distance_cache_miss(mock_client) -> None:
 
 def test_get_skating_distance_cache_hit(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_distance.return_value = ok(SKATING_DISTANCE_RESPONSE)
-    svc = TeamSkatingDistance(mock_client)
-    _ = svc.get_skating_distance(team_id=21)
-    _ = svc.get_skating_distance(team_id=21)
+    svc = TeamSkatingDistance(mock_client, 21)
+    _ = svc.get_skating_distance()
+    _ = svc.get_skating_distance()
     mock_client._api.api_web.call_nhl_edge_team.get_team_distance.assert_called_once()
 
 
 def test_get_skating_distance_with_season_and_game_type(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_distance.return_value = ok(SKATING_DISTANCE_RESPONSE)
-    svc = TeamSkatingDistance(mock_client)
-    result = svc.get_skating_distance(team_id=21, season=20242025, game_type=2)
+    svc = TeamSkatingDistance(mock_client, 21)
+    result = svc.get_skating_distance(season=20242025, game_type=2)
     assert isinstance(result, TeamSkatingDistanceResult)
     mock_client._api.api_web.call_nhl_edge_team.get_team_distance.assert_called_once_with(
         team_id=21, season=20242025, game_type=2
@@ -68,16 +68,17 @@ def test_get_skating_distance_with_season_and_game_type(mock_client) -> None:
 
 def test_get_skating_distance_different_teams_separate_cache_keys(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_distance.return_value = ok(SKATING_DISTANCE_RESPONSE)
-    svc = TeamSkatingDistance(mock_client)
-    _ = svc.get_skating_distance(team_id=21)
-    _ = svc.get_skating_distance(team_id=10)
+    svc1 = TeamSkatingDistance(mock_client, 21)
+    svc2 = TeamSkatingDistance(mock_client, 10)
+    _ = svc1.get_skating_distance()
+    _ = svc2.get_skating_distance()
     assert mock_client._api.api_web.call_nhl_edge_team.get_team_distance.call_count == 2
 
 
 def test_get_skating_distance_result_populated(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_distance.return_value = ok(SKATING_DISTANCE_RESPONSE)
-    svc = TeamSkatingDistance(mock_client)
-    result = svc.get_skating_distance(team_id=21)
+    svc = TeamSkatingDistance(mock_client, 21)
+    result = svc.get_skating_distance()
     assert len(result.skating_distance_last_10) == 1
     assert result.skating_distance_last_10[0].toi_all == 17880
     assert len(result.skating_distance_details) == 1

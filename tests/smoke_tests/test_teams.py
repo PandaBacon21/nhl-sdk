@@ -38,7 +38,8 @@ def test_smoke_standings_by_season(nhl) -> None:
 # ==========================================================================
 
 def test_smoke_team_stats(nhl) -> None:
-    result = nhl.teams.stats.get_team_stats(team=TEAM_CODE)
+    team = nhl.teams.get(TEAM_CODE)
+    result = team.stats.get_team_stats()
 
     assert result is not None
     assert len(result.skaters) > 0
@@ -52,14 +53,14 @@ def test_smoke_team_stats(nhl) -> None:
     top_goalie = result.goalies[0]
     print(f"First goalie: {top_goalie.last_name.default} | W: {top_goalie.wins} | SV%: {top_goalie.save_percentage}")
 
-    result_2324 = nhl.teams.stats.get_team_stats(team=TEAM_CODE, season=20232024, g_type=2)
+    result_2324 = team.stats.get_team_stats(season=20232024, g_type=2)
     assert result_2324 is not None
     assert len(result_2324.skaters) > 0
     print(f"2023-24 season: {result_2324.season} | Skaters: {len(result_2324.skaters)}")
 
 
 def test_smoke_team_game_types_per_season(nhl) -> None:
-    result = nhl.teams.stats.get_game_types_per_season(team=TEAM_CODE)
+    result = nhl.teams.get(TEAM_CODE).stats.get_game_types_per_season()
 
     assert result is not None
     assert len(result) > 0
@@ -68,7 +69,7 @@ def test_smoke_team_game_types_per_season(nhl) -> None:
 
 
 def test_smoke_team_scoreboard(nhl) -> None:
-    result = nhl.teams.stats.get_team_scoreboard(team=TEAM_CODE)
+    result = nhl.teams.get(TEAM_CODE).stats.get_team_scoreboard()
 
     assert result is not None
     print(f"Focused date: {result.focused_date}")
@@ -85,7 +86,7 @@ def test_smoke_team_scoreboard(nhl) -> None:
 # ==========================================================================
 
 def test_smoke_roster_seasons(nhl) -> None:
-    seasons = nhl.teams.roster.get_roster_seasons(team=TEAM_CODE)
+    seasons = nhl.teams.get(TEAM_CODE).roster.get_roster_seasons()
 
     assert isinstance(seasons, list)
     assert len(seasons) > 0
@@ -95,7 +96,8 @@ def test_smoke_roster_seasons(nhl) -> None:
 
 
 def test_smoke_team_roster(nhl) -> None:
-    result = nhl.teams.roster.get_team_roster(team=TEAM_CODE)
+    team = nhl.teams.get(TEAM_CODE)
+    result = team.roster.get_team_roster()
 
     assert result is not None
     assert len(result.forwards) > 0
@@ -108,14 +110,14 @@ def test_smoke_team_roster(nhl) -> None:
     print(f"  Height: {f.height_in_inches}in | Weight: {f.weight_in_pounds}lbs")
     print(f"  Birth: {f.birth_details.birth_date} | {f.birth_details.city.default}, {f.birth_details.country}")
 
-    result_2324 = nhl.teams.roster.get_team_roster(team=TEAM_CODE, season=20232024)
+    result_2324 = team.roster.get_team_roster(season=20232024)
     assert result_2324 is not None
     assert len(result_2324.forwards) > 0
     print(f"2023-24 forwards: {len(result_2324.forwards)}")
 
 
 def test_smoke_team_prospects(nhl) -> None:
-    result = nhl.teams.roster.get_team_prospects(team=TEAM_CODE)
+    result = nhl.teams.get(TEAM_CODE).roster.get_team_prospects()
 
     assert result is not None
     assert len(result.forwards) + len(result.defensemen) + len(result.goalies) > 0
@@ -130,7 +132,8 @@ def test_smoke_team_prospects(nhl) -> None:
 # ==========================================================================
 
 def test_smoke_schedule(nhl) -> None:
-    result = nhl.teams.schedule.get_schedule(team=TEAM_CODE)
+    team = nhl.teams.get(TEAM_CODE)
+    result = team.schedule.get_schedule()
 
     assert result is not None
     assert len(result.games) > 0
@@ -139,14 +142,15 @@ def test_smoke_schedule(nhl) -> None:
     g = result.games[0]
     print(f"First game: {g.game_date} | {g.away_team.abbrev} @ {g.home_team.abbrev} | state: {g.game_state}")
 
-    result_2324 = nhl.teams.schedule.get_schedule(team=TEAM_CODE, season=20232024)
+    result_2324 = team.schedule.get_schedule(season=20232024)
     assert result_2324 is not None
     assert len(result_2324.games) > 0
     print(f"2023-24 games: {len(result_2324.games)}")
 
 
 def test_smoke_schedule_month(nhl) -> None:
-    result = nhl.teams.schedule.get_schedule_month(team=TEAM_CODE)
+    team = nhl.teams.get(TEAM_CODE)
+    result = team.schedule.get_schedule_month()
 
     assert result is not None
     assert result.current_month is not None
@@ -156,14 +160,15 @@ def test_smoke_schedule_month(nhl) -> None:
         g = result.games[0]
         print(f"First game: {g.game_date} | {g.away_team.abbrev} @ {g.home_team.abbrev}")
 
-    result_specific = nhl.teams.schedule.get_schedule_month(team=TEAM_CODE, month="2024-11")
+    result_specific = team.schedule.get_schedule_month(month="2024-11")
     assert result_specific is not None
     assert len(result_specific.games) > 0
     print(f"Nov 2024 games: {len(result_specific.games)}")
 
 
 def test_smoke_schedule_week(nhl) -> None:
-    result = nhl.teams.schedule.get_schedule_week(team=TEAM_CODE)
+    team = nhl.teams.get(TEAM_CODE)
+    result = team.schedule.get_schedule_week()
 
     assert result is not None
     print(f"Previous week start: {result.previous_start_date} | Next: {result.next_start_date}")
@@ -174,7 +179,7 @@ def test_smoke_schedule_week(nhl) -> None:
         if g.tickets_link:
             print(f"  Tickets: {g.tickets_link}")
 
-    result_specific = nhl.teams.schedule.get_schedule_week(team=TEAM_CODE, week="2024-11-04")
+    result_specific = team.schedule.get_schedule_week(week="2024-11-04")
     assert result_specific is not None
     assert len(result_specific.games) > 0
     print(f"Week of 2024-11-04 games: {len(result_specific.games)}")

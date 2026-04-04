@@ -11,6 +11,7 @@ from .edge import (
     TeamShotSpeed10, TeamShotSpeedLeaderEntry,
     TeamShotLocation10, TeamShotLocationLeaderEntry,
 )
+from .team.team import Team
 from .team.team_stats import TeamStats, TeamStatsResult, TeamSkaterStat, TeamGoalieStat, TeamSeasonGameTypes, TeamScoreboard, ScoreboardGame, ScoreboardTeam, ScoreboardGamesByDate, ScoreboardTvBroadcast, ScoreboardPeriodDescriptor
 from .team.team_roster import TeamRoster, TeamRosterResult, RosterPlayer, ProspectsResult, Prospect
 from .team.team_schedule import TeamSchedule, TeamScheduleResult, TeamMonthScheduleResult, TeamWeekScheduleResult, ScheduleGame, ScheduleTeam, ScheduleTvBroadcast, SchedulePeriodDescriptor, ScheduleGameOutcome, ScheduleGoalPlayer
@@ -33,6 +34,7 @@ from .team.edge import (
 )
 
 __all__ = [
+    "Team",
     "Standings",
     "StandingsResult",
     "StandingEntry",

@@ -20,7 +20,7 @@ class Standings(CacheFetchMixin):
     Provides access to NHL standings as of a given date or the current moment,
     and the list of seasons for which standings are available.
 
-    Accessed via `teams.standings`.
+    Accessed via ``client.teams.standings``.
     """
     def __init__(self, client: NhlClient) -> None:
         self._client = client

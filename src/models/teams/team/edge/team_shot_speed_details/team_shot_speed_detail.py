@@ -99,7 +99,7 @@ class TeamShotSpeedResult:
     Contains the hardest shot instances for the season and per-position
     breakdowns with shot speed ranks and attempt buckets.
 
-    Instances of this class are accessed via `client.teams.stats.edge.shot_speed`.
+    Accessed via ``team.stats.edge.shot_speed`` on a ``Team`` object.
     """
     hardest_shots: list[TeamHardestShotEntry]
     shot_speed_details: list[TeamShotSpeedDetail]

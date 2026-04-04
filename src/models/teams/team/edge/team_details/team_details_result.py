@@ -196,7 +196,7 @@ class TeamDetailResult:
     Provides a full per-category summary including shot speed, skating speed,
     distance skated, shot on goal details, and zone time percentages.
 
-    Instances of this class are accessed via `client.teams.stats.edge.details(team_id)`.
+    Accessed via ``team.stats.edge.details`` on a ``Team`` object.
     """
     team: TeamDetailTeam
     seasons_with_edge: list[EdgeSeason]

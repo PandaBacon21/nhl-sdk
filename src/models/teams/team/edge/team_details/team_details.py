@@ -21,23 +21,24 @@ class TeamDetails(CacheFetchMixin):
     including shot speed, skating speed, distance skated,
     shot on goal details, and zone time percentages.
 
-    Accessed via `client.teams.stats.edge.details`.
+    Accessed via ``team.stats.edge.details`` on a ``Team`` object.
     """
-    def __init__(self, client: NhlClient):
+    def __init__(self, client: NhlClient, team_id: int):
         self._client = client
+        self._team_id = team_id
         self._cache = get_cache()
         self._logger = logging.getLogger("nhl_sdk.teams.edge.details")
         self._ttl: int = 60 * 60 * 1
 
-    def get_details(self, team_id: int, season: int | None = None, game_type: int | None = None) -> TeamDetailResult:
+    def get_details(self, season: int | None = None, game_type: int | None = None) -> TeamDetailResult:
         """
         Retrieve NHL Edge rankings and stat summaries for the team.
 
         Args:
-            team_id (int): Numeric team ID.
             season (int, optional): Season in YYYYYYYY format.
             game_type (int, optional): Game type (e.g. ``2`` for regular season). Required when ``season`` is provided.
         """
+        team_id = self._team_id
         if season and game_type:
             key = f"teams:edge:details:{team_id}:{season}:{game_type}"
         else:

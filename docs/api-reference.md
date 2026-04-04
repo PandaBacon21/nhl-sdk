@@ -375,58 +375,68 @@ All Edge methods accept optional `season` and `game_type`. `season` and `game_ty
 
 ## `client.teams`
 
-| Property     | Returns        | Description                                    |
-| ------------ | -------------- | ---------------------------------------------- |
-| `.standings` | `Standings`    | NHL standings sub-resource                     |
-| `.stats`     | `TeamStats`    | Per-team stats sub-resource                    |
-| `.roster`    | `TeamRoster`   | Per-team roster sub-resource                   |
-| `.schedule`  | `TeamSchedule` | Per-team schedule sub-resource                 |
-| `.edge`      | `TeamsEdge`    | League-wide NHL Edge leaderboards sub-resource |
+| Method / Property     | Returns     | Description                                    |
+| --------------------- | ----------- | ---------------------------------------------- |
+| `.get(abbrev)`        | `Team`      | Team gateway object with identifier baked in   |
+| `.standings`          | `Standings` | NHL standings sub-resource                     |
+| `.edge`               | `TeamsEdge` | League-wide NHL Edge leaderboards sub-resource |
+
+`abbrev` is the three-letter team code (e.g. `"COL"`). Case-insensitive. Raises `ValueError` for unknown codes. Supports all current franchises and historical relocations (`"ARI"`, `"PHX"`, `"ATL"`).
+
+---
+
+## `Team`
+
+Returned by `client.teams.get("COL")`. The team abbreviation and ID are baked in — sub-resource methods require no team identifier.
+
+| Property    | Returns        | Description                                       |
+| ----------- | -------------- | ------------------------------------------------- |
+| `.stats`    | `TeamStats`    | Per-team stats and NHL Edge sub-resource          |
+| `.roster`   | `TeamRoster`   | Per-team roster sub-resource                      |
+| `.schedule` | `TeamSchedule` | Per-team schedule sub-resource                    |
 
 ---
 
 ## `TeamStats`
 
-Accessed via `client.teams.stats`. Results are cached with a 1hr TTL.
+Accessed via `team.stats` on a `Team` object. Results are cached with a 1hr TTL.
 
-| Method                                  | Returns                     | Description                                   |
-| --------------------------------------- | --------------------------- | --------------------------------------------- |
-| `.get_team_stats(team, season, g_type)` | `TeamStatsResult`           | Club skater and goalie stats                  |
-| `.get_game_types_per_season(team)`      | `list[TeamSeasonGameTypes]` | Seasons and game types available for the club |
-| `.get_team_scoreboard(team)`            | `TeamScoreboard`            | Current scoreboard for the club               |
-| `.edge`                                 | `TeamEdge`                  | Team-specific NHL Edge sub-resource           |
+| Method                           | Returns                     | Description                                   |
+| -------------------------------- | --------------------------- | --------------------------------------------- |
+| `.get_team_stats(season, g_type)`| `TeamStatsResult`           | Club skater and goalie stats                  |
+| `.get_game_types_per_season()`   | `list[TeamSeasonGameTypes]` | Seasons and game types available for the club |
+| `.get_team_scoreboard()`         | `TeamScoreboard`            | Current scoreboard for the club               |
+| `.edge`                          | `TeamEdge`                  | Team-specific NHL Edge sub-resource           |
 
 `get_team_stats()` parameters:
 
 | Parameter | Required | Valid values                                 |
 | --------- | -------- | -------------------------------------------- |
-| `team`    | Yes      | Three-letter team code (e.g. `"COL"`)        |
 | `season`  | No       | `int` in `YYYYYYYY` format (e.g. `20242025`) |
 | `g_type`  | No       | `2` = regular season, `3` = playoffs         |
 
-`season` and `g_type` must be provided together for a historical lookup, or omitted for current stats. `team` is required for all three methods.
+`season` and `g_type` must be provided together for a historical lookup, or omitted for current stats.
 
 ---
 
 ## `TeamEdge`
 
-Accessed via `client.teams.stats.edge`. Each property returns a sub-resource with a single method. All methods accept optional `season` and `game_type` — omit both for current-season data, or provide both for a historical lookup. Results are cached with a 1hr TTL.
+Accessed via `team.stats.edge` on a `Team` object. The team ID is baked in. Each property returns a sub-resource with a single method. All methods accept optional `season` and `game_type` — omit both for current-season data, or provide both for a historical lookup. Results are cached with a 1hr TTL.
 
-| Property           | Sub-resource             | Method                                                 | Returns                    | Description                                        |
-| ------------------ | ------------------------ | ------------------------------------------------------ | -------------------------- | -------------------------------------------------- |
-| `.details`         | `TeamDetails`            | `.get_details(team_id, season, game_type)`             | `TeamDetailResult`         | Full Edge stat summary for a team                  |
-| `.comparison`      | `TeamComparison`         | `.get_comparison(team_id, season, game_type)`          | `TeamComparisonResult`     | Shot/skating speed, distance, zone time, shot diff |
-| `.skating_distance`| `TeamSkatingDistance`    | `.get_skating_distance(team_id, season, game_type)`    | `TeamSkatingDistanceResult`| Per-situation distance breakdowns by strength/pos  |
-| `.skating_speed`   | `TeamSkatingSpeedDetails`| `.get_skating_speed(team_id, season, game_type)`       | `TeamSkatingSpeedResult`   | Top speed instances and burst count breakdowns     |
-| `.zone_time`       | `TeamZoneDetails`        | `.get_zone_time(team_id, season, game_type)`           | `TeamZoneDetailResult`     | Zone time percentages by strength, shot diffs      |
-| `.shot_speed`      | `TeamShotSpeedDetails`   | `.get_shot_speed(team_id, season, game_type)`          | `TeamShotSpeedResult`      | Hardest shot instances and attempt bucket breakdown|
-| `.shot_location`   | `TeamShotLocationDetails`| `.get_shot_location(team_id, season, game_type)`       | `TeamShotLocationResult`   | Per-area shot breakdowns and totals by location    |
+| Property            | Sub-resource             | Method                                   | Returns                     | Description                                        |
+| ------------------- | ------------------------ | ---------------------------------------- | --------------------------- | -------------------------------------------------- |
+| `.details`          | `TeamDetails`            | `.get_details(season, game_type)`        | `TeamDetailResult`          | Full Edge stat summary for the team                |
+| `.comparison`       | `TeamComparison`         | `.get_comparison(season, game_type)`     | `TeamComparisonResult`      | Shot/skating speed, distance, zone time, shot diff |
+| `.skating_distance` | `TeamSkatingDistance`    | `.get_skating_distance(season, game_type)` | `TeamSkatingDistanceResult` | Per-situation distance breakdowns by strength/pos  |
+| `.skating_speed`    | `TeamSkatingSpeedDetails`| `.get_skating_speed(season, game_type)`  | `TeamSkatingSpeedResult`    | Top speed instances and burst count breakdowns     |
+| `.zone_time`        | `TeamZoneDetails`        | `.get_zone_time(season, game_type)`      | `TeamZoneDetailResult`      | Zone time percentages by strength, shot diffs      |
+| `.shot_speed`       | `TeamShotSpeedDetails`   | `.get_shot_speed(season, game_type)`     | `TeamShotSpeedResult`       | Hardest shot instances and attempt bucket breakdown|
+| `.shot_location`    | `TeamShotLocationDetails`| `.get_shot_location(season, game_type)`  | `TeamShotLocationResult`    | Per-area shot breakdowns and totals by location    |
 
 All methods share the same parameter signature:
 
 | Parameter   | Required | Valid values                                 |
 | ----------- | -------- | -------------------------------------------- |
-| `team_id`   | Yes      | NHL team ID as `int` (e.g. `21` for Colorado)|
 | `season`    | No       | `int` in `YYYYYYYY` format (e.g. `20242025`) |
 | `game_type` | No       | `2` = regular season, `3` = playoffs         |
 
@@ -517,43 +527,41 @@ Accessed via `client.teams.standings`. Results are cached with a 1hr TTL.
 
 ## `TeamRoster`
 
-Accessed via `client.teams.roster`. Results are cached with a 6hr TTL.
+Accessed via `team.roster` on a `Team` object. Results are cached with a 6hr TTL.
 
-| Method                           | Returns            | Description                                |
-| -------------------------------- | ------------------ | ------------------------------------------ |
-| `.get_team_roster(team, season)` | `TeamRosterResult` | Current or historical roster for a club    |
-| `.get_roster_seasons(team)`      | `list[int]`        | Seasons for which roster data is available |
-| `.get_team_prospects(team)`      | `ProspectsResult`  | Prospect list for a club                   |
+| Method                     | Returns            | Description                                |
+| -------------------------- | ------------------ | ------------------------------------------ |
+| `.get_team_roster(season)` | `TeamRosterResult` | Current or historical roster for the team  |
+| `.get_roster_seasons()`    | `list[int]`        | Seasons for which roster data is available |
+| `.get_team_prospects()`    | `ProspectsResult`  | Prospect list for the team                 |
 
 `get_team_roster()` parameters:
 
 | Parameter | Required | Valid values                                 |
 | --------- | -------- | -------------------------------------------- |
-| `team`    | Yes      | Three-letter team code (e.g. `"COL"`)        |
 | `season`  | No       | `int` in `YYYYYYYY` format (e.g. `20242025`) |
 
-`season` defaults to the current roster. `team` is required for all three methods.
+`season` defaults to the current roster.
 
 ---
 
 ## `TeamSchedule`
 
-Accessed via `client.teams.schedule`. Results are cached with a 1hr TTL.
+Accessed via `team.schedule` on a `Team` object. Results are cached with a 1hr TTL.
 
-| Method                             | Returns                   | Description                     |
-| ---------------------------------- | ------------------------- | ------------------------------- |
-| `.get_schedule(team, season)`      | `TeamScheduleResult`      | Full-season schedule for a club |
-| `.get_schedule_month(team, month)` | `TeamMonthScheduleResult` | Monthly schedule for a club     |
-| `.get_schedule_week(team, week)`   | `TeamWeekScheduleResult`  | Weekly schedule for a club      |
+| Method                       | Returns                   | Description                      |
+| ---------------------------- | ------------------------- | -------------------------------- |
+| `.get_schedule(season)`      | `TeamScheduleResult`      | Full-season schedule for the team |
+| `.get_schedule_month(month)` | `TeamMonthScheduleResult` | Monthly schedule for the team    |
+| `.get_schedule_week(week)`   | `TeamWeekScheduleResult`  | Weekly schedule for the team     |
 
 | Parameter | Required | Format       | Example        |
 | --------- | -------- | ------------ | -------------- |
-| `team`    | Yes      | Three-letter code | `"COL"`   |
 | `season`  | No       | `YYYYYYYY`   | `20242025`     |
 | `month`   | No       | `YYYY-MM`    | `"2025-01"`    |
 | `week`    | No       | `YYYY-MM-DD` | `"2025-01-06"` |
 
-`season`, `month`, and `week` are optional and default to the current period. `team` is required for all three methods.
+`season`, `month`, and `week` are optional and default to the current period.
 
 ---
 

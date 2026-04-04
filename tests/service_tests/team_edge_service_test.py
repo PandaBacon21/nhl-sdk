@@ -36,8 +36,8 @@ DETAIL_RESPONSE = {
 
 def test_get_details_cache_miss(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_details.return_value = ok(DETAIL_RESPONSE)
-    svc = TeamDetails(mock_client)
-    result = svc.get_details(team_id=21)
+    svc = TeamDetails(mock_client, 21)
+    result = svc.get_details()
     assert isinstance(result, TeamDetailResult)
     mock_client._api.api_web.call_nhl_edge_team.get_team_details.assert_called_once_with(
         team_id=21, season=None, game_type=None
@@ -46,16 +46,16 @@ def test_get_details_cache_miss(mock_client) -> None:
 
 def test_get_details_cache_hit(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_details.return_value = ok(DETAIL_RESPONSE)
-    svc = TeamDetails(mock_client)
-    _ = svc.get_details(team_id=21)
-    _ = svc.get_details(team_id=21)
+    svc = TeamDetails(mock_client, 21)
+    _ = svc.get_details()
+    _ = svc.get_details()
     mock_client._api.api_web.call_nhl_edge_team.get_team_details.assert_called_once()
 
 
 def test_get_details_with_season_and_game_type(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_details.return_value = ok(DETAIL_RESPONSE)
-    svc = TeamDetails(mock_client)
-    result = svc.get_details(team_id=21, season=20242025, game_type=2)
+    svc = TeamDetails(mock_client, 21)
+    result = svc.get_details(season=20242025, game_type=2)
     assert isinstance(result, TeamDetailResult)
     mock_client._api.api_web.call_nhl_edge_team.get_team_details.assert_called_once_with(
         team_id=21, season=20242025, game_type=2
@@ -64,16 +64,17 @@ def test_get_details_with_season_and_game_type(mock_client) -> None:
 
 def test_get_details_different_teams_separate_cache_keys(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_details.return_value = ok(DETAIL_RESPONSE)
-    svc = TeamDetails(mock_client)
-    _ = svc.get_details(team_id=21)
-    _ = svc.get_details(team_id=10)
+    svc1 = TeamDetails(mock_client, 21)
+    svc2 = TeamDetails(mock_client, 10)
+    _ = svc1.get_details()
+    _ = svc2.get_details()
     assert mock_client._api.api_web.call_nhl_edge_team.get_team_details.call_count == 2
 
 
 def test_get_details_result_populated(mock_client) -> None:
     mock_client._api.api_web.call_nhl_edge_team.get_team_details.return_value = ok(DETAIL_RESPONSE)
-    svc = TeamDetails(mock_client)
-    result = svc.get_details(team_id=21)
+    svc = TeamDetails(mock_client, 21)
+    result = svc.get_details()
     assert result.team.abbrev == "COL"
     assert result.team.wins == 49
     assert len(result.seasons_with_edge) == 1
