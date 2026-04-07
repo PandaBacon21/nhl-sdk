@@ -8,7 +8,7 @@ import time
 import requests
 import logging
 
-from .config import BASE_URL_API_WEB
+from .config import BASE_URL_API_WEB, BASE_URL_API_STATS
 from .errors import NotFoundError, ServerError, RateLimitError, NhlApiError
 
 session = requests.Session()
@@ -20,15 +20,14 @@ class APIResponse:
     data: Any 
     status_code: int 
 
-
-class APICallWeb:
-    def __init__(self, base_url: str = BASE_URL_API_WEB, session: requests.Session = session, max_retries: int = 3) -> None:
+class APICall: 
+    def __init__(self, api:str, base_url: str, logger: logging.Logger, session: requests.Session = session, max_retries: int = 3) -> None:
         self.base_url = base_url.rstrip("/")
         self.response = APIResponse
         self.session = session
         self.max_retries = max_retries
-        self.logger = logging.getLogger("nhl_sdk.api_call_web")
-        self.logger.info(msg=f"APICallWeb initialized: base_url - {self.base_url}")
+        self.logger = logger
+        self.logger.info(msg=f"APICall{api} initialized: base_url - {self.base_url}")
 
     def get(self, endpoint: str, params: dict | None = None, *, raise_on_error: bool = True) -> APIResponse:
         url = self.base_url+endpoint
@@ -116,3 +115,15 @@ class APICallWeb:
             raise ServerError(msg, status_code=status, url=url)
 
         raise NhlApiError(msg, status_code=status, url=url)    
+
+
+class APICallWeb(APICall):
+    def __init__(self, base_url: str = BASE_URL_API_WEB, session: requests.Session = session, max_retries: int = 3) -> None:
+        super().__init__(api="Web", base_url=base_url, logger=logging.getLogger("nhl_sdk.api_call_web"), 
+                         session=session, max_retries=max_retries)
+        
+
+class APICallStats(APICall):
+    def __init__(self, base_url: str = BASE_URL_API_STATS, session: requests.Session = session, max_retries: int = 3) -> None:
+        super().__init__(api="Stats", base_url=base_url, logger=logging.getLogger("nhl_sdk.api_call_stats"), 
+                         session=session, max_retries=max_retries)

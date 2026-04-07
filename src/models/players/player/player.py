@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 from ....core.utilities import _check_cache
 from .profile import Profile
 from .player_stats import PlayerStats
+from .achievements import PlayerAchievements
 from ....core.cache import get_cache
 
 if TYPE_CHECKING:
@@ -43,6 +44,7 @@ class Player:
         self._pos: str = "S"
         self._profile: Profile | None = None
         self._stats: PlayerStats | None = None
+        self._achievements: PlayerAchievements | None = None
 
     def __repr__(self):
         """
@@ -123,4 +125,25 @@ class Player:
         self._stats = PlayerStats(pos=self._pos, pid=self._pid, data=data.data, client=self._client)
         self._logger.debug(f"{self._pid} stats retrieved")
         return self._stats
+
+    @property
+    def achievements(self) -> PlayerAchievements:
+        """
+        Player career recognition and upcoming milestones.
+
+        Returns
+        -------
+        PlayerAchievements
+            Structured access to awards, badges, Hall of Fame status,
+            top-100 ranking, and approaching statistical milestones.
+        """
+        if self._achievements:
+            if self._cache is None or _check_cache(self._cache, self._landing_key):
+                return self._achievements
+        data = self._get_player_landing()
+        self._achievements = PlayerAchievements(
+            pid=self._pid, pos=self._pos, data=data.data, client=self._client
+        )
+        self._logger.debug(f"{self._pid} achievements retrieved")
+        return self._achievements
 

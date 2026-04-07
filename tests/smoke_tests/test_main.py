@@ -70,6 +70,22 @@ from test_playoffs import (
     test_smoke_series_schedule,
     test_smoke_bracket,
 )
+from test_league import (
+    test_smoke_league_schedule_now,
+    test_smoke_league_schedule_with_date,
+    test_smoke_league_schedule_calendar_now,
+    test_smoke_league_schedule_calendar_with_date,
+    test_smoke_league_seasons,
+)
+from test_misc import (
+    test_smoke_misc_location,
+    test_smoke_misc_countries,
+    test_smoke_misc_franchises,
+    test_smoke_misc_glossary,
+    test_smoke_misc_config,
+    test_smoke_misc_ping,
+    test_smoke_games_shifts,
+)
 
 
 if __name__ == "__main__":
@@ -138,3 +154,19 @@ if __name__ == "__main__":
     test_smoke_carousel(client)
     test_smoke_series_schedule(client)
     test_smoke_bracket(client)
+    time.sleep(1.5)
+
+    test_smoke_league_schedule_now(client)
+    test_smoke_league_schedule_with_date(client)
+    test_smoke_league_schedule_calendar_now(client)
+    test_smoke_league_schedule_calendar_with_date(client)
+    test_smoke_league_seasons(client)
+    time.sleep(1.5)
+
+    test_smoke_misc_location(client)
+    test_smoke_misc_countries(client)
+    test_smoke_misc_franchises(client)
+    test_smoke_misc_glossary(client)
+    test_smoke_misc_config(client)
+    test_smoke_misc_ping(client)
+    test_smoke_games_shifts(client)

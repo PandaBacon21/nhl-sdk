@@ -113,12 +113,12 @@ class CallNhlMisc:
         game_rail: APIResponse = self._http.get(endpoint=endpoint)
         return game_rail
 
-    def get_wsc(self, game_id: int) -> APIResponse: 
+    def get_wsc(self, game_id: int) -> APIResponse:
         """
         Retrieves WSC (World Showcase) play-by-play information for a specific game
         game_id: int
         """
-        endpoint = f"/{V}/gamecenter/{game_id}/right-rail"
+        endpoint = f"/{V}/wsc/play-by-play/{game_id}"
         res: APIResponse = self._http.get(endpoint=endpoint)
         return res
 

@@ -23,18 +23,18 @@ def test_smoke_profile(nhl) -> None:
     print(f"Draft year: {player.profile.draft.year}")
     print(f"Birth city: {player.profile.birth_details.city}")
     print(f"Birth state/province: {player.profile.birth_details.state_province}")
-    print(f"In HHOF: {player.profile.legacy.in_HHOF}")
-    print(f"In top 100 all time: {player.profile.legacy.in_top_100_all_time}")
+    print(f"In HHOF: {player.achievements.in_hhof}")
+    print(f"In top 100 all time: {player.achievements.in_top_100_all_time}")
     print(f"Is active: {player.profile.is_active}")
     print(f"Headshot: {player.profile.media.headshot}")
     print(f"Slug: {player.profile.media.slug}")
     print("")
     print("Badges:")
-    for badge in player.profile.legacy.badges:
+    for badge in player.achievements.badges:
         print(badge)
     print("")
     print("Awards:")
-    for award in player.profile.legacy.awards:
+    for award in player.achievements.awards:
         print(award)
 
 

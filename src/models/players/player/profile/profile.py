@@ -5,7 +5,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .profile_team import ProfileTeam
-from .legacy import Legacy
 from .media import Media
 from .draft import Draft
 
@@ -27,9 +26,7 @@ class Profile:
     weight_in_kilograms: int | None
     birth_details: BirthDetails
     draft: Draft
-    legacy: Legacy
     media: Media
-
 
     @classmethod
     def from_dict(cls, data: dict) -> Profile:
@@ -48,6 +45,5 @@ class Profile:
             weight_in_kilograms = data.get("weightInKilograms"),
             birth_details = BirthDetails.from_dict(data),
             draft = Draft.from_dict(data),
-            legacy = Legacy.from_dict(data),
             media = Media.from_dict(data)
         )

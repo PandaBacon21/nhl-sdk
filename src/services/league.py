@@ -66,3 +66,30 @@ class League(CacheFetchMixin):
             self._logger, self._cache, self._ttl,
             lambda d: d or [],
         )
+
+    def get_season_details(self) -> list[dict]:
+        """
+        Retrieve detailed season metadata from the NHL Stats API.
+
+        Returns a list of season records with start/end dates and other
+        metadata not available from the standard seasons endpoint.
+        """
+        return self._fetch(
+            "league:season-details",
+            lambda: self._client._api.api_stats.call_nhl_stats_seasons.get_season(),
+            self._logger, self._cache, self._ttl,
+            lambda d: d.get("data") or [],
+        )
+
+    def get_component_season(self) -> list[dict]:
+        """
+        Retrieve component season information from the NHL Stats API.
+
+        Returns metadata about the structural components of the current season.
+        """
+        return self._fetch(
+            "league:component-season",
+            lambda: self._client._api.api_stats.call_nhl_stats_seasons.get_component_season(),
+            self._logger, self._cache, self._ttl,
+            lambda d: d.get("data") or [],
+        )

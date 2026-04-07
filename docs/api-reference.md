@@ -33,6 +33,7 @@ client = NhlClient()
 | `.games`    | `Games`    | Games namespace    |
 | `.draft`    | `Draft`    | Draft namespace    |
 | `.playoffs` | `Playoffs` | Playoffs namespace |
+| `.misc`     | `Misc`     | Miscellaneous endpoints and reference data |
 
 ---
 
@@ -89,35 +90,71 @@ The default `MemCache` is an in-process dict-based cache. It does not persist ac
 
 ## `client.players`
 
-| Method / Property | Returns           | Description                          |
-| ----------------- | ----------------- | ------------------------------------ |
-| `.get(pid)`       | `Player`          | Player object for a given player ID  |
-| `.spotlight`      | `list[Spotlight]` | Currently spotlighted players        |
-| `.leaders`        | `Leaders`         | Stat leaders for skaters and goalies |
+| Method / Property      | Returns              | Description                                        |
+| ---------------------- | -------------------- | -------------------------------------------------- |
+| `.get(pid)`            | `Player`             | Player object for a given player ID                |
+| `.spotlight`           | `list[Spotlight]`    | Currently spotlighted players                      |
+| `.leaders`             | `Leaders`            | Stat leaders for skaters and goalies               |
+| `.milestones(...)`     | `list[PlayerMilestone]` | League-wide upcoming skater milestones          |
+
+### `.milestones(milestone, game_type, limit)` → `list[PlayerMilestone]`
+
+Returns upcoming statistical milestones being approached by skaters across the league. Results are cached with a 1hr TTL.
+
+| Parameter    | Required | Description                                                        |
+| ------------ | -------- | ------------------------------------------------------------------ |
+| `milestone`  | No       | Filter by type: `"Goals"`, `"Assists"`, `"Points"`, etc.          |
+| `game_type`  | No       | `2` = regular season, `3` = playoffs                               |
+| `limit`      | No       | Maximum results. Pass `-1` for all.                                |
 
 ---
 
 ## `Player`
 
-| Property / Method | Returns   | Description                                                    |
-| ----------------- | --------- | -------------------------------------------------------------- |
-| `.profile`        | `Profile` | Biographical info (name, position, birth, draft, awards, etc.) |
-| `.stats`          | `Stats`   | Statistical data                                               |
+| Property / Method  | Returns              | Description                                                    |
+| ------------------ | -------------------- | -------------------------------------------------------------- |
+| `.profile`         | `Profile`            | Biographical info (name, position, birth, draft, media)        |
+| `.achievements`    | `PlayerAchievements` | Career recognition — awards, badges, HHOF, milestones          |
+| `.stats`           | `PlayerStats`        | Statistical data                                               |
+
+---
+
+## `Player.achievements`
+
+Accessed via `player.achievements`. Exposes career recognition data from the player landing response, and lazily loads upcoming milestone data from the NHL Stats API.
+
+| Property / Method        | Returns                   | Description                                            |
+| ------------------------ | ------------------------- | ------------------------------------------------------ |
+| `.in_top_100_all_time`   | `bool \| None`            | Whether the player is in the top 100 all-time          |
+| `.in_hhof`               | `bool \| None`            | Whether the player is inducted in the Hockey Hall of Fame |
+| `.awards`                | `list[Award]`             | NHL awards won by the player                           |
+| `.badges`                | `list[Badge]`             | Achievement badges earned by the player                |
+| `.milestones(game_type)` | `list[PlayerMilestone] \| None` | Upcoming statistical milestones the player is approaching |
+
+### `.milestones(game_type)` → `list[PlayerMilestone] | None`
+
+Results are cached with a 1hr TTL. Returns `None` if no approaching milestones exist.
+
+| Parameter   | Required | Description                                   |
+| ----------- | -------- | --------------------------------------------- |
+| `game_type` | No       | `2` = regular season, `3` = playoffs          |
 
 ---
 
 ## `Player.stats`
 
-| Attribute / Method             | Returns              | Description                       |
-| ------------------------------ | -------------------- | --------------------------------- |
-| `.featured`                    | `Featured`           | Current season featured stats     |
-| `.career`                      | `Career`             | Career totals                     |
-| `.seasons`                     | `list[Season]`       | Per-season stat totals            |
-| `.last_5_games`                | `list[FeaturedGame]` | Most recent 5 games               |
-| `.game_log(season, game_type)` | `GameLogs`           | Full game log for a season        |
-| `.edge()`                      | `SkaterEdge \| GoalieEdge` | NHL Edge stats for the player's position |
+| Attribute / Method             | Returns                               | Description                       |
+| ------------------------------ | ------------------------------------- | --------------------------------- |
+| `.featured`                    | `Featured`                            | Current season featured stats     |
+| `.career`                      | `Career`                              | Career totals                     |
+| `.seasons`                     | `list[Season]`                        | Per-season stat totals            |
+| `.last_5_games`                | `list[FeaturedGame]`                  | Most recent 5 games               |
+| `.game_log(season, game_type)` | `GameLogs`                            | Full game log for a season        |
+| `.summary(season, game_type)`  | `SkaterSummaryReport \| GoalieSummaryReport \| None` | Season aggregate from api_stats |
+| `.report(report_type, ...)`    | `dict`                                | Raw escape hatch for any api_stats report |
+| `.edge()`                      | `SkaterEdge \| GoalieEdge`            | NHL Edge stats for the player's position |
 
-`game_log()` parameters:
+### `.game_log(season, game_type)` → `GameLogs`
 
 | Parameter   | Required | Valid values                                 |
 | ----------- | -------- | -------------------------------------------- |
@@ -125,6 +162,31 @@ The default `MemCache` is an in-process dict-based cache. It does not persist ac
 | `game_type` | No       | `2` = regular season, `3` = playoffs         |
 
 Omit both for the current season. `season` and `game_type` must be provided together for a historical lookup.
+
+### `.summary(season, game_type)` → `SkaterSummaryReport | GoalieSummaryReport | None`
+
+Fetches season-level aggregate stats from the NHL Stats API. Includes situational breakdowns (EV/PP/SH goals and points) not available in the player landing response. Returns the position-appropriate model automatically. Results are cached with a 1hr TTL. Returns `None` if no data exists for the requested season.
+
+| Parameter   | Required | Valid values                                 |
+| ----------- | -------- | -------------------------------------------- |
+| `season`    | No       | `int` in `YYYYYYYY` format (e.g. `20232024`) |
+| `game_type` | No       | `2` = regular season, `3` = playoffs         |
+
+### `.report(report_type, ...)` → `dict`
+
+Raw escape hatch for any api_stats report type not covered by named methods. Returns `{"data": [...], "total": N}`.
+
+| Parameter      | Required | Description                                                         |
+| -------------- | -------- | ------------------------------------------------------------------- |
+| `report_type`  | Yes      | e.g. `"summary"`, `"bios"`, `"realtime"`, `"faceoffwins"`          |
+| `season`       | No       | Season in `YYYYYYYY` format. Merged into cayenneExp automatically.  |
+| `game_type`    | No       | Game type. Merged into cayenneExp automatically.                    |
+| `is_aggregate` | No       | Aggregate stats across seasons/teams.                               |
+| `cayenne_exp`  | No       | Custom filter expression. Overrides auto-built expression.          |
+| `sort`         | No       | Field to sort by.                                                   |
+| `dir`          | No       | Sort direction: `"ASC"` or `"DESC"`.                                |
+| `start`        | No       | Pagination offset.                                                  |
+| `limit`        | No       | Maximum results (`-1` for all).                                     |
 
 ---
 
@@ -401,14 +463,15 @@ Returned by `client.teams.get("COL")`. The team abbreviation and ID are baked in
 
 Accessed via `team.stats` on a `Team` object. Results are cached with a 1hr TTL.
 
-| Method                           | Returns                     | Description                                   |
-| -------------------------------- | --------------------------- | --------------------------------------------- |
-| `.get_team_stats(season, g_type)`| `TeamStatsResult`           | Club skater and goalie stats                  |
-| `.get_game_types_per_season()`   | `list[TeamSeasonGameTypes]` | Seasons and game types available for the club |
-| `.get_team_scoreboard()`         | `TeamScoreboard`            | Current scoreboard for the club               |
-| `.edge`                          | `TeamEdge`                  | Team-specific NHL Edge sub-resource           |
+| Method                              | Returns                     | Description                                   |
+| ----------------------------------- | --------------------------- | --------------------------------------------- |
+| `.get_team_stats(season, g_type)`   | `TeamStatsResult`           | Club skater and goalie stats                  |
+| `.get_game_types_per_season()`      | `list[TeamSeasonGameTypes]` | Seasons and game types available for the club |
+| `.get_team_scoreboard()`            | `TeamScoreboard`            | Current scoreboard for the club               |
+| `.get_summary(season, g_type)`      | `TeamAggregateSummary \| None` | Aggregate team stats from api_stats         |
+| `.edge`                             | `TeamEdge`                  | Team-specific NHL Edge sub-resource           |
 
-`get_team_stats()` parameters:
+### `.get_team_stats(season, g_type)` parameters
 
 | Parameter | Required | Valid values                                 |
 | --------- | -------- | -------------------------------------------- |
@@ -416,6 +479,17 @@ Accessed via `team.stats` on a `Team` object. Results are cached with a 1hr TTL.
 | `g_type`  | No       | `2` = regular season, `3` = playoffs         |
 
 `season` and `g_type` must be provided together for a historical lookup, or omitted for current stats.
+
+### `.get_summary(season, g_type)` → `TeamAggregateSummary | None`
+
+Fetches team-level aggregate metrics from the NHL Stats API (goals for/against, power play %, penalty kill %, faceoff win %, and more). Returns `None` if no data exists for the requested season. Results are cached with a 1hr TTL.
+
+| Parameter | Required | Valid values                                 |
+| --------- | -------- | -------------------------------------------- |
+| `season`  | No       | `int` in `YYYYYYYY` format (e.g. `20232024`) |
+| `g_type`  | No       | `2` = regular season, `3` = playoffs         |
+
+`season` and `g_type` must be provided together for a historical lookup, or omitted for current data.
 
 ---
 
@@ -569,11 +643,13 @@ Accessed via `team.schedule` on a `Team` object. Results are cached with a 1hr T
 
 Accessed directly as `client.league`. Results are cached with a 1hr TTL.
 
-| Method                            | Returns                  | Description                                         |
-| --------------------------------- | ------------------------ | --------------------------------------------------- |
+| Method                            | Returns                  | Description                                                    |
+| --------------------------------- | ------------------------ | -------------------------------------------------------------- |
 | `.get_schedule(date)`             | `LeagueScheduleResult`   | League-wide game schedule for the current week or a specific date |
 | `.get_schedule_calendar(date)`    | `LeagueCalendarResult`   | Calendar of scheduled game dates for the current window or a specific date |
-| `.get_seasons()`                  | `list[int]`              | All NHL season IDs, past and present                |
+| `.get_seasons()`                  | `list[int]`              | All NHL season IDs, past and present                           |
+| `.get_season_details()`           | `list[dict]`             | Detailed season metadata from api_stats (start/end dates, etc.) |
+| `.get_component_season()`         | `list[dict]`             | Component season metadata from api_stats                       |
 
 | Parameter | Required | Format       | Example        |
 | --------- | -------- | ------------ | -------------- |
@@ -595,6 +671,7 @@ Accessed directly as `client.league`. Results are cached with a 1hr TTL.
 | `.boxscore`   | `GameBoxscore`   | Boxscore sub-resource                |
 | `.story`      | `GameStory`      | Game story sub-resource              |
 | `.odds`       | `PartnerOdds`    | Partner betting odds sub-resource    |
+| `.shifts`     | `GameShifts`     | Shift chart sub-resource             |
 
 ---
 
@@ -706,6 +783,22 @@ Accessed via `client.games.odds`. Results are cached with a 1hr TTL.
 
 ---
 
+## `GameShifts`
+
+Accessed via `client.games.shifts`. Results are cached with a 1hr TTL.
+
+| Method          | Returns      | Description                              |
+| --------------- | ------------ | ---------------------------------------- |
+| `.get(game_id)` | `ShiftChart` | Shift chart data for a specific game     |
+
+| Parameter | Required | Description                      |
+| --------- | -------- | -------------------------------- |
+| `game_id` | Yes      | NHL game ID (e.g. `2024020001`)  |
+
+`ShiftChart` contains a `total` count and a `shifts` list of `ShiftEntry` objects. Each `ShiftEntry` includes player identity, team, period, start/end times, duration, hex color, and event details when applicable.
+
+---
+
 ## `client.draft`
 
 | Property     | Returns          | Description                        |
@@ -713,6 +806,22 @@ Accessed via `client.games.odds`. Results are cached with a 1hr TTL.
 | `.rankings`  | `DraftRankings`  | Prospect rankings sub-resource     |
 | `.tracker`   | `DraftTracker`   | Live draft tracker sub-resource    |
 | `.picks`     | `DraftPicks`     | Draft picks sub-resource           |
+
+| Method          | Returns      | Description                               |
+| --------------- | ------------ | ----------------------------------------- |
+| `.query(...)`   | `list[dict]` | Raw api_stats draft query                 |
+
+### `.query(cayenne_exp, sort, dir, start, limit)` → `list[dict]`
+
+Queries draft data from the NHL Stats API. Useful for filtering historical draft records by year, round, team, etc. Results are cached with a 6hr TTL.
+
+| Parameter     | Required | Description                                                    |
+| ------------- | -------- | -------------------------------------------------------------- |
+| `cayenne_exp` | No       | Filter expression (e.g. `"draftYear=2023 and roundNumber=1"`) |
+| `sort`        | No       | Field to sort by.                                              |
+| `dir`         | No       | Sort direction: `"ASC"` or `"DESC"`.                           |
+| `start`       | No       | Pagination offset.                                             |
+| `limit`       | No       | Maximum results (`-1` for all).                                |
 
 ---
 
@@ -810,3 +919,68 @@ Accessed via `client.playoffs.bracket`. Results are cached with a 6hr TTL.
 | Parameter | Required | Description                          |
 | --------- | -------- | ------------------------------------ |
 | `year`    | Yes      | Year in `YYYY` format (e.g. `2024`)  |
+
+---
+
+## `client.misc`
+
+Accessed directly as `client.misc`. Provides access to miscellaneous api-web endpoints and reference data from api_stats. Methods without caching note are uncached (live API call each time). Reference properties are cached with a 24hr TTL.
+
+### Game & Location Methods
+
+| Method / Property                          | Returns                        | Description                                                     |
+| ------------------------------------------ | ------------------------------ | --------------------------------------------------------------- |
+| `.location()`                              | `LocationResult`               | Country code detected for the current request                   |
+| `.postal_lookup(postal_code)`              | `list[PostalLookupResult]`     | Geographic info for a postal code                               |
+| `.meta(players, teams, season_states)`     | `MiscMeta`                     | Meta info for players, teams, or season states                  |
+| `.game_meta(game_id)`                      | `GameMetaResult`               | Metadata for a specific game                                    |
+| `.playoff_series_meta(year, series_letter)`| `PlayoffSeriesMetaResult`      | Metadata for a specific playoff series                          |
+| `.game_rail(game_id)`                      | `GameRailResult`               | Sidebar content for the game center view                        |
+| `.goal_replay(game_id, event_number)`      | `GoalReplayResult`             | Goal replay data for a game event                               |
+| `.play_replay(game_id, event_number)`      | `PlayReplayResult`             | Play replay data for a game event                               |
+| `.wsc_play_by_play(game_id)`               | `list[WscPlay]`                | WSC play-by-play data for a game                                |
+
+### Reference Data (cached 24hr)
+
+| Property        | Returns              | Description                                      |
+| --------------- | -------------------- | ------------------------------------------------ |
+| `.countries`    | `list[Country]`      | All countries with a hockey presence             |
+| `.franchises`   | `list[Franchise]`    | All NHL franchises, past and present             |
+| `.glossary`     | `list[GlossaryEntry]`| Statistical term definitions                     |
+| `.config`       | `StatsConfig`        | NHL Stats API configuration and report metadata  |
+
+### Connectivity
+
+| Method    | Returns | Description                                   |
+| --------- | ------- | --------------------------------------------- |
+| `.ping()` | `bool`  | `True` if the Stats API server responds successfully |
+
+### Parameter details
+
+`.postal_lookup(postal_code)`:
+
+| Parameter     | Required | Description                         |
+| ------------- | -------- | ----------------------------------- |
+| `postal_code` | Yes      | Postal / ZIP code string            |
+
+`.meta(players, teams, season_states)` — all parameters optional:
+
+| Parameter       | Required | Description                                  |
+| --------------- | -------- | -------------------------------------------- |
+| `players`       | No       | Player ID string                             |
+| `teams`         | No       | Three-letter team code                       |
+| `season_states` | No       | Season state filter                          |
+
+`.game_meta(game_id)`, `.game_rail(game_id)`, `.goal_replay(game_id, event_number)`, `.play_replay(game_id, event_number)`, `.wsc_play_by_play(game_id)`:
+
+| Parameter      | Required | Description                      |
+| -------------- | -------- | -------------------------------- |
+| `game_id`      | Yes      | NHL game ID (e.g. `2024020001`)  |
+| `event_number` | Yes (replays only) | Event number within the game |
+
+`.playoff_series_meta(year, series_letter)`:
+
+| Parameter       | Required | Description                                        |
+| --------------- | -------- | -------------------------------------------------- |
+| `year`          | Yes      | Season year in `YYYY` format (e.g. `2024`)         |
+| `series_letter` | Yes      | Series letter (e.g. `"A"`)                         |

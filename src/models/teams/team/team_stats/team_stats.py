@@ -10,6 +10,7 @@ from .....core.utilities import CacheFetchMixin
 from .team_stats_result import TeamStatsResult
 from .team_season_game_types import TeamSeasonGameTypes
 from .team_scoreboard import TeamScoreboard
+from .team_aggregate_summary import TeamAggregateSummary
 from ..edge import TeamEdge
 
 if TYPE_CHECKING:
@@ -76,6 +77,52 @@ class TeamStats(CacheFetchMixin):
             lambda: self._client._api.api_web.call_nhl_teams.get_team_scoreboard(team=team),
             self._logger, self._cache, self._ttl,
             TeamScoreboard.from_dict,
+        )
+
+    def get_summary(
+        self,
+        season: int | None = None,
+        g_type: int | None = None,
+    ) -> TeamAggregateSummary | None:
+        """
+        Retrieve aggregate team performance stats from the NHL Stats API.
+
+        Returns team-level metrics such as goals for/against, win percentages,
+        power play and penalty kill rates, faceoff win percentage, and more.
+        This is distinct from ``get_team_stats`` which returns per-player stats.
+
+        Parameters
+        ----------
+        season : int | None
+            Season in YYYYYYYY format (e.g. 20232024). Defaults to current season.
+        g_type : int | None
+            Game type (2 = regular season, 3 = playoffs). Required with season.
+        """
+        team_id = self._team_id
+        key = (
+            f"teams:aggregate:{team_id}:{season}:{g_type}"
+            if season and g_type
+            else f"teams:aggregate:{team_id}:now"
+        )
+
+        parts = [f"teamId={team_id}"]
+        if season:
+            parts.append(f"seasonId={season}")
+        if g_type:
+            parts.append(f"gameTypeId={g_type}")
+        cayenne_exp = " and ".join(parts)
+
+        def _builder(d: dict) -> TeamAggregateSummary | None:
+            items = d.get("data") or []
+            return TeamAggregateSummary.from_dict(items[0]) if items else None
+
+        return self._fetch(
+            key,
+            lambda: self._client._api.api_stats.call_nhl_stats_teams.get_team_stats(
+                report="summary", cayenne_exp=cayenne_exp
+            ),
+            self._logger, self._cache, self._ttl,
+            _builder,
         )
 
     @property

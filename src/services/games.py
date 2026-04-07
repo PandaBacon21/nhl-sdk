@@ -6,6 +6,8 @@ import logging
 from typing import TYPE_CHECKING
 
 from ..core.cache import get_cache
+from ..core.utilities import CacheFetchMixin
+from ..models.games.shifts import GameShifts
 from ..models.games.network import GameNetwork
 from ..models.games.scores import GameScores
 from ..models.games.scoreboard import GameScoreboard
@@ -19,7 +21,7 @@ if TYPE_CHECKING:
     from nhl_stats.src.client import NhlClient
 
 
-class Games:
+class Games(CacheFetchMixin):
     """
     Games Collection
 
@@ -29,6 +31,7 @@ class Games:
         self._client = client
         self._cache = get_cache()
         self._logger = logging.getLogger("nhl_sdk.games")
+        self._ttl: int = 60 * 60
 
     @property
     def network(self) -> GameNetwork:
@@ -108,3 +111,12 @@ class Games:
         current odds by country code.
         """
         return PartnerOdds(self._client)
+
+    @property
+    def shifts(self) -> GameShifts:
+        """
+        Access shift chart data for a specific game.
+
+        Returns a GameShifts sub-resource with a get(game_id) method.
+        """
+        return GameShifts(self._client)
