@@ -1,21 +1,4 @@
-"""
-AWARD DATA CLASS
-"""
-from __future__ import annotations
-from dataclasses import dataclass
+# Moved to models/players/player/achievements/award.py
+from ..achievements.award import Award
 
-from .....core.utilities import LocalizedString
-
-@dataclass(slots=True, frozen=True)
-class Award: 
-    trophy: LocalizedString
-    seasons: list[int]
-
-
-    @classmethod
-    def from_dict(cls, data: dict) -> Award:
-        return cls(
-            trophy = LocalizedString(data.get("trophy")),
-            seasons = data.get("seasons") or []
-        )
-    
+__all__ = ["Award"]

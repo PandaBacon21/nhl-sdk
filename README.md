@@ -37,20 +37,36 @@ player = client.players.get(8477492)  # Nathan MacKinnon
 print(player.profile.first_name)
 print(player.profile.position)
 
+# Achievements (awards, badges, HHOF, top-100 status)
+print(player.achievements.in_hhof)
+print(player.achievements.in_top_100_all_time)
+print(player.achievements.awards)
+print(player.achievements.badges)
+
+# Upcoming milestones for this player
+milestones = player.achievements.milestones()
+milestones = player.achievements.milestones(game_type=2)
+
 # Stats
 print(player.stats.career)
 print(player.stats.seasons)
 print(player.stats.last_5_games)
 
-# Game log (current season)
-logs = player.stats.game_log()
+# Season summary (api_stats — includes EV/PP/SH splits)
+summary = player.stats.summary()
+summary = player.stats.summary(season=20232024, game_type=2)
 
-# Game log (specific season + game type)
+# Game log
+logs = player.stats.game_log()
 logs = player.stats.game_log(season=20232024, game_type=2)
 
 # NHL Edge — position-aware (returns SkaterEdge or GoalieEdge automatically)
 details = player.stats.edge().details()
 speed   = player.stats.edge().skating_speed()
+
+# League-wide player milestones
+milestones = client.players.milestones()
+milestones = client.players.milestones(milestone="Goals", game_type=2)
 
 # Spotlight + leaders
 spotlight = client.players.spotlight
@@ -68,6 +84,10 @@ team = client.teams.get("COL")
 # Stats
 team_stats = team.stats.get_team_stats()
 scoreboard = team.stats.get_team_scoreboard()
+
+# Aggregate summary (api_stats — goals for/against, PP%, PK%, faceoff%, etc.)
+summary = team.stats.get_summary()
+summary = team.stats.get_summary(season=20232024, g_type=2)
 
 # Roster
 roster = team.roster.get_team_roster()
@@ -99,6 +119,8 @@ shot_loc_top  = client.teams.edge.shot_location_top_10.get_top_10(category="sog"
 league_schedule  = client.league.get_schedule()
 league_calendar  = client.league.get_schedule_calendar(date="2025-01-06")
 seasons          = client.league.get_seasons()
+season_details   = client.league.get_season_details()
+component_season = client.league.get_component_season()
 
 # --- Games ---
 tv_schedule  = client.games.network.get_tv_schedule()
@@ -109,6 +131,7 @@ landing      = client.games.landing.get_landing(game_id=2024020001)
 boxscore     = client.games.boxscore.get_boxscore(game_id=2024020001)
 story        = client.games.story.get_game_story(game_id=2024020001)
 odds         = client.games.odds.get_odds(country_code="US")
+shifts       = client.games.shifts.get(game_id=2024020001)
 
 # --- Draft ---
 rankings     = client.draft.rankings.get_rankings()
@@ -117,10 +140,28 @@ tracker      = client.draft.tracker.get_tracker_now()
 picks        = client.draft.picks.get_picks()
 picks_by     = client.draft.picks.get_picks(season=2025, round="1")
 
+# api_stats draft query
+draft_data   = client.draft.query(cayenne_exp="draftYear=2023 and roundNumber=1")
+
 # --- Playoffs ---
 carousel        = client.playoffs.carousel.get_carousel(season=20242025)
 series_schedule = client.playoffs.series_schedule.get_series_schedule(season=20242025, series_letter="A")
 bracket         = client.playoffs.bracket.get_bracket(year=2024)
+
+# --- Misc ---
+location     = client.misc.location()
+postal       = client.misc.postal_lookup(postal_code="80202")
+meta         = client.misc.meta()
+game_meta    = client.misc.game_meta(game_id=2024020001)
+game_rail    = client.misc.game_rail(game_id=2024020001)
+goal_replay  = client.misc.goal_replay(game_id=2024020001, event_number=3)
+play_replay  = client.misc.play_replay(game_id=2024020001, event_number=3)
+wsc          = client.misc.wsc_play_by_play(game_id=2024020001)
+countries    = client.misc.countries
+franchises   = client.misc.franchises
+glossary     = client.misc.glossary
+config       = client.misc.config
+ping         = client.misc.ping()
 ```
 
 ---
@@ -206,20 +247,24 @@ except NhlApiError as e:
 
 ## Roadmap
 
-- [x] Player profile (bio, awards, draft, media)
+- [x] Player profile (bio, draft, media)
+- [x] Player achievements (awards, badges, HHOF, top-100, milestones)
 - [x] Player stats (career, season, game log, featured)
+- [x] Player season summary from api_stats (EV/PP/SH splits)
 - [x] Player spotlight
 - [x] Stat leaders (skaters + goalies)
+- [x] League-wide player milestones
 - [x] NHL Edge — skater stats
 - [x] NHL Edge — goalie stats
 - [x] NHL Edge — team stats (team-specific detail + league-wide leaderboards)
 - [x] Teams namespace (standings, stats, roster, schedule)
-- [x] League (schedule, calendar, seasons)
-- [x] Games (network schedule, daily scores, scoreboard, PBP, landing, boxscore, story, odds)
-- [x] Draft (prospect rankings, live tracker, picks)
+- [x] Team aggregate summary from api_stats (PP%, PK%, goals for/against, etc.)
+- [x] League (schedule, calendar, seasons, season details, component season)
+- [x] Games (network schedule, daily scores, scoreboard, PBP, landing, boxscore, story, odds, shift charts)
+- [x] Draft (prospect rankings, live tracker, picks, api_stats query)
 - [x] Playoffs (series carousel, series schedule, bracket)
-- [ ] api-web.nhle.com miscellaneous endpoints (TBD)
-- [ ] api.nhle.com/stats/rest (TBD)
+- [x] Misc (location, postal lookup, meta, game rail, replays, WSC play-by-play)
+- [x] Reference data via api_stats (countries, franchises, glossary, config, ping)
 
 ---
 
