@@ -48,37 +48,37 @@ def _set_goalie_response(mock_client, row=None):
 
 
 # ==========================================================================
-# bio()
+# stats_bio()
 # ==========================================================================
 
-def test_bio_skater_cache_miss(mock_client) -> None:
+def test_stats_bio_skater_cache_miss(mock_client) -> None:
     _set_skater_response(mock_client)
     ps = _skater(mock_client)
-    result = ps.bio()
+    result = ps.stats_bio()
     assert isinstance(result, SkaterBioReport)
     mock_client._api.api_stats.call_nhl_stats_players.get_skater_stats.assert_called_once()
 
 
-def test_bio_skater_cache_hit(mock_client) -> None:
+def test_stats_bio_skater_cache_hit(mock_client) -> None:
     _set_skater_response(mock_client)
     ps = _skater(mock_client)
-    _ = ps.bio()
-    _ = ps.bio()
+    _ = ps.stats_bio()
+    _ = ps.stats_bio()
     mock_client._api.api_stats.call_nhl_stats_players.get_skater_stats.assert_called_once()
 
 
-def test_bio_goalie_cache_miss(mock_client) -> None:
+def test_stats_bio_goalie_cache_miss(mock_client) -> None:
     _set_goalie_response(mock_client)
     ps = _goalie(mock_client)
-    result = ps.bio()
+    result = ps.stats_bio()
     assert isinstance(result, GoalieBioReport)
     mock_client._api.api_stats.call_nhl_stats_players.get_goalie_stats.assert_called_once()
 
 
-def test_bio_returns_none_on_empty_data(mock_client) -> None:
+def test_stats_bio_returns_none_on_empty_data(mock_client) -> None:
     mock_client._api.api_stats.call_nhl_stats_players.get_skater_stats.return_value = ok({"data": []})
     ps = _skater(mock_client)
-    assert ps.bio() is None
+    assert ps.stats_bio() is None
 
 
 # ==========================================================================

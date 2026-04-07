@@ -60,13 +60,46 @@ summary = player.stats.summary(season=20232024, game_type=2)
 logs = player.stats.game_log()
 logs = player.stats.game_log(season=20232024, game_type=2)
 
+# Named api_stats reports — all accept optional season + game_type
+# Shared (skater and goalie)
+stats_bio    = player.stats.stats_bio()
+pen_shots    = player.stats.penalty_shots(season=20232024, game_type=2)
+
+# Skater-only (returns None for goalies)
+faceoff_pct  = player.stats.faceoff_pct()
+faceoff_wins = player.stats.faceoff_wins()
+gfa          = player.stats.goals_for_against()
+penalties    = player.stats.penalties()
+pk           = player.stats.penalty_kill()
+pp           = player.stats.powerplay()
+puck_poss    = player.stats.puck_possessions()
+realtime     = player.stats.realtime()
+shot_type    = player.stats.shot_type()
+toi          = player.stats.time_on_ice()
+pct          = player.stats.percentages()
+
+# Goalie-only (returns None for skaters)
+advanced     = player.stats.advanced()
+days_rest    = player.stats.days_rest()
+saves_str    = player.stats.saves_by_strength()
+shootout     = player.stats.shootout()
+svr          = player.stats.started_vs_relieved()
+
+# Raw escape hatch — any api_stats report type by name
+raw          = player.stats.report("realtime", season=20232024, game_type=2)
+
 # NHL Edge — position-aware (returns SkaterEdge or GoalieEdge automatically)
 details = player.stats.edge().details()
 speed   = player.stats.edge().skating_speed()
 
-# League-wide player milestones
+# League-wide player milestones (skaters + goalies combined by default)
 milestones = client.players.milestones()
 milestones = client.players.milestones(milestone="Goals", game_type=2)
+milestones = client.players.milestones(position="s")   # skaters only
+milestones = client.players.milestones(position="g")   # goalies only
+
+# Raw player list query (api_stats escape hatch)
+players    = client.players.query(cayenne_exp="currentTeamId>0")   # all active players with a team
 
 # Spotlight + leaders
 spotlight = client.players.spotlight
@@ -88,6 +121,12 @@ scoreboard = team.stats.get_team_scoreboard()
 # Aggregate summary (api_stats — goals for/against, PP%, PK%, faceoff%, etc.)
 summary = team.stats.get_summary()
 summary = team.stats.get_summary(season=20232024, g_type=2)
+
+# Team reference data from api_stats
+ref = team.stats.get_team_ref()    # TeamRef for this team
+
+# All teams reference list (includes historical)
+all_teams = client.teams.all()
 
 # Roster
 roster = team.roster.get_team_roster()
@@ -132,6 +171,8 @@ boxscore     = client.games.boxscore.get_boxscore(game_id=2024020001)
 story        = client.games.story.get_game_story(game_id=2024020001)
 odds         = client.games.odds.get_odds(country_code="US")
 shifts       = client.games.shifts.get(game_id=2024020001)
+streams      = client.games.streams.get()                    # may be region-restricted
+game_records = client.games.query(cayenne_exp="season=20242025", limit=10)
 
 # --- Draft ---
 rankings     = client.draft.rankings.get_rankings()
@@ -139,9 +180,10 @@ rankings_by  = client.draft.rankings.get_rankings(season=2024, category=1)
 tracker      = client.draft.tracker.get_tracker_now()
 picks        = client.draft.picks.get_picks()
 picks_by     = client.draft.picks.get_picks(season=2025, round="1")
+all_picks    = client.draft.picks.get_all(year=2024)
 
 # api_stats draft query
-draft_data   = client.draft.query(cayenne_exp="draftYear=2023 and roundNumber=1")
+draft_data   = client.draft.query(cayenne_exp="draftYear=2023")
 
 # --- Playoffs ---
 carousel        = client.playoffs.carousel.get_carousel(season=20242025)
@@ -251,17 +293,21 @@ except NhlApiError as e:
 - [x] Player achievements (awards, badges, HHOF, top-100, milestones)
 - [x] Player stats (career, season, game log, featured)
 - [x] Player season summary from api_stats (EV/PP/SH splits)
+- [x] Player api_stats named report methods (20 reports: stats_bio, faceoff, penalties, TOI, etc.)
 - [x] Player spotlight
 - [x] Stat leaders (skaters + goalies)
-- [x] League-wide player milestones
+- [x] League-wide player milestones (skaters + goalies, filterable by position)
+- [x] Player list query escape hatch (api_stats)
 - [x] NHL Edge — skater stats
 - [x] NHL Edge — goalie stats
 - [x] NHL Edge — team stats (team-specific detail + league-wide leaderboards)
 - [x] Teams namespace (standings, stats, roster, schedule)
 - [x] Team aggregate summary from api_stats (PP%, PK%, goals for/against, etc.)
+- [x] Team reference data via api_stats (TeamRef, teams.all, get_team_ref)
 - [x] League (schedule, calendar, seasons, season details, component season)
 - [x] Games (network schedule, daily scores, scoreboard, PBP, landing, boxscore, story, odds, shift charts)
-- [x] Draft (prospect rankings, live tracker, picks, api_stats query)
+- [x] Games query + streams escape hatches (api_stats)
+- [x] Draft (prospect rankings, live tracker, picks, all-picks, api_stats query)
 - [x] Playoffs (series carousel, series schedule, bracket)
 - [x] Misc (location, postal lookup, meta, game rail, replays, WSC play-by-play)
 - [x] Reference data via api_stats (countries, franchises, glossary, config, ping)

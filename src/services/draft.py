@@ -74,7 +74,7 @@ class Draft(CacheFetchMixin):
         Parameters
         ----------
         cayenne_exp : str | None
-            Filter expression (e.g. ``"draftYear=2023 and roundNumber=1"``).
+            Filter expression (e.g. ``"draftYear=2023"``).
         sort : str | None
             Field to sort by.
         dir : str | None

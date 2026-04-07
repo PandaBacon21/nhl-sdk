@@ -157,7 +157,7 @@ class PlayerStats(CacheFetchMixin):
 
         return self._fetch(key, api_fn, self._logger, self._cache, self._ttl, _builder)
 
-    def bio(self) -> SkaterBioReport | GoalieBioReport | None:
+    def stats_bio(self) -> SkaterBioReport | GoalieBioReport | None:
         """
         Retrieve the player's career bio from the NHL Stats API.
 
