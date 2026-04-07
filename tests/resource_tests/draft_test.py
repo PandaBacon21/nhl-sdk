@@ -35,3 +35,18 @@ def test_draft_tracker(monkeypatch) -> None:
 
     assert res.ok == False
     assert called["endpoint"] == f"/v1/draft-tracker/picks/now"
+
+def test_get_all_picks_endpoint(monkeypatch) -> None:
+    called = {}
+    def fake_call(endpoint: str, params: dict | None = None) -> APIResponse:
+        called["endpoint"] = endpoint
+        called["params"] = params
+        return APIResponse(ok=True, data={}, status_code=200)
+
+    monkeypatch.setattr(draft_test._http, "get", fake_call)
+
+    res = draft_test.get_all_picks(year=2024)
+
+    assert res.ok
+    assert called["endpoint"] == "/v1/draft/picks/2024/all"
+    assert called["params"] is None

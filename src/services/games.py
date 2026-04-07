@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 from ..core.cache import get_cache
 from ..core.utilities import CacheFetchMixin
 from ..models.games.shifts import GameShifts
+from ..models.games.streams import GameStreams
 from ..models.games.network import GameNetwork
 from ..models.games.scores import GameScores
 from ..models.games.scoreboard import GameScoreboard
@@ -120,3 +121,49 @@ class Games(CacheFetchMixin):
         Returns a GameShifts sub-resource with a get(game_id) method.
         """
         return GameShifts(self._client)
+
+    @property
+    def streams(self) -> GameStreams:
+        """
+        Access NHL where-to-watch streaming information.
+
+        Returns a GameStreams sub-resource with a get() method.
+        Note: this endpoint may be region-restricted.
+        """
+        return GameStreams(self._client)
+
+    def query(
+        self,
+        cayenne_exp: str | None = None,
+        sort: str | None = None,
+        dir: str | None = None,
+        start: int | None = None,
+        limit: int | None = None,
+    ) -> list[dict]:
+        """
+        Query raw game records from the NHL Stats API.
+
+        Returns game records filterable via cayenneExp expressions.
+
+        Parameters
+        ----------
+        cayenne_exp : str | None
+            Filter expression (e.g. ``"season=20232024 and gameType=2"``).
+        sort : str | None
+            Field to sort by.
+        dir : str | None
+            Sort direction ("ASC" or "DESC").
+        start : int | None
+            Pagination offset.
+        limit : int | None
+            Maximum results (-1 for all).
+        """
+        key = f"games:query:{cayenne_exp or 'all'}:{sort}:{start}:{limit}"
+        return self._fetch(
+            key,
+            lambda: self._client._api.api_stats.call_nhl_stats_games.get_game(
+                cayenne_exp=cayenne_exp, sort=sort, dir=dir, start=start, limit=limit,
+            ),
+            self._logger, self._cache, self._ttl,
+            lambda d: d.get("data") or [],
+        )

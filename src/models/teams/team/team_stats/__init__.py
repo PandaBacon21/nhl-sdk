@@ -4,6 +4,7 @@ from .team_skater_stat import TeamSkaterStat
 from .team_goalie_stat import TeamGoalieStat
 from .team_season_game_types import TeamSeasonGameTypes
 from .team_scoreboard import TeamScoreboard, ScoreboardGame, ScoreboardTeam, ScoreboardGamesByDate, ScoreboardTvBroadcast, ScoreboardPeriodDescriptor
+from .team_ref import TeamRef
 
 __all__ = [
     "TeamStats",
@@ -17,4 +18,5 @@ __all__ = [
     "ScoreboardGamesByDate",
     "ScoreboardTvBroadcast",
     "ScoreboardPeriodDescriptor",
+    "TeamRef",
 ]

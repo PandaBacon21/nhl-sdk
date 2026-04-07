@@ -44,3 +44,45 @@ def test_teams_standings_each_call_new_instance(mock_client) -> None:
     b = svc.standings
     assert isinstance(a, Standings)
     assert isinstance(b, Standings)
+
+
+# ==========================================================================
+# all()
+# ==========================================================================
+
+def test_teams_all_returns_list(mock_client) -> None:
+    from src.models.teams.team.team_stats.team_ref import TeamRef
+    from .conftest import ok
+    mock_client._api.api_stats.call_nhl_stats_teams.get_teams.return_value = ok(
+        {"data": [{"id": 21, "triCode": "COL", "fullName": "Colorado Avalanche", "franchiseId": 27, "leagueId": 133, "rawTricode": "COL"}], "total": 1}
+    )
+    svc = Teams(mock_client)
+    result = svc.all()
+    assert isinstance(result, list)
+    assert len(result) == 1
+    assert isinstance(result[0], TeamRef)
+    assert result[0].tricode == "COL"
+
+
+def test_teams_all_cache_miss(mock_client) -> None:
+    from .conftest import ok
+    mock_client._api.api_stats.call_nhl_stats_teams.get_teams.return_value = ok({"data": [], "total": 0})
+    svc = Teams(mock_client)
+    _ = svc.all()
+    mock_client._api.api_stats.call_nhl_stats_teams.get_teams.assert_called_once()
+
+
+def test_teams_all_cache_hit(mock_client) -> None:
+    from .conftest import ok
+    mock_client._api.api_stats.call_nhl_stats_teams.get_teams.return_value = ok({"data": [], "total": 0})
+    svc = Teams(mock_client)
+    _ = svc.all()
+    _ = svc.all()
+    mock_client._api.api_stats.call_nhl_stats_teams.get_teams.assert_called_once()
+
+
+def test_teams_all_empty(mock_client) -> None:
+    from .conftest import ok
+    mock_client._api.api_stats.call_nhl_stats_teams.get_teams.return_value = ok({"data": [], "total": 0})
+    svc = Teams(mock_client)
+    assert svc.all() == []
