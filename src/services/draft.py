@@ -68,8 +68,9 @@ class Draft(CacheFetchMixin):
         """
         Query NHL draft data from the NHL Stats API.
 
-        Returns raw draft records filterable via cayenneExp expressions.
-        Useful for querying historical draft data by year, round, team, etc.
+        Returns high-level draft records (id, draftYear, rounds) filterable
+        via cayenneExp expressions. Only ``draftYear`` is a known-working
+        filter field on this endpoint. For per-pick data use ``client.draft.picks``.
 
         Parameters
         ----------
