@@ -5,14 +5,17 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
+from ..core.cache import get_cache
+from ..core.utilities import CacheFetchMixin
 from ..models.teams.standings import Standings
 from ..models.teams.team.team import Team, _NHL_TEAM_IDS
 from ..models.teams.edge import TeamsEdge
+from ..models.teams.team.team_stats.team_ref import TeamRef
 
 if TYPE_CHECKING:
     from nhl_stats.src.client import NhlClient
 
-class Teams:
+class Teams(CacheFetchMixin):
     """
     Teams Collection
 
@@ -20,7 +23,9 @@ class Teams:
     """
     def __init__(self, client: NhlClient):
         self._client = client
+        self._cache = get_cache()
         self._logger = logging.getLogger("nhl_sdk.teams")
+        self._ttl: int = 60 * 60 * 24
 
     def get(self, abbrev: str) -> Team:
         """
@@ -57,3 +62,17 @@ class Teams:
         landing leaders and top-10 leaderboards across all NHL Edge categories.
         """
         return TeamsEdge(self._client)
+
+    def all(self) -> list[TeamRef]:
+        """
+        Return all NHL teams from the NHL Stats API reference endpoint.
+
+        Includes historical teams. For only active rosters use
+        the known abbreviations via ``get(abbrev)``.
+        """
+        return self._fetch(
+            "teams:all",
+            lambda: self._client._api.api_stats.call_nhl_stats_teams.get_teams(),
+            self._logger, self._cache, self._ttl,
+            lambda d: [TeamRef.from_dict(t) for t in (d.get("data") or [])],
+        )

@@ -35,14 +35,22 @@ class CallNhlDraft:
         res: APIResponse = self._http.get(endpoint=endpoint)
         return res
 
-    def get_picks(self, season: int | None = None, round: str | None = None) -> APIResponse: 
+    def get_picks(self, season: int | None = None, round: str | None = None) -> APIResponse:
         """
         Retrieve a list of draft picks for the current moment or a specific season
         season: int - YYYY
         round: str - Selectable round (1-7, 1 for round 1 etc.) or all for all selectable rounds
-        """    
+        """
         endpoint = f"/{V}/draft/picks/now"
-        if season and round: 
+        if season and round:
             endpoint = f"/{V}/draft/picks/{season}/{round}"
         res: APIResponse = self._http.get(endpoint=endpoint)
         return res
+
+    def get_all_picks(self, year: int) -> APIResponse:
+        """
+        Retrieve all picks across every round for a specific draft year.
+        year: int - Draft year (e.g. 2024)
+        """
+        endpoint = f"/{V}/draft/picks/{year}/all"
+        return self._http.get(endpoint=endpoint)

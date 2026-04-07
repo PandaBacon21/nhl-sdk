@@ -11,6 +11,7 @@ from .team_stats_result import TeamStatsResult
 from .team_season_game_types import TeamSeasonGameTypes
 from .team_scoreboard import TeamScoreboard
 from .team_aggregate_summary import TeamAggregateSummary
+from .team_ref import TeamRef
 from ..edge import TeamEdge
 
 if TYPE_CHECKING:
@@ -123,6 +124,24 @@ class TeamStats(CacheFetchMixin):
             ),
             self._logger, self._cache, self._ttl,
             _builder,
+        )
+
+
+    def get_team_ref(self) -> TeamRef | None:
+        """
+        Retrieve basic team reference data for this team from the NHL Stats API.
+
+        Returns team identity fields: id, tricode, full name, franchise id, and league id.
+        """
+        team_id = self._team_id
+        def _build(d: dict) -> TeamRef | None:
+            items = d.get("data") or []
+            return TeamRef.from_dict(items[0]) if items else None
+        return self._fetch(
+            f"teams:ref:{team_id}",
+            lambda: self._client._api.api_stats.call_nhl_stats_teams.get_team_by_id(team_id=team_id),
+            self._logger, self._cache, self._ttl * 24,
+            _build,
         )
 
     @property

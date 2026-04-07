@@ -66,18 +66,24 @@ class Players(CacheFetchMixin):
         milestone: str | None = None,
         game_type: int | None = None,
         limit: int | None = None,
+        position: str | None = None,
     ) -> list[PlayerMilestone]:
         """
-        Return a list of upcoming skater milestones across the league.
+        Return a list of upcoming milestones across the league.
+
+        By default returns both skater and goalie milestones combined.
+        Use ``position`` to restrict to one group.
 
         Parameters
         ----------
         milestone : str | None
-            Filter by milestone type (e.g. "Goals", "Assists", "Points").
+            Filter by milestone type (e.g. "Goals", "Assists", "Points", "Wins").
         game_type : int | None
             Filter by game type (2 = regular season, 3 = playoffs).
         limit : int | None
-            Maximum number of results. Pass -1 to return all.
+            Maximum number of results per position group. Pass -1 to return all.
+        position : str | None
+            ``"s"`` for skaters only, ``"g"`` for goalies only, or ``None`` for both.
         """
         parts: list[str] = []
         if milestone is not None:
@@ -86,14 +92,68 @@ class Players(CacheFetchMixin):
             parts.append(f"gameTypeId={game_type}")
         cayenne_exp = " and ".join(parts) if parts else None
 
-        key = f"players:milestones:{milestone or 'all'}:{game_type or 'all'}:{limit or 'all'}"
+        pos = (position or "").lower()
         ttl = 60 * 60
+        stats_players = self._client._api.api_stats.call_nhl_stats_players
 
+        def _build(d: dict) -> list[PlayerMilestone]:
+            return [PlayerMilestone.from_dict(m) for m in (d.get("data") or [])]
+
+        results: list[PlayerMilestone] = []
+
+        if pos != "g":
+            key = f"players:milestones:s:{milestone or 'all'}:{game_type or 'all'}:{limit or 'all'}"
+            results += self._fetch(
+                key,
+                lambda: stats_players.get_skater_milestones(cayenne_exp=cayenne_exp, limit=limit),
+                self._logger, self._cache, ttl,
+                _build,
+            )
+
+        if pos != "s":
+            key = f"players:milestones:g:{milestone or 'all'}:{game_type or 'all'}:{limit or 'all'}"
+            results += self._fetch(
+                key,
+                lambda: stats_players.get_goalie_milestones(cayenne_exp=cayenne_exp, limit=limit),
+                self._logger, self._cache, ttl,
+                _build,
+            )
+
+        return results
+
+    def query(
+        self,
+        cayenne_exp: str | None = None,
+        sort: str | None = None,
+        dir: str | None = None,
+        start: int | None = None,
+        limit: int | None = None,
+    ) -> list[dict]:
+        """
+        Query raw player records from the NHL Stats API.
+
+        Returns basic player information filterable via cayenneExp expressions.
+
+        Parameters
+        ----------
+        cayenne_exp : str | None
+            Filter expression (e.g. ``"active=1"``).
+        sort : str | None
+            Field to sort by.
+        dir : str | None
+            Sort direction ("ASC" or "DESC").
+        start : int | None
+            Pagination offset.
+        limit : int | None
+            Maximum results (-1 for all).
+        """
+        key = f"players:query:{cayenne_exp or 'all'}:{sort}:{start}:{limit}"
+        ttl = 60 * 60
         return self._fetch(
             key,
-            lambda: self._client._api.api_stats.call_nhl_stats_players.get_skater_milestones(
-                cayenne_exp=cayenne_exp, limit=limit
+            lambda: self._client._api.api_stats.call_nhl_stats_players.get_players(
+                cayenne_exp=cayenne_exp, sort=sort, dir=dir, start=start, limit=limit,
             ),
             self._logger, self._cache, ttl,
-            lambda d: [PlayerMilestone.from_dict(m) for m in (d.get("data") or [])],
+            lambda d: d.get("data") or [],
         )

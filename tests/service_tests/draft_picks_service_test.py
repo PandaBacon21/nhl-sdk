@@ -83,3 +83,40 @@ def test_get_picks_result_populated(mock_client) -> None:
     assert len(result.picks) == 1
     assert result.picks[0].team_abbrev == "NYI"
     assert result.picks[0].first_name.default == "Matthew"
+
+
+# ==========================================================================
+# get_all()
+# ==========================================================================
+
+def test_get_all_cache_miss(mock_client) -> None:
+    mock_client._api.api_web.call_nhl_draft.get_all_picks.return_value = ok(PICKS_RESPONSE)
+    svc = DraftPicks(mock_client)
+    result = svc.get_all(year=2024)
+    assert isinstance(result, DraftPicksResult)
+    mock_client._api.api_web.call_nhl_draft.get_all_picks.assert_called_once_with(year=2024)
+
+
+def test_get_all_cache_hit(mock_client) -> None:
+    mock_client._api.api_web.call_nhl_draft.get_all_picks.return_value = ok(PICKS_RESPONSE)
+    svc = DraftPicks(mock_client)
+    _ = svc.get_all(year=2024)
+    _ = svc.get_all(year=2024)
+    mock_client._api.api_web.call_nhl_draft.get_all_picks.assert_called_once()
+
+
+def test_get_all_different_years_separate_cache_keys(mock_client) -> None:
+    mock_client._api.api_web.call_nhl_draft.get_all_picks.return_value = ok(PICKS_RESPONSE)
+    svc = DraftPicks(mock_client)
+    _ = svc.get_all(year=2024)
+    _ = svc.get_all(year=2023)
+    assert mock_client._api.api_web.call_nhl_draft.get_all_picks.call_count == 2
+
+
+def test_get_all_result_populated(mock_client) -> None:
+    mock_client._api.api_web.call_nhl_draft.get_all_picks.return_value = ok(PICKS_RESPONSE)
+    svc = DraftPicks(mock_client)
+    result = svc.get_all(year=2025)
+    assert result.draft_year == 2025
+    assert len(result.picks) == 1
+    assert result.picks[0].overall_pick == 1

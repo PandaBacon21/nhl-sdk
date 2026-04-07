@@ -28,6 +28,22 @@ class DraftPicks(CacheFetchMixin):
         self._logger = logging.getLogger("nhl_sdk.draft.picks")
         self._ttl: int = 60 * 60 * 6
 
+    def get_all(self, year: int) -> DraftPicksResult:
+        """
+        Retrieve all picks across every round for a specific draft year.
+
+        Parameters
+        ----------
+        year : int
+            Draft year (e.g. 2024).
+        """
+        return self._fetch(
+            f"draft:picks:{year}:all",
+            lambda: self._client._api.api_web.call_nhl_draft.get_all_picks(year=year),
+            self._logger, self._cache, self._ttl,
+            DraftPicksResult.from_dict,
+        )
+
     def get_picks(self, season: int | None = None, round: str | None = None) -> DraftPicksResult:
         """
         Retrieve draft picks.

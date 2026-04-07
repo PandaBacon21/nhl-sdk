@@ -74,3 +74,39 @@ def test_get_team_scoreboard_cache_hit(mock_client) -> None:
     _ = svc.get_team_scoreboard()
     _ = svc.get_team_scoreboard()
     mock_client._api.api_web.call_nhl_teams.get_team_scoreboard.assert_called_once()
+
+
+# ==========================================================================
+# get_team_ref()
+# ==========================================================================
+
+def test_get_team_ref_cache_miss(mock_client) -> None:
+    from src.models.teams.team.team_stats.team_ref import TeamRef
+    mock_client._api.api_stats.call_nhl_stats_teams.get_team_by_id.return_value = ok(
+        {"data": [{"id": TEAM_ID, "triCode": ABBREV, "fullName": "Colorado Avalanche", "franchiseId": 27, "leagueId": 133, "rawTricode": ABBREV}], "total": 1}
+    )
+    svc = TeamStats(mock_client, ABBREV, TEAM_ID)
+    result = svc.get_team_ref()
+    assert isinstance(result, TeamRef)
+    assert result.id == TEAM_ID
+    assert result.tricode == ABBREV
+    mock_client._api.api_stats.call_nhl_stats_teams.get_team_by_id.assert_called_once_with(team_id=TEAM_ID)
+
+
+def test_get_team_ref_cache_hit(mock_client) -> None:
+    mock_client._api.api_stats.call_nhl_stats_teams.get_team_by_id.return_value = ok(
+        {"data": [{}], "total": 1}
+    )
+    svc = TeamStats(mock_client, ABBREV, TEAM_ID)
+    _ = svc.get_team_ref()
+    _ = svc.get_team_ref()
+    mock_client._api.api_stats.call_nhl_stats_teams.get_team_by_id.assert_called_once()
+
+
+def test_get_team_ref_returns_none_on_empty(mock_client) -> None:
+    mock_client._api.api_stats.call_nhl_stats_teams.get_team_by_id.return_value = ok(
+        {"data": [], "total": 0}
+    )
+    svc = TeamStats(mock_client, ABBREV, TEAM_ID)
+    result = svc.get_team_ref()
+    assert result is None
