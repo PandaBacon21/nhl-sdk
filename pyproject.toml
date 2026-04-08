@@ -3,17 +3,19 @@ name = "nhl-stats"
 version = "0.1.0"
 description = "unofficial SDK for the NHL API"
 readme = "README.md"
+authors = [
+    {name = "Josh Aiken", email = "josh@theloosemoose.us"},
+]
+urls = {Homepage = "https://github.com/PandaBacon21/nhl-sdk"}
 requires-python = ">=3.13"
 dependencies = [
-    "dotenv>=0.9.9",
-    "httpx>=0.28.0",
+    "requests>=2.32",
     "platformdirs>=4.0",
 ]
 
 [dependency-groups]
 dev = [
     "pytest>=9.0.2",
-    "pytest-asyncio>=0.26.0",
     "pytest-cov>=7.0.0",
     "responses>=0.25.8",
 ]
@@ -29,5 +31,11 @@ markers = [
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-packages = ["src"]
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pyright]
+pythonVersion = "3.13"
+venvPath = "."
+venv = ".venv"
+extraPaths = ["src"]

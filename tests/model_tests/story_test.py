@@ -2,7 +2,7 @@
 Tests for game story models:
   StoryTeam, StoryThreeStar, TeamGameStat, GameStorySummary, GameStoryResult
 """
-from src.models.games.story.story_result import (
+from nhl_stats.models.games.story.story_result import (
     StoryTeam,
     StoryThreeStar,
     TeamGameStat,

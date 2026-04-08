@@ -1,7 +1,7 @@
-from src.models.teams.team.team_stats.team_stats import TeamStats
-from src.models.teams.team.team_stats.team_stats_result import TeamStatsResult
-from src.models.teams.team.team_stats.team_scoreboard import TeamScoreboard
-from src.models.teams.team.team_stats.team_season_game_types import TeamSeasonGameTypes
+from nhl_stats.models.teams.team.team_stats.team_stats import TeamStats
+from nhl_stats.models.teams.team.team_stats.team_stats_result import TeamStatsResult
+from nhl_stats.models.teams.team.team_stats.team_scoreboard import TeamScoreboard
+from nhl_stats.models.teams.team.team_stats.team_season_game_types import TeamSeasonGameTypes
 
 from .conftest import ok
 
@@ -81,7 +81,7 @@ def test_get_team_scoreboard_cache_hit(mock_client) -> None:
 # ==========================================================================
 
 def test_get_team_ref_cache_miss(mock_client) -> None:
-    from src.models.teams.team.team_stats.team_ref import TeamRef
+    from nhl_stats.models.teams.team.team_stats.team_ref import TeamRef
     mock_client._api.api_stats.call_nhl_stats_teams.get_team_by_id.return_value = ok(
         {"data": [{"id": TEAM_ID, "triCode": ABBREV, "fullName": "Colorado Avalanche", "franchiseId": 27, "leagueId": 133, "rawTricode": ABBREV}], "total": 1}
     )

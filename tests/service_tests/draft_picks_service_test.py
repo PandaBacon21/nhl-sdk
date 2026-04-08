@@ -1,4 +1,4 @@
-from src.models.draft.picks import DraftPicks, DraftPicksResult
+from nhl_stats.models.draft.picks import DraftPicks, DraftPicksResult
 
 from .conftest import ok
 

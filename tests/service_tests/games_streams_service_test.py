@@ -1,7 +1,7 @@
 """
 Service tests for GameStreams sub-resource.
 """
-from src.models.games.streams import GameStreams
+from nhl_stats.models.games.streams import GameStreams
 
 from .conftest import ok
 
@@ -31,6 +31,6 @@ def test_streams_get_returns_raw_dict(mock_client) -> None:
 
 
 def test_games_streams_property_returns_game_streams(mock_client) -> None:
-    from src.services.games import Games
+    from nhl_stats.services.games import Games
     svc = Games(mock_client)
     assert isinstance(svc.streams, GameStreams)

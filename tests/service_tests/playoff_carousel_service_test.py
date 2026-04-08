@@ -1,4 +1,4 @@
-from src.models.playoffs.carousel import PlayoffCarousel, PlayoffCarouselResult
+from nhl_stats.models.playoffs.carousel import PlayoffCarousel, PlayoffCarouselResult
 
 from .conftest import ok
 

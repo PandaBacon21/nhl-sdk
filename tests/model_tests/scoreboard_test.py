@@ -2,7 +2,7 @@
 Tests for scoreboard models:
   ScoreboardTeam, ScoreboardGame, ScoreboardDate, ScoreboardResult
 """
-from src.models.games.scoreboard.scoreboard_result import (
+from nhl_stats.models.games.scoreboard.scoreboard_result import (
     ScoreboardTeam, ScoreboardGame, ScoreboardDate, ScoreboardResult,
 )
 

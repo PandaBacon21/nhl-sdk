@@ -1,7 +1,7 @@
 """
 Service tests for Games.query().
 """
-from src.services.games import Games
+from nhl_stats.services.games import Games
 
 from .conftest import ok
 

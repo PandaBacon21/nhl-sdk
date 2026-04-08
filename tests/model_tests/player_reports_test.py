@@ -1,4 +1,4 @@
-from src.models.players.player.player_stats.reports import (
+from nhl_stats.models.players.player.player_stats.reports import (
     SkaterBioReport, SkaterFaceoffPctReport, SkaterFaceoffWinsReport,
     SkaterGoalsForAgainstReport, SkaterPenaltiesReport, SkaterPenaltyKillReport,
     SkaterPenaltyShotsReport, SkaterPowerPlayReport, SkaterPuckPossessionsReport,

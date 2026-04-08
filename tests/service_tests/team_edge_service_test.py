@@ -2,7 +2,7 @@
 """
 Tests for TeamDetails service: get_details()
 """
-from src.models.teams.team.edge.team_details import TeamDetails, TeamDetailResult
+from nhl_stats.models.teams.team.edge.team_details import TeamDetails, TeamDetailResult
 
 from .conftest import ok
 

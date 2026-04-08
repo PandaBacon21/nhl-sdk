@@ -1,9 +1,9 @@
-from src.models.games.game import Game
-from src.models.games.pbp.pbp_result import PlayByPlayResult
-from src.models.games.landing.landing_result import GameLandingResult
-from src.models.games.boxscore.boxscore_result import GameBoxscoreResult
-from src.models.games.story.story_result import GameStoryResult
-from src.models.games.shifts.shift_chart import ShiftChart
+from nhl_stats.models.games.game import Game
+from nhl_stats.models.games.pbp.pbp_result import PlayByPlayResult
+from nhl_stats.models.games.landing.landing_result import GameLandingResult
+from nhl_stats.models.games.boxscore.boxscore_result import GameBoxscoreResult
+from nhl_stats.models.games.story.story_result import GameStoryResult
+from nhl_stats.models.games.shifts.shift_chart import ShiftChart
 
 from .conftest import ok
 
@@ -15,7 +15,7 @@ GAME_ID = 2025020417
 # ==========================================================================
 
 def test_games_get_returns_game(mock_client) -> None:
-    from src.services.games import Games
+    from nhl_stats.services.games import Games
     svc = Games(mock_client)
     game = svc.get(GAME_ID)
     assert isinstance(game, Game)

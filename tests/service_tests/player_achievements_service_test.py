@@ -1,6 +1,6 @@
-from src.models.players.player.achievements.player_achievements import PlayerAchievements
-from src.models.players.player.achievements.player_milestone import PlayerMilestone
-from tests.service_tests.conftest import ok
+from nhl_stats.models.players.player.achievements.player_achievements import PlayerAchievements
+from nhl_stats.models.players.player.achievements.player_milestone import PlayerMilestone
+from .conftest import ok
 
 PID = 8477492
 POS_SKATER = "C"

@@ -1,6 +1,6 @@
-from src.models.players.player.achievements.player_milestone import PlayerMilestone
-from src.models.players.player.player_stats.reports.skater_summary_report import SkaterSummaryReport
-from src.models.players.player.player_stats.reports.goalie_summary_report import GoalieSummaryReport
+from nhl_stats.models.players.player.achievements.player_milestone import PlayerMilestone
+from nhl_stats.models.players.player.player_stats.reports.skater_summary_report import SkaterSummaryReport
+from nhl_stats.models.players.player.player_stats.reports.goalie_summary_report import GoalieSummaryReport
 
 
 # ==========================================================================

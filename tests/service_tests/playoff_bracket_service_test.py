@@ -1,4 +1,4 @@
-from src.models.playoffs.bracket import PlayoffBracket, PlayoffBracketResult
+from nhl_stats.models.playoffs.bracket import PlayoffBracket, PlayoffBracketResult
 
 from .conftest import ok
 

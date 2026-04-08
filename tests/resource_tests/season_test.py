@@ -1,5 +1,5 @@
-from src.resources.api_web.season import CallNhlSeasons as SeasonTest
-from src.core.transport import APICallWeb, APIResponse
+from nhl_stats.resources.api_web.season import CallNhlSeasons as SeasonTest
+from nhl_stats.core.transport import APICallWeb, APIResponse
 
 season_test = SeasonTest(http=APICallWeb())
 

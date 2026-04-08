@@ -1,7 +1,7 @@
 """
 Tests for TeamShotLocationLeaderEntry model.
 """
-from src.models.teams.edge.team_shot_location_10.team_shot_location_10_result import (
+from nhl_stats.models.teams.edge.team_shot_location_10.team_shot_location_10_result import (
     TeamShotLocationLeaderEntry,
 )
 

@@ -2,8 +2,8 @@
 Tests for league models:
   GameDay, LeagueScheduleResult, CalendarTeam, LeagueCalendarResult
 """
-from src.models.league.league_schedule import GameDay, LeagueScheduleResult
-from src.models.league.league_calendar import CalendarTeam, LeagueCalendarResult
+from nhl_stats.models.league.league_schedule import GameDay, LeagueScheduleResult
+from nhl_stats.models.league.league_calendar import CalendarTeam, LeagueCalendarResult
 
 
 COMPLETED_GAME = {

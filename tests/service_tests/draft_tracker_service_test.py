@@ -1,4 +1,4 @@
-from src.models.draft.tracker import DraftTracker, DraftTrackerResult
+from nhl_stats.models.draft.tracker import DraftTracker, DraftTrackerResult
 
 from .conftest import ok
 

@@ -1,6 +1,6 @@
-from src.models.teams.team.team_roster.team_roster import TeamRoster
-from src.models.teams.team.team_roster.team_roster_result import TeamRosterResult
-from src.models.teams.team.team_roster.team_prospects import ProspectsResult
+from nhl_stats.models.teams.team.team_roster.team_roster import TeamRoster
+from nhl_stats.models.teams.team.team_roster.team_roster_result import TeamRosterResult
+from nhl_stats.models.teams.team.team_roster.team_prospects import ProspectsResult
 
 from .conftest import ok
 

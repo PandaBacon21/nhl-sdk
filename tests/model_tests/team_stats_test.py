@@ -3,11 +3,11 @@ Tests for the team stats models:
   TeamSkaterStat, TeamGoalieStat, TeamStatsResult,
   TeamSeasonGameTypes, TeamScoreboard and its nested types
 """
-from src.models.teams.team.team_stats.team_skater_stat import TeamSkaterStat
-from src.models.teams.team.team_stats.team_goalie_stat import TeamGoalieStat
-from src.models.teams.team.team_stats.team_stats_result import TeamStatsResult
-from src.models.teams.team.team_stats.team_season_game_types import TeamSeasonGameTypes
-from src.models.teams.team.team_stats.team_scoreboard import (
+from nhl_stats.models.teams.team.team_stats.team_skater_stat import TeamSkaterStat
+from nhl_stats.models.teams.team.team_stats.team_goalie_stat import TeamGoalieStat
+from nhl_stats.models.teams.team.team_stats.team_stats_result import TeamStatsResult
+from nhl_stats.models.teams.team.team_stats.team_season_game_types import TeamSeasonGameTypes
+from nhl_stats.models.teams.team.team_stats.team_scoreboard import (
     TeamScoreboard,
     ScoreboardGamesByDate,
     ScoreboardGame,

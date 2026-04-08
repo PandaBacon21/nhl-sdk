@@ -1,7 +1,7 @@
 """
 Tests for TeamSkatingDistanceResult and sub-models.
 """
-from src.models.teams.team.edge.team_skating_distance_details.team_skating_distance_detail import (
+from nhl_stats.models.teams.team.edge.team_skating_distance_details.team_skating_distance_detail import (
     TeamSkatingDistanceResult, TeamDistanceTeamRef,
     TeamDistanceLast10Game, TeamDistanceEntry,
 )

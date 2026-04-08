@@ -1,12 +1,12 @@
-from src.models.players.player.player_stats.edge.skaters.skater_edge import SkaterEdge
-from src.models.players.player.player_stats.edge.skaters.skater_details import SkaterDetails
-from src.models.players.player.player_stats.edge.skaters.skater_comparison import SkaterComparison
-from src.models.players.player.player_stats.edge.skaters.skating_distance import SkatingDistance
-from src.models.players.player.player_stats.edge.skaters.skating_speed import SkatingSpeed
-from src.models.players.player.player_stats.edge.skaters.skater_zone_time import ZoneTime
-from src.models.players.player.player_stats.edge.skaters.shot_speed import ShotSpeed
-from src.models.players.player.player_stats.edge.skaters.shot_location import ShotLocation
-from src.models.players.player.player_stats.edge.skaters.cat_skater_details import CatSkaterDetails
+from nhl_stats.models.players.player.player_stats.edge.skaters.skater_edge import SkaterEdge
+from nhl_stats.models.players.player.player_stats.edge.skaters.skater_details import SkaterDetails
+from nhl_stats.models.players.player.player_stats.edge.skaters.skater_comparison import SkaterComparison
+from nhl_stats.models.players.player.player_stats.edge.skaters.skating_distance import SkatingDistance
+from nhl_stats.models.players.player.player_stats.edge.skaters.skating_speed import SkatingSpeed
+from nhl_stats.models.players.player.player_stats.edge.skaters.skater_zone_time import ZoneTime
+from nhl_stats.models.players.player.player_stats.edge.skaters.shot_speed import ShotSpeed
+from nhl_stats.models.players.player.player_stats.edge.skaters.shot_location import ShotLocation
+from nhl_stats.models.players.player.player_stats.edge.skaters.cat_skater_details import CatSkaterDetails
 
 from .conftest import ok
 

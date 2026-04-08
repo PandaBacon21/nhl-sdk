@@ -1,6 +1,6 @@
-from src.services.league import League
-from src.models.league.league_schedule import LeagueScheduleResult
-from src.models.league.league_calendar import LeagueCalendarResult
+from nhl_stats.services.league import League
+from nhl_stats.models.league.league_schedule import LeagueScheduleResult
+from nhl_stats.models.league.league_calendar import LeagueCalendarResult
 
 from .conftest import ok
 

@@ -1,7 +1,7 @@
 """
 Tests for TeamZoneTime10 service: get_top_10()
 """
-from src.models.teams.edge.team_zone_time_10 import (
+from nhl_stats.models.teams.edge.team_zone_time_10 import (
     TeamZoneTime10, TeamZoneTimeLeaderEntry,
 )
 

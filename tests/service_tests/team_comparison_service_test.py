@@ -1,7 +1,7 @@
 """
 Tests for TeamComparison service: get_comparison()
 """
-from src.models.teams.team.edge.team_comparison import TeamComparison, TeamComparisonResult
+from nhl_stats.models.teams.team.edge.team_comparison import TeamComparison, TeamComparisonResult
 
 from .conftest import ok
 

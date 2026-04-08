@@ -1,5 +1,5 @@
-from src.services.misc import Misc
-from src.models.misc import (
+from nhl_stats.services.misc import Misc
+from nhl_stats.models.misc import (
     LocationResult, PostalLookupResult, MiscMeta,
     GameMetaResult, PlayoffSeriesMetaResult,
     GoalReplayResult, PlayReplayResult,
@@ -259,7 +259,7 @@ def test_misc_ping_true(mock_client) -> None:
 
 
 def test_misc_ping_false(mock_client) -> None:
-    from src.core.transport import APIResponse
+    from nhl_stats.core.transport import APIResponse
     mock_client._api.api_stats.call_nhl_stats_misc.ping.return_value = APIResponse(
         ok=False, data={}, status_code=503
     )

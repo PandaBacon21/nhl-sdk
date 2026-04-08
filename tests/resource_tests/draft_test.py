@@ -1,5 +1,5 @@
-from src.resources.api_web.draft import CallNhlDraft as DraftTest
-from src.core.transport import APICallWeb, APIResponse
+from nhl_stats.resources.api_web.draft import CallNhlDraft as DraftTest
+from nhl_stats.core.transport import APICallWeb, APIResponse
 
 SEASON: int = 20232024
 CATEGORY: int = 1

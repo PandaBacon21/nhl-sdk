@@ -1,4 +1,4 @@
-from src.models.games.scoreboard import GameScoreboard, ScoreboardResult
+from nhl_stats.models.games.scoreboard import GameScoreboard, ScoreboardResult
 
 from .conftest import ok
 

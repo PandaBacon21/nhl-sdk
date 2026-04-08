@@ -1,7 +1,7 @@
 """
 Tests for TeamEdgeLandingResult and related models.
 """
-from src.models.teams.edge.team_landing.team_landing_result import (
+from nhl_stats.models.teams.edge.team_landing.team_landing_result import (
     TeamEdgeLandingResult, TeamEdgeLandingLeaders, TeamEdgeLeaderTeam,
     LandingSogAreaDetail, TeamShotAttemptLeader, TeamBurstsLeader,
     TeamDistanceLeader, TeamHighDangerSOGLeader, TeamZoneTimeLeader,

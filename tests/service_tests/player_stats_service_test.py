@@ -1,7 +1,7 @@
-from src.models.players.player.player_stats.player_stats import PlayerStats
-from src.models.players.player.player_stats.games.player_game_logs import GameLogs
-from src.models.players.player.player_stats.edge.skaters.skater_edge import SkaterEdge
-from src.models.players.player.player_stats.edge.goalies.goalie_edge import GoalieEdge
+from nhl_stats.models.players.player.player_stats.player_stats import PlayerStats
+from nhl_stats.models.players.player.player_stats.games.player_game_logs import GameLogs
+from nhl_stats.models.players.player.player_stats.edge.skaters.skater_edge import SkaterEdge
+from nhl_stats.models.players.player.player_stats.edge.goalies.goalie_edge import GoalieEdge
 
 from .conftest import ok
 

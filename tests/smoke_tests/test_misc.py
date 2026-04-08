@@ -107,11 +107,11 @@ def test_smoke_misc_ping(nhl) -> None:
 
 
 # ==========================================================================
-# SHIFTS (via games.shifts)
+# SHIFTS (via games.get(game_id).shifts())
 # ==========================================================================
 
 def test_smoke_games_shifts(nhl) -> None:
-    result = nhl.games.shifts.get(game_id=GAME_ID)
+    result = nhl.games.get(GAME_ID).shifts()
 
     assert result is not None
     assert result.game_id == GAME_ID
@@ -129,6 +129,6 @@ def test_smoke_games_shifts(nhl) -> None:
 
 
 def test_smoke_games_shifts_cache(nhl) -> None:
-    result1 = nhl.games.shifts.get(game_id=GAME_ID)
-    result2 = nhl.games.shifts.get(game_id=GAME_ID)
+    result1 = nhl.games.get(GAME_ID).shifts()
+    result2 = nhl.games.get(GAME_ID).shifts()
     assert result1 is result2

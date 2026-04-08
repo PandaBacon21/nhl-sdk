@@ -1,5 +1,5 @@
-from src.resources.api_web.miscellaneous import CallNhlMisc as MiscTest
-from src.core.transport import APICallWeb, APIResponse
+from nhl_stats.resources.api_web.miscellaneous import CallNhlMisc as MiscTest
+from nhl_stats.core.transport import APICallWeb, APIResponse
 
 YEAR: int = 2024
 GAME_ID: int = 2025020417

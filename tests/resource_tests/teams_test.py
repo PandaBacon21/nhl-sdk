@@ -1,5 +1,5 @@
-from src.resources.api_web.teams import CallNhlTeams as TeamsTest
-from src.core.transport import APICallWeb, APIResponse
+from nhl_stats.resources.api_web.teams import CallNhlTeams as TeamsTest
+from nhl_stats.core.transport import APICallWeb, APIResponse
 
 
 TEAM_CODE: str = "COL"

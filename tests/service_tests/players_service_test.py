@@ -1,7 +1,7 @@
-from src.services.players import Players
-from src.models.players.player.player import Player
-from src.models.players.leaders.leaders import Leaders
-from src.models.players.spotlight import Spotlight
+from nhl_stats.services.players import Players
+from nhl_stats.models.players.player.player import Player
+from nhl_stats.models.players.leaders.leaders import Leaders
+from nhl_stats.models.players.spotlight import Spotlight
 
 from .conftest import ok
 
@@ -67,8 +67,8 @@ def test_players_leaders_each_call_returns_new_instance(mock_client) -> None:
 # ==========================================================================
 
 def test_milestones_both_positions_calls_two_endpoints(mock_client) -> None:
-    from src.services.players import Players
-    from src.models.players.player.achievements import PlayerMilestone
+    from nhl_stats.services.players import Players
+    from nhl_stats.models.players.player.achievements import PlayerMilestone
     mock_client._api.api_stats.call_nhl_stats_players.get_skater_milestones.return_value = ok({"data": [{}], "total": 1})
     mock_client._api.api_stats.call_nhl_stats_players.get_goalie_milestones.return_value = ok({"data": [{}], "total": 1})
     svc = Players(mock_client)
@@ -79,7 +79,7 @@ def test_milestones_both_positions_calls_two_endpoints(mock_client) -> None:
 
 
 def test_milestones_skaters_only(mock_client) -> None:
-    from src.services.players import Players
+    from nhl_stats.services.players import Players
     mock_client._api.api_stats.call_nhl_stats_players.get_skater_milestones.return_value = ok({"data": [{}], "total": 1})
     svc = Players(mock_client)
     result = svc.milestones(position="s")
@@ -89,7 +89,7 @@ def test_milestones_skaters_only(mock_client) -> None:
 
 
 def test_milestones_goalies_only(mock_client) -> None:
-    from src.services.players import Players
+    from nhl_stats.services.players import Players
     mock_client._api.api_stats.call_nhl_stats_players.get_goalie_milestones.return_value = ok({"data": [{}], "total": 1})
     svc = Players(mock_client)
     result = svc.milestones(position="g")
@@ -99,7 +99,7 @@ def test_milestones_goalies_only(mock_client) -> None:
 
 
 def test_milestones_cache_hit_skaters(mock_client) -> None:
-    from src.services.players import Players
+    from nhl_stats.services.players import Players
     mock_client._api.api_stats.call_nhl_stats_players.get_skater_milestones.return_value = ok({"data": [], "total": 0})
     mock_client._api.api_stats.call_nhl_stats_players.get_goalie_milestones.return_value = ok({"data": [], "total": 0})
     svc = Players(mock_client)
@@ -109,7 +109,7 @@ def test_milestones_cache_hit_skaters(mock_client) -> None:
 
 
 def test_milestones_empty_data(mock_client) -> None:
-    from src.services.players import Players
+    from nhl_stats.services.players import Players
     mock_client._api.api_stats.call_nhl_stats_players.get_skater_milestones.return_value = ok({"data": [], "total": 0})
     mock_client._api.api_stats.call_nhl_stats_players.get_goalie_milestones.return_value = ok({"data": [], "total": 0})
     svc = Players(mock_client)
@@ -122,7 +122,7 @@ def test_milestones_empty_data(mock_client) -> None:
 # ==========================================================================
 
 def test_players_query_returns_list(mock_client) -> None:
-    from src.services.players import Players
+    from nhl_stats.services.players import Players
     mock_client._api.api_stats.call_nhl_stats_players.get_players.return_value = ok({"data": [{"id": 1}], "total": 1})
     svc = Players(mock_client)
     result = svc.query()
@@ -131,7 +131,7 @@ def test_players_query_returns_list(mock_client) -> None:
 
 
 def test_players_query_cache_miss(mock_client) -> None:
-    from src.services.players import Players
+    from nhl_stats.services.players import Players
     mock_client._api.api_stats.call_nhl_stats_players.get_players.return_value = ok({"data": [], "total": 0})
     svc = Players(mock_client)
     _ = svc.query(cayenne_exp="active=1")
@@ -139,7 +139,7 @@ def test_players_query_cache_miss(mock_client) -> None:
 
 
 def test_players_query_cache_hit(mock_client) -> None:
-    from src.services.players import Players
+    from nhl_stats.services.players import Players
     mock_client._api.api_stats.call_nhl_stats_players.get_players.return_value = ok({"data": [], "total": 0})
     svc = Players(mock_client)
     _ = svc.query(cayenne_exp="active=1")
@@ -148,7 +148,7 @@ def test_players_query_cache_hit(mock_client) -> None:
 
 
 def test_players_query_empty_response(mock_client) -> None:
-    from src.services.players import Players
+    from nhl_stats.services.players import Players
     mock_client._api.api_stats.call_nhl_stats_players.get_players.return_value = ok({})
     svc = Players(mock_client)
     result = svc.query()

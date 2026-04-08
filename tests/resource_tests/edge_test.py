@@ -1,8 +1,8 @@
-from src.resources.api_web.edge.edge_goalies import CallNhlEdgeGoalies as EdgeGoaliesTest
-from src.resources.api_web.edge.edge_skaters import CallNhlEdgeSkaters as EdgeSkatersTest
-from src.resources.api_web.edge.edge_team import CallNhlEdgeTeam as EdgeTeamTest
+from nhl_stats.resources.api_web.edge.edge_goalies import CallNhlEdgeGoalies as EdgeGoaliesTest
+from nhl_stats.resources.api_web.edge.edge_skaters import CallNhlEdgeSkaters as EdgeSkatersTest
+from nhl_stats.resources.api_web.edge.edge_team import CallNhlEdgeTeam as EdgeTeamTest
 
-from src.core.transport import APICallWeb, APIResponse
+from nhl_stats.core.transport import APICallWeb, APIResponse
 
 SKATER_ID: int = 8477492
 GOALIE_ID: int = 8475809

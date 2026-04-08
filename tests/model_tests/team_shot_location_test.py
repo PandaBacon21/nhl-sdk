@@ -1,7 +1,7 @@
 """
 Tests for TeamShotLocationResult and sub-models.
 """
-from src.models.teams.team.edge.team_shot_location_details.team_shot_location_detail import (
+from nhl_stats.models.teams.team.edge.team_shot_location_details.team_shot_location_detail import (
     TeamShotLocationResult, ShotLocationEntry, ShotLocationTotal,
 )
 

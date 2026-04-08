@@ -1,5 +1,5 @@
-from src.models.games.scores.scores import GameScores
-from src.models.games.scores.daily_score import DailyScoreResult
+from nhl_stats.models.games.scores.scores import GameScores
+from nhl_stats.models.games.scores.daily_score import DailyScoreResult
 
 from .conftest import ok
 

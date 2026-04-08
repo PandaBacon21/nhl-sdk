@@ -2,8 +2,8 @@ import requests
 import responses
 import pytest
 
-import src.core.transport as transport_test
-from src.core.errors import NotFoundError, RateLimitError, ServerError, NhlApiError
+import nhl_stats.core.transport as transport_test
+from nhl_stats.core.errors import NotFoundError, RateLimitError, ServerError, NhlApiError
 
 BASE_URL_TEST: str = "https://api.test"
 PLAYER_ID: int = 8477492

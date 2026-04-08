@@ -1,11 +1,11 @@
-from src.core.utilities import BirthDetails, LocalizedString
-from src.models.players.player.profile.draft import Draft
-from src.models.players.player.profile.media import Media
-from src.models.players.player.profile.profile_team import ProfileTeam
-from src.models.players.player.profile.award import Award
-from src.models.players.player.profile.badge import Badge
-from src.models.players.player.profile.legacy import Legacy
-from src.models.players.player.profile.profile import Profile
+from nhl_stats.core.utilities import BirthDetails, LocalizedString
+from nhl_stats.models.players.player.profile.draft import Draft
+from nhl_stats.models.players.player.profile.media import Media
+from nhl_stats.models.players.player.profile.profile_team import ProfileTeam
+from nhl_stats.models.players.player.profile.award import Award
+from nhl_stats.models.players.player.profile.badge import Badge
+from nhl_stats.models.players.player.profile.legacy import Legacy
+from nhl_stats.models.players.player.profile.profile import Profile
 
 
 # ==========================================================================

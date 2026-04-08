@@ -1,7 +1,7 @@
 """
 Tests for TeamSkatingSpeed10 service: get_top_10()
 """
-from src.models.teams.edge.team_skating_speed_10 import (
+from nhl_stats.models.teams.edge.team_skating_speed_10 import (
     TeamSkatingSpeed10, TeamSpeedLeaderEntry,
 )
 

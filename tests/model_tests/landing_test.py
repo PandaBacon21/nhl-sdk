@@ -3,7 +3,7 @@ Tests for game landing models:
   GoalAssist, ScoringGoal, ScoringPeriod, ThreeStar,
   PenaltyPlayer, LandingPenalty, PenaltyPeriod, GameSummary, GameLandingResult
 """
-from src.models.games.landing.landing_result import (
+from nhl_stats.models.games.landing.landing_result import (
     GoalAssist,
     ScoringGoal,
     ScoringPeriod,

@@ -6,7 +6,7 @@ Tests for Edge landing page models:
   GoalieHighDangerSavePctgLeader, GoalieHighDangerSavesLeader,
   GoalieSimpleLeader, GoalieSavePctg5v5Leader
 """
-from src.models.players.leaders.edge.skaters.skater_landing import (
+from nhl_stats.models.players.leaders.edge.skaters.skater_landing import (
     SkaterLanding,
     SkaterLandingLeaders,
     SkaterPeakLeader,
@@ -15,7 +15,7 @@ from src.models.players.leaders.edge.skaters.skater_landing import (
     SkaterSOGLeader,
     SkaterZoneTimeLeader,
 )
-from src.models.players.leaders.edge.goalies.goalie_landing import (
+from nhl_stats.models.players.leaders.edge.goalies.goalie_landing import (
     GoalieLanding,
     GoalieLandingLeaders,
     GoalieSavePctgAreaDetail,

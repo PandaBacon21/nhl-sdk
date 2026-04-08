@@ -4,7 +4,7 @@ Tests for team schedule models:
   ScheduleGameOutcome, ScheduleGoalPlayer, ScheduleGame,
   TeamScheduleResult, TeamMonthScheduleResult, TeamWeekScheduleResult
 """
-from src.models.teams.team.team_schedule.team_schedule_result import (
+from nhl_stats.models.teams.team.team_schedule.team_schedule_result import (
     ScheduleTvBroadcast,
     ScheduleTeam,
     SchedulePeriodDescriptor,

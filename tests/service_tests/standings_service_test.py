@@ -1,5 +1,5 @@
-from src.models.teams.standings.standings import Standings
-from src.models.teams.standings.standings_result import StandingsResult
+from nhl_stats.models.teams.standings.standings import Standings
+from nhl_stats.models.teams.standings.standings_result import StandingsResult
 
 from .conftest import ok
 

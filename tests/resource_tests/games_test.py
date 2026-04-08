@@ -1,5 +1,5 @@
-from src.resources.api_web.games import CallNhlGames as GamesTest
-from src.core.transport import APICallWeb, APIResponse
+from nhl_stats.resources.api_web.games import CallNhlGames as GamesTest
+from nhl_stats.core.transport import APICallWeb, APIResponse
 
 DATE: str = "2025-11-15"
 GAME_ID: int = 2025020417

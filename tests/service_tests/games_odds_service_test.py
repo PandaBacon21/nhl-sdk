@@ -1,4 +1,4 @@
-from src.models.games.odds import PartnerOdds, PartnerOddsResult
+from nhl_stats.models.games.odds import PartnerOdds, PartnerOddsResult
 
 from .conftest import ok
 

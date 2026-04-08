@@ -1,5 +1,5 @@
-from src.models.games.network.network import GameNetwork
-from src.models.games.network.network_schedule import NetworkScheduleResult
+from nhl_stats.models.games.network.network import GameNetwork
+from nhl_stats.models.games.network.network_schedule import NetworkScheduleResult
 
 from .conftest import ok
 

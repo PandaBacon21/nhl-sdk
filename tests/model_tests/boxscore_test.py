@@ -2,7 +2,7 @@
 Tests for game boxscore models:
   BoxscoreSkater, BoxscoreGoalie, BoxscoreTeam, PlayerByGameStats, GameBoxscoreResult
 """
-from src.models.games.boxscore.boxscore_result import (
+from nhl_stats.models.games.boxscore.boxscore_result import (
     BoxscoreSkater,
     BoxscoreGoalie,
     BoxscoreTeam,

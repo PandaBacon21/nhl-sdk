@@ -1,7 +1,7 @@
-from src.client import NhlClient
-from src.core.config import DefaultConfig
-from src.services.players import Players
-from src.services.teams import Teams
+from nhl_stats.client import NhlClient
+from nhl_stats.core.config import DefaultConfig
+from nhl_stats.services.players import Players
+from nhl_stats.services.teams import Teams
 
 
 def test_client_default_init() -> None:

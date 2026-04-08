@@ -1,4 +1,4 @@
-from src.core.utilities import LocalizedString, _to_bool
+from nhl_stats.core.utilities import LocalizedString, _to_bool
 
 
 # ==========================================================================
