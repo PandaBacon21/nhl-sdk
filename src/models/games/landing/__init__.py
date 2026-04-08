@@ -1,4 +1,3 @@
-from .landing import GameLanding
 from .landing_result import (
     GameLandingResult,
     GameSummary,
@@ -12,7 +11,6 @@ from .landing_result import (
 )
 
 __all__ = [
-    "GameLanding",
     "GameLandingResult",
     "GameSummary",
     "ScoringPeriod",

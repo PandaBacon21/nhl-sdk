@@ -128,7 +128,8 @@ GAME_ID = 2025020417  # VAN @ COL, 2025-12-02
 
 
 def test_smoke_pbp(nhl) -> None:
-    result = nhl.games.pbp.get_play_by_play(game_id=GAME_ID)
+    game = nhl.games.get(GAME_ID)
+    result = game.pbp()
 
     assert result is not None
     assert result.id == GAME_ID
@@ -146,8 +147,9 @@ def test_smoke_pbp(nhl) -> None:
 
 
 def test_smoke_pbp_cache(nhl) -> None:
-    result1 = nhl.games.pbp.get_play_by_play(game_id=GAME_ID)
-    result2 = nhl.games.pbp.get_play_by_play(game_id=GAME_ID)
+    game = nhl.games.get(GAME_ID)
+    result1 = game.pbp()
+    result2 = game.pbp()
     assert result1 is result2
 
 
@@ -156,7 +158,8 @@ def test_smoke_pbp_cache(nhl) -> None:
 # ==========================================================================
 
 def test_smoke_landing(nhl) -> None:
-    result = nhl.games.landing.get_landing(game_id=GAME_ID)
+    game = nhl.games.get(GAME_ID)
+    result = game.landing()
 
     assert result is not None
     assert result.id == GAME_ID
@@ -176,8 +179,9 @@ def test_smoke_landing(nhl) -> None:
 
 
 def test_smoke_landing_cache(nhl) -> None:
-    result1 = nhl.games.landing.get_landing(game_id=GAME_ID)
-    result2 = nhl.games.landing.get_landing(game_id=GAME_ID)
+    game = nhl.games.get(GAME_ID)
+    result1 = game.landing()
+    result2 = game.landing()
     assert result1 is result2
 
 
@@ -189,7 +193,8 @@ BOXSCORE_GAME_ID = 2025020691  # OTT @ COL, 2026-01-08
 
 
 def test_smoke_boxscore(nhl) -> None:
-    result = nhl.games.boxscore.get_boxscore(game_id=BOXSCORE_GAME_ID)
+    game = nhl.games.get(BOXSCORE_GAME_ID)
+    result = game.boxscore()
 
     assert result is not None
     assert result.id == BOXSCORE_GAME_ID
@@ -211,8 +216,9 @@ def test_smoke_boxscore(nhl) -> None:
 
 
 def test_smoke_boxscore_cache(nhl) -> None:
-    result1 = nhl.games.boxscore.get_boxscore(game_id=BOXSCORE_GAME_ID)
-    result2 = nhl.games.boxscore.get_boxscore(game_id=BOXSCORE_GAME_ID)
+    game = nhl.games.get(BOXSCORE_GAME_ID)
+    result1 = game.boxscore()
+    result2 = game.boxscore()
     assert result1 is result2
 
 
@@ -221,7 +227,8 @@ def test_smoke_boxscore_cache(nhl) -> None:
 # ==========================================================================
 
 def test_smoke_story(nhl) -> None:
-    result = nhl.games.story.get_game_story(game_id=GAME_ID)
+    game = nhl.games.get(GAME_ID)
+    result = game.story()
 
     assert result is not None
     assert result.id == GAME_ID
@@ -242,8 +249,9 @@ def test_smoke_story(nhl) -> None:
 
 
 def test_smoke_story_cache(nhl) -> None:
-    result1 = nhl.games.story.get_game_story(game_id=GAME_ID)
-    result2 = nhl.games.story.get_game_story(game_id=GAME_ID)
+    game = nhl.games.get(GAME_ID)
+    result1 = game.story()
+    result2 = game.story()
     assert result1 is result2
 
 

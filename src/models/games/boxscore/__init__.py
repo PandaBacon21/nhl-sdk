@@ -1,4 +1,3 @@
-from .boxscore import GameBoxscore
 from .boxscore_result import (
     GameBoxscoreResult,
     PlayerByGameStats,
@@ -8,7 +7,6 @@ from .boxscore_result import (
 )
 
 __all__ = [
-    "GameBoxscore",
     "GameBoxscoreResult",
     "PlayerByGameStats",
     "BoxscoreTeam",

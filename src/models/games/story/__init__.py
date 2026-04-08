@@ -1,4 +1,3 @@
-from .story import GameStory
 from .story_result import (
     GameStoryResult,
     GameStorySummary,
@@ -8,7 +7,6 @@ from .story_result import (
 )
 
 __all__ = [
-    "GameStory",
     "GameStoryResult",
     "GameStorySummary",
     "StoryTeam",

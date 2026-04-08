@@ -743,17 +743,13 @@ Accessed directly as `client.league`. Results are cached with a 1hr TTL.
 
 ## `client.games`
 
-| Property / Method   | Returns          | Description                          |
+| Method / Property   | Returns          | Description                          |
 | ------------------- | ---------------- | ------------------------------------ |
+| `.get(game_id)`     | `Game`           | Game gateway object for a specific game |
 | `.network`          | `GameNetwork`    | TV broadcast schedule sub-resource   |
 | `.scores`           | `GameScores`     | Daily scores sub-resource            |
 | `.scoreboard`       | `GameScoreboard` | Current scoreboard sub-resource      |
-| `.pbp`              | `GamePlayByPlay` | Play-by-play sub-resource            |
-| `.landing`          | `GameLanding`    | Game landing sub-resource            |
-| `.boxscore`         | `GameBoxscore`   | Boxscore sub-resource                |
-| `.story`            | `GameStory`      | Game story sub-resource              |
 | `.odds`             | `PartnerOdds`    | Partner betting odds sub-resource    |
-| `.shifts`           | `GameShifts`     | Shift chart sub-resource             |
 | `.streams`          | `GameStreams`     | Streaming URL sub-resource (may be region-restricted) |
 | `.query(...)`       | `list[dict]`     | Raw api_stats game records query     |
 
@@ -811,59 +807,28 @@ Accessed via `client.games.scoreboard`. Results are cached with a 1hr TTL.
 
 ---
 
-## `GamePlayByPlay`
+## `Game`
 
-Accessed via `client.games.pbp`. Results are cached with a 1hr TTL.
+Obtained via `client.games.get(game_id)`. The game ID is baked in — all methods take no parameters. Results are cached with a 1hr TTL.
 
-| Method                          | Returns           | Description                          |
-| ------------------------------- | ----------------- | ------------------------------------ |
-| `.get_play_by_play(game_id)`    | `PlayByPlayResult` | Full event-by-event play-by-play for a game |
+```python
+game = client.games.get(2024020001)
+pbp      = game.pbp()
+landing  = game.landing()
+boxscore = game.boxscore()
+story    = game.story()
+shifts   = game.shifts()
+```
 
-| Parameter | Required | Description                                      |
-| --------- | -------- | ------------------------------------------------ |
-| `game_id` | Yes      | NHL game ID (e.g. `2024020001`)                  |
+| Method        | Returns               | Description                                                           |
+| ------------- | --------------------- | --------------------------------------------------------------------- |
+| `.pbp()`      | `PlayByPlayResult`    | Full event-by-event play-by-play data                                 |
+| `.landing()`  | `GameLandingResult`   | Scoring by period, three stars, and penalties                         |
+| `.boxscore()` | `GameBoxscoreResult`  | Per-player stats for forwards, defense, and goalies on both teams     |
+| `.story()`    | `GameStoryResult`     | Scoring summary, three stars, and team-level game statistics          |
+| `.shifts()`   | `ShiftChart`          | Shift chart data for all players                                      |
 
----
-
-## `GameLanding`
-
-Accessed via `client.games.landing`. Results are cached with a 1hr TTL.
-
-| Method                   | Returns             | Description                                                  |
-| ------------------------ | ------------------- | ------------------------------------------------------------ |
-| `.get_landing(game_id)`  | `GameLandingResult` | Scoring by period, three stars, and penalties for a game     |
-
-| Parameter | Required | Description                      |
-| --------- | -------- | -------------------------------- |
-| `game_id` | Yes      | NHL game ID (e.g. `2024020001`)  |
-
----
-
-## `GameBoxscore`
-
-Accessed via `client.games.boxscore`. Results are cached with a 1hr TTL.
-
-| Method                      | Returns               | Description                                               |
-| --------------------------- | --------------------- | --------------------------------------------------------- |
-| `.get_boxscore(game_id)`    | `GameBoxscoreResult`  | Per-player stats for forwards, defense, and goalies for both teams |
-
-| Parameter | Required | Description                      |
-| --------- | -------- | -------------------------------- |
-| `game_id` | Yes      | NHL game ID (e.g. `2024020001`)  |
-
----
-
-## `GameStory`
-
-Accessed via `client.games.story`. Results are cached with a 1hr TTL.
-
-| Method                        | Returns           | Description                                                        |
-| ----------------------------- | ----------------- | ------------------------------------------------------------------ |
-| `.get_game_story(game_id)`    | `GameStoryResult` | Scoring summary, three stars, and team game stats for a game       |
-
-| Parameter | Required | Description                      |
-| --------- | -------- | -------------------------------- |
-| `game_id` | Yes      | NHL game ID (e.g. `2024020001`)  |
+`ShiftChart` contains a `total` count and a `shifts` list of `ShiftEntry` objects. Each `ShiftEntry` includes player identity, team, period, start/end times, duration, hex color, and event details when applicable.
 
 ---
 
@@ -878,22 +843,6 @@ Accessed via `client.games.odds`. Results are cached with a 1hr TTL.
 | Parameter      | Required | Description                                   |
 | -------------- | -------- | --------------------------------------------- |
 | `country_code` | Yes      | Two-letter country code (e.g. `"US"`, `"CA"`) |
-
----
-
-## `GameShifts`
-
-Accessed via `client.games.shifts`. Results are cached with a 1hr TTL.
-
-| Method          | Returns      | Description                              |
-| --------------- | ------------ | ---------------------------------------- |
-| `.get(game_id)` | `ShiftChart` | Shift chart data for a specific game     |
-
-| Parameter | Required | Description                      |
-| --------- | -------- | -------------------------------- |
-| `game_id` | Yes      | NHL game ID (e.g. `2024020001`)  |
-
-`ShiftChart` contains a `total` count and a `shifts` list of `ShiftEntry` objects. Each `ShiftEntry` includes player identity, team, period, start/end times, duration, hex color, and event details when applicable.
 
 ---
 

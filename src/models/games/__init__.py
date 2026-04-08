@@ -1,31 +1,35 @@
+from .game import Game
 from .network import GameNetwork, NetworkScheduleResult, NetworkBroadcast
 from .scoreboard import GameScoreboard, ScoreboardResult, ScoreboardDate, ScoreboardGame, ScoreboardTeam
-from .pbp import GamePlayByPlay, PlayByPlayResult, Play, PlayDetails, PbpTeam
+from .pbp import PlayByPlayResult, Play, PlayDetails, PbpTeam
 from .landing import (
-    GameLanding, GameLandingResult, GameSummary,
+    GameLandingResult, GameSummary,
     ScoringPeriod, ScoringGoal, GoalAssist,
     ThreeStar, PenaltyPeriod, LandingPenalty, PenaltyPlayer,
 )
 from .boxscore import (
-    GameBoxscore, GameBoxscoreResult,
+    GameBoxscoreResult,
     PlayerByGameStats, BoxscoreTeam, BoxscoreSkater, BoxscoreGoalie,
 )
 from .story import (
-    GameStory, GameStoryResult, GameStorySummary,
+    GameStoryResult, GameStorySummary,
     StoryTeam, StoryThreeStar, TeamGameStat,
 )
+from .shifts import ShiftChart, ShiftEntry
 from .odds import PartnerOdds, PartnerOddsResult, OddsGame, OddsTeam, OddsEntry
 
 __all__ = [
+    "Game",
     "GameNetwork", "NetworkScheduleResult", "NetworkBroadcast",
     "GameScoreboard", "ScoreboardResult", "ScoreboardDate", "ScoreboardGame", "ScoreboardTeam",
-    "GamePlayByPlay", "PlayByPlayResult", "Play", "PlayDetails", "PbpTeam",
-    "GameLanding", "GameLandingResult", "GameSummary",
+    "PlayByPlayResult", "Play", "PlayDetails", "PbpTeam",
+    "GameLandingResult", "GameSummary",
     "ScoringPeriod", "ScoringGoal", "GoalAssist",
     "ThreeStar", "PenaltyPeriod", "LandingPenalty", "PenaltyPlayer",
-    "GameBoxscore", "GameBoxscoreResult",
+    "GameBoxscoreResult",
     "PlayerByGameStats", "BoxscoreTeam", "BoxscoreSkater", "BoxscoreGoalie",
-    "GameStory", "GameStoryResult", "GameStorySummary",
+    "GameStoryResult", "GameStorySummary",
     "StoryTeam", "StoryThreeStar", "TeamGameStat",
+    "ShiftChart", "ShiftEntry",
     "PartnerOdds", "PartnerOddsResult", "OddsGame", "OddsTeam", "OddsEntry",
 ]
