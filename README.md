@@ -16,7 +16,7 @@ An unofficial Python SDK for the NHL API. Personal side project built for fun â€
 ## Installation
 
 ```bash
-pip install nhl-stats
+pip install nhl-sdk
 ```
 
 Or clone the repo and install in editable mode for local development:

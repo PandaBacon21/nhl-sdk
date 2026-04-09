@@ -1,6 +1,6 @@
 [project]
-name = "nhl-stats"
-version = "0.1.0"
+name = "nhl-sdk"
+version = "0.1.1"
 description = "unofficial SDK for the NHL API"
 readme = "README.md"
 authors = [
