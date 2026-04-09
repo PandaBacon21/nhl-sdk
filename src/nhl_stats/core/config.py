@@ -26,7 +26,7 @@ class BaseConfig(ABC):
     _v: str = field(default=V, init=True)
 
     log_name: str = "nhl_sdk"
-    log_level: str = "DEBUG"
+    log_level: str = "WARNING"
     lang: str = LANG
     # log_file: str | None = str(FILE_PATH)  # default log path; set to None for stdout only
     log_file: str | None = None # Set to None for stdout only - Currently set just for testing

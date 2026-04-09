@@ -17,7 +17,7 @@ client = NhlClient()
 | Parameter            | Type         | Default      | Description                                              |
 | -------------------- | ------------ | ------------ | -------------------------------------------------------- |
 | `log_name`           | `str`        | `"nhl_sdk"`  | Logger name                                              |
-| `log_level`          | `str`        | `"DEBUG"`    | Logging level: `"DEBUG"`, `"INFO"`, `"WARNING"`, `"ERROR"` |
+| `log_level`          | `str`        | `"WARNING"`  | Logging level: `"DEBUG"`, `"INFO"`, `"WARNING"`, `"ERROR"` |
 | `log_file`           | `str \| None` | `None`       | File path for log output. `None` writes to stdout only   |
 | `lang`               | `str`        | `"en"`       | API response language                                    |
 | `cache`              | `BaseCache`  | `MemCache()` | Cache backend. Pass a custom `BaseCache` implementation  |
@@ -54,7 +54,7 @@ client = NhlClient(config_from_object=config)
 | Field      | Type         | Default      | Description                              |
 | ---------- | ------------ | ------------ | ---------------------------------------- |
 | `log_name` | `str`        | `"nhl_sdk"`  | Logger name                              |
-| `log_level`| `str`        | `"DEBUG"`    | Logging level                            |
+| `log_level`| `str`        | `"WARNING"`  | Logging level                            |
 | `log_file` | `str \| None` | `None`       | Log file path. `None` = stdout only      |
 | `lang`     | `str`        | `"en"`       | API response language                    |
 | `cache`    | `BaseCache`  | `MemCache()` | Cache backend                            |

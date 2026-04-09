@@ -3,7 +3,7 @@
 An unofficial Python SDK for the NHL API. Personal side project built for fun â€” no guarantees on cadence, but actively maintained.
 
 > Only possible due to the great work by Zmalski documenting the [NHL API](https://github.com/Zmalski/NHL-API-Reference).
-> Full Postman collection for manual testing available [here](https://josh-personal.postman.co/workspace/My-Personal-Workspace~1a09e9af-597c-4eb3-806e-860262a49125/collection/19505270-dfda07ab-2c76-4c1e-9682-296f91049732?action=share&creator=19505270&active-environment=19505270-97cd10c3-3bf7-4101-b0b2-569cd2507fed).
+> Full Postman collection for manual testing available [here](https://www.postman.com/josh-a/workspace/nhl-api-unofficial-collection/collection/19505270-dfda07ab-2c76-4c1e-9682-296f91049732?action=share&creator=19505270).
 
 ---
 
@@ -15,9 +15,15 @@ An unofficial Python SDK for the NHL API. Personal side project built for fun â€
 
 ## Installation
 
-> while in dev
+```bash
+pip install nhl-stats
+```
+
+Or clone the repo and install in editable mode for local development:
 
 ```bash
+git clone https://github.com/PandaBacon21/nhl-sdk.git
+cd nhl-sdk/nhl_stats
 pip install -e .
 ```
 
@@ -126,7 +132,7 @@ from nhl_stats.client import NhlClient
 
 client = NhlClient(
     log_name="my_app",        # logger name              (default: "nhl_sdk")
-    log_level="INFO",         # DEBUG|INFO|WARNING|ERROR  (default: "DEBUG")
+    log_level="INFO",         # DEBUG|INFO|WARNING|ERROR  (default: "WARNING")
     log_file="/tmp/nhl.log",  # log file path; None = stdout only (default: None)
     lang="en",                # response language         (default: "en")
     cache=my_cache,           # custom BaseCache impl     (default: MemCache)
