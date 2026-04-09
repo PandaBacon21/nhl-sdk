@@ -1,7 +1,7 @@
-from nhl_stats.services.teams import Teams
-from nhl_stats.models.teams.standings.standings import Standings
-from nhl_stats.models.teams.team.team import Team
-from nhl_stats.models.teams.edge.teams_edge import TeamsEdge
+from nhl_sdk.services.teams import Teams
+from nhl_sdk.models.teams.standings.standings import Standings
+from nhl_sdk.models.teams.team.team import Team
+from nhl_sdk.models.teams.edge.teams_edge import TeamsEdge
 
 
 def test_teams_standings_property(mock_client) -> None:
@@ -51,9 +51,9 @@ def test_teams_standings_each_call_new_instance(mock_client) -> None:
 # ==========================================================================
 
 def test_teams_all_returns_list(mock_client) -> None:
-    from nhl_stats.models.teams.team.team_stats.team_ref import TeamRef
+    from nhl_sdk.models.teams.team.team_stats.team_ref import TeamRef
     from .conftest import ok
-    mock_client._api.api_stats.call_nhl_stats_teams.get_teams.return_value = ok(
+    mock_client._api.api_stats.call_nhl_sdk_teams.get_teams.return_value = ok(
         {"data": [{"id": 21, "triCode": "COL", "fullName": "Colorado Avalanche", "franchiseId": 27, "leagueId": 133, "rawTricode": "COL"}], "total": 1}
     )
     svc = Teams(mock_client)
@@ -66,23 +66,23 @@ def test_teams_all_returns_list(mock_client) -> None:
 
 def test_teams_all_cache_miss(mock_client) -> None:
     from .conftest import ok
-    mock_client._api.api_stats.call_nhl_stats_teams.get_teams.return_value = ok({"data": [], "total": 0})
+    mock_client._api.api_stats.call_nhl_sdk_teams.get_teams.return_value = ok({"data": [], "total": 0})
     svc = Teams(mock_client)
     _ = svc.all()
-    mock_client._api.api_stats.call_nhl_stats_teams.get_teams.assert_called_once()
+    mock_client._api.api_stats.call_nhl_sdk_teams.get_teams.assert_called_once()
 
 
 def test_teams_all_cache_hit(mock_client) -> None:
     from .conftest import ok
-    mock_client._api.api_stats.call_nhl_stats_teams.get_teams.return_value = ok({"data": [], "total": 0})
+    mock_client._api.api_stats.call_nhl_sdk_teams.get_teams.return_value = ok({"data": [], "total": 0})
     svc = Teams(mock_client)
     _ = svc.all()
     _ = svc.all()
-    mock_client._api.api_stats.call_nhl_stats_teams.get_teams.assert_called_once()
+    mock_client._api.api_stats.call_nhl_sdk_teams.get_teams.assert_called_once()
 
 
 def test_teams_all_empty(mock_client) -> None:
     from .conftest import ok
-    mock_client._api.api_stats.call_nhl_stats_teams.get_teams.return_value = ok({"data": [], "total": 0})
+    mock_client._api.api_stats.call_nhl_sdk_teams.get_teams.return_value = ok({"data": [], "total": 0})
     svc = Teams(mock_client)
     assert svc.all() == []

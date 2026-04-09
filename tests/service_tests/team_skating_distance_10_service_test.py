@@ -1,7 +1,7 @@
 """
 Tests for TeamSkatingDistance10 service: get_top_10()
 """
-from nhl_stats.models.teams.edge.team_skating_distance_10 import (
+from nhl_sdk.models.teams.edge.team_skating_distance_10 import (
     TeamSkatingDistance10, TeamDistanceLeaderEntry,
 )
 

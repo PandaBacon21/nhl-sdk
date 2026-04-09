@@ -11,8 +11,8 @@ import time
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-from nhl_stats.client import NhlClient
-from nhl_stats.core.cache.mem_cache import MemCache
+from nhl_sdk.client import NhlClient
+from nhl_sdk.core.cache.mem_cache import MemCache
 
 from test_player import test_smoke_profile, test_smoke_stats, test_smoke_game_log
 from test_leaders import test_smoke_spotlight, test_smoke_leaders

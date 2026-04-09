@@ -1,7 +1,7 @@
 """
 Tests for TeamZoneDetailResult and sub-models.
 """
-from nhl_stats.models.teams.team.edge.team_zone_details.team_zone_detail import (
+from nhl_sdk.models.teams.team.edge.team_zone_details.team_zone_detail import (
     TeamZoneDetailResult, ZoneTimeEntry, ZoneShotDifferential,
 )
 

@@ -1,10 +1,10 @@
-from nhl_stats.models.players.player.player_stats.edge.goalies.goalie_edge import GoalieEdge
-from nhl_stats.models.players.player.player_stats.edge.goalies.goalie_details import GoalieDetails
-from nhl_stats.models.players.player.player_stats.edge.goalies.goalie_comparison import GoalieComparison
-from nhl_stats.models.players.player.player_stats.edge.goalies.goalie_5v5 import GoalieFiveVFive
-from nhl_stats.models.players.player.player_stats.edge.goalies.goalie_shot_location import GoalieShotLocation
-from nhl_stats.models.players.player.player_stats.edge.goalies.goalie_save_pctg import GoalieSavePctg
-from nhl_stats.models.players.player.player_stats.edge.goalies.cat_goalie_details import CatGoalieDetails
+from nhl_sdk.models.players.player.player_stats.edge.goalies.goalie_edge import GoalieEdge
+from nhl_sdk.models.players.player.player_stats.edge.goalies.goalie_details import GoalieDetails
+from nhl_sdk.models.players.player.player_stats.edge.goalies.goalie_comparison import GoalieComparison
+from nhl_sdk.models.players.player.player_stats.edge.goalies.goalie_5v5 import GoalieFiveVFive
+from nhl_sdk.models.players.player.player_stats.edge.goalies.goalie_shot_location import GoalieShotLocation
+from nhl_sdk.models.players.player.player_stats.edge.goalies.goalie_save_pctg import GoalieSavePctg
+from nhl_sdk.models.players.player.player_stats.edge.goalies.cat_goalie_details import CatGoalieDetails
 
 from .conftest import ok
 

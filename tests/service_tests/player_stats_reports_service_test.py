@@ -1,8 +1,8 @@
 """
 Service tests for the named report methods on PlayerStats.
 """
-from nhl_stats.models.players.player.player_stats.player_stats import PlayerStats
-from nhl_stats.models.players.player.player_stats.reports import (
+from nhl_sdk.models.players.player.player_stats.player_stats import PlayerStats
+from nhl_sdk.models.players.player.player_stats.reports import (
     SkaterBioReport, SkaterFaceoffPctReport, SkaterFaceoffWinsReport,
     SkaterGoalsForAgainstReport, SkaterPenaltiesReport, SkaterPenaltyKillReport,
     SkaterPenaltyShotsReport, SkaterPowerPlayReport, SkaterPuckPossessionsReport,
@@ -39,12 +39,12 @@ def _goalie(mock_client) -> PlayerStats:
 
 def _set_skater_response(mock_client, row=None):
     data = {"data": [row or SKATER_ROW], "total": 1}
-    mock_client._api.api_stats.call_nhl_stats_players.get_skater_stats.return_value = ok(data)
+    mock_client._api.api_stats.call_nhl_sdk_players.get_skater_stats.return_value = ok(data)
 
 
 def _set_goalie_response(mock_client, row=None):
     data = {"data": [row or GOALIE_ROW], "total": 1}
-    mock_client._api.api_stats.call_nhl_stats_players.get_goalie_stats.return_value = ok(data)
+    mock_client._api.api_stats.call_nhl_sdk_players.get_goalie_stats.return_value = ok(data)
 
 
 # ==========================================================================
@@ -56,7 +56,7 @@ def test_stats_bio_skater_cache_miss(mock_client) -> None:
     ps = _skater(mock_client)
     result = ps.stats_bio()
     assert isinstance(result, SkaterBioReport)
-    mock_client._api.api_stats.call_nhl_stats_players.get_skater_stats.assert_called_once()
+    mock_client._api.api_stats.call_nhl_sdk_players.get_skater_stats.assert_called_once()
 
 
 def test_stats_bio_skater_cache_hit(mock_client) -> None:
@@ -64,7 +64,7 @@ def test_stats_bio_skater_cache_hit(mock_client) -> None:
     ps = _skater(mock_client)
     _ = ps.stats_bio()
     _ = ps.stats_bio()
-    mock_client._api.api_stats.call_nhl_stats_players.get_skater_stats.assert_called_once()
+    mock_client._api.api_stats.call_nhl_sdk_players.get_skater_stats.assert_called_once()
 
 
 def test_stats_bio_goalie_cache_miss(mock_client) -> None:
@@ -72,11 +72,11 @@ def test_stats_bio_goalie_cache_miss(mock_client) -> None:
     ps = _goalie(mock_client)
     result = ps.stats_bio()
     assert isinstance(result, GoalieBioReport)
-    mock_client._api.api_stats.call_nhl_stats_players.get_goalie_stats.assert_called_once()
+    mock_client._api.api_stats.call_nhl_sdk_players.get_goalie_stats.assert_called_once()
 
 
 def test_stats_bio_returns_none_on_empty_data(mock_client) -> None:
-    mock_client._api.api_stats.call_nhl_stats_players.get_skater_stats.return_value = ok({"data": []})
+    mock_client._api.api_stats.call_nhl_sdk_players.get_skater_stats.return_value = ok({"data": []})
     ps = _skater(mock_client)
     assert ps.stats_bio() is None
 
@@ -104,7 +104,7 @@ def test_penalty_shots_cache_hit(mock_client) -> None:
     ps = _skater(mock_client)
     _ = ps.penalty_shots(season=20232024, game_type=2)
     _ = ps.penalty_shots(season=20232024, game_type=2)
-    mock_client._api.api_stats.call_nhl_stats_players.get_skater_stats.assert_called_once()
+    mock_client._api.api_stats.call_nhl_sdk_players.get_skater_stats.assert_called_once()
 
 
 # ==========================================================================
@@ -124,8 +124,8 @@ def test_skater_only_methods_return_none_for_goalie(mock_client) -> None:
     assert ps.shot_type() is None
     assert ps.time_on_ice() is None
     assert ps.percentages() is None
-    mock_client._api.api_stats.call_nhl_stats_players.get_skater_stats.assert_not_called()
-    mock_client._api.api_stats.call_nhl_stats_players.get_goalie_stats.assert_not_called()
+    mock_client._api.api_stats.call_nhl_sdk_players.get_skater_stats.assert_not_called()
+    mock_client._api.api_stats.call_nhl_sdk_players.get_goalie_stats.assert_not_called()
 
 
 # ==========================================================================
@@ -139,8 +139,8 @@ def test_goalie_only_methods_return_none_for_skater(mock_client) -> None:
     assert ps.saves_by_strength() is None
     assert ps.shootout() is None
     assert ps.started_vs_relieved() is None
-    mock_client._api.api_stats.call_nhl_stats_players.get_skater_stats.assert_not_called()
-    mock_client._api.api_stats.call_nhl_stats_players.get_goalie_stats.assert_not_called()
+    mock_client._api.api_stats.call_nhl_sdk_players.get_skater_stats.assert_not_called()
+    mock_client._api.api_stats.call_nhl_sdk_players.get_goalie_stats.assert_not_called()
 
 
 # ==========================================================================
@@ -152,7 +152,7 @@ def test_faceoff_pct_cache_miss(mock_client) -> None:
     ps = _skater(mock_client)
     result = ps.faceoff_pct(season=20232024, game_type=2)
     assert isinstance(result, SkaterFaceoffPctReport)
-    mock_client._api.api_stats.call_nhl_stats_players.get_skater_stats.assert_called_once()
+    mock_client._api.api_stats.call_nhl_sdk_players.get_skater_stats.assert_called_once()
 
 
 def test_faceoff_pct_cache_hit(mock_client) -> None:
@@ -160,7 +160,7 @@ def test_faceoff_pct_cache_hit(mock_client) -> None:
     ps = _skater(mock_client)
     _ = ps.faceoff_pct(season=20232024, game_type=2)
     _ = ps.faceoff_pct(season=20232024, game_type=2)
-    mock_client._api.api_stats.call_nhl_stats_players.get_skater_stats.assert_called_once()
+    mock_client._api.api_stats.call_nhl_sdk_players.get_skater_stats.assert_called_once()
 
 
 def test_faceoff_wins_returns_report(mock_client) -> None:
@@ -232,7 +232,7 @@ def test_advanced_cache_miss(mock_client) -> None:
     ps = _goalie(mock_client)
     result = ps.advanced(season=20232024, game_type=2)
     assert isinstance(result, GoalieAdvancedReport)
-    mock_client._api.api_stats.call_nhl_stats_players.get_goalie_stats.assert_called_once()
+    mock_client._api.api_stats.call_nhl_sdk_players.get_goalie_stats.assert_called_once()
 
 
 def test_advanced_cache_hit(mock_client) -> None:
@@ -240,7 +240,7 @@ def test_advanced_cache_hit(mock_client) -> None:
     ps = _goalie(mock_client)
     _ = ps.advanced(season=20232024, game_type=2)
     _ = ps.advanced(season=20232024, game_type=2)
-    mock_client._api.api_stats.call_nhl_stats_players.get_goalie_stats.assert_called_once()
+    mock_client._api.api_stats.call_nhl_sdk_players.get_goalie_stats.assert_called_once()
 
 
 def test_days_rest_returns_report(mock_client) -> None:
@@ -276,7 +276,7 @@ def test_different_seasons_use_separate_cache_keys(mock_client) -> None:
     ps = _skater(mock_client)
     _ = ps.realtime(season=20232024, game_type=2)
     _ = ps.realtime(season=20222023, game_type=2)
-    assert mock_client._api.api_stats.call_nhl_stats_players.get_skater_stats.call_count == 2
+    assert mock_client._api.api_stats.call_nhl_sdk_players.get_skater_stats.call_count == 2
 
 
 def test_different_game_types_use_separate_cache_keys(mock_client) -> None:
@@ -284,4 +284,4 @@ def test_different_game_types_use_separate_cache_keys(mock_client) -> None:
     ps = _skater(mock_client)
     _ = ps.powerplay(season=20232024, game_type=2)
     _ = ps.powerplay(season=20232024, game_type=3)
-    assert mock_client._api.api_stats.call_nhl_stats_players.get_skater_stats.call_count == 2
+    assert mock_client._api.api_stats.call_nhl_sdk_players.get_skater_stats.call_count == 2

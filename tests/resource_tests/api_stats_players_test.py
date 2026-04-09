@@ -1,8 +1,8 @@
 """
 Resource tests for CallNhlStatsPlayers.
 """
-from nhl_stats.resources.api_stats.players import CallNhlStatsPlayers
-from nhl_stats.core.transport import APICallStats, APIResponse
+from nhl_sdk.resources.api_stats.players import CallNhlStatsPlayers
+from nhl_sdk.core.transport import APICallStats, APIResponse
 
 svc = CallNhlStatsPlayers(http=APICallStats())
 

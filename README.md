@@ -1,5 +1,7 @@
 # NHL Stats SDK
 
+[![PyPI version](https://img.shields.io/pypi/v/nhl-sdk)](https://pypi.org/project/nhl-sdk)
+
 An unofficial Python SDK for the NHL API. Personal side project built for fun — no guarantees on cadence, but actively maintained.
 
 > Only possible due to the great work by Zmalski documenting the [NHL API](https://github.com/Zmalski/NHL-API-Reference).
@@ -23,7 +25,7 @@ Or clone the repo and install in editable mode for local development:
 
 ```bash
 git clone https://github.com/PandaBacon21/nhl-sdk.git
-cd nhl-sdk/nhl_stats
+cd nhl-sdk/nhl_sdk
 pip install -e .
 ```
 
@@ -32,7 +34,7 @@ pip install -e .
 ## Quick Start
 
 ```python
-from nhl_stats.client import NhlClient
+from nhl_sdk.client import NhlClient
 
 client = NhlClient()
 
@@ -128,7 +130,7 @@ dist_top = client.teams.edge.skating_distance_top_10.get_top_10()
 `NhlClient` accepts optional keyword arguments. All fields have defaults and can be overridden individually or via a `BaseConfig` object.
 
 ```python
-from nhl_stats.client import NhlClient
+from nhl_sdk.client import NhlClient
 
 client = NhlClient(
     log_name="my_app",        # logger name              (default: "nhl_sdk")
@@ -144,8 +146,8 @@ By default, logs are written to stdout only (`log_file=None`). Pass any file pat
 ### Custom Config Object
 
 ```python
-from nhl_stats.core.config import DefaultConfig
-from nhl_stats.client import NhlClient
+from nhl_sdk.core.config import DefaultConfig
+from nhl_sdk.client import NhlClient
 
 config = DefaultConfig(log_level="WARNING", log_file=None)
 client = NhlClient(config_from_object=config)
@@ -156,7 +158,7 @@ client = NhlClient(config_from_object=config)
 Implement `BaseCache` to plug in any backend (Redis, file-based, etc.):
 
 ```python
-from nhl_stats.core.cache.base_cache import BaseCache
+from nhl_sdk.core.cache.base_cache import BaseCache
 
 class MyCache(BaseCache):
     def get(self, key): ...
@@ -180,7 +182,7 @@ The NHL API is public and requires no authentication. As this is an unofficial S
 On HTTP 429, the SDK automatically retries up to 3 times with exponential backoff. The `Retry-After` response header is respected when present, capped at 60s with a minimum of 1s per retry. `RateLimitError` is raised only after all retries are exhausted. In practice, the NHL API returns `Retry-After: 60` on rate limit and counts it down across successive 429 responses in the same window.
 
 ```python
-from nhl_stats.core.errors import NotFoundError, RateLimitError, NhlApiError
+from nhl_sdk.core.errors import NotFoundError, RateLimitError, NhlApiError
 
 try:
     player = client.players.get(9999999)

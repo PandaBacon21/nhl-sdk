@@ -7,7 +7,7 @@
 The main entry point for the SDK. All kwargs are optional — defaults are used for any omitted values.
 
 ```python
-from nhl_stats.client import NhlClient
+from nhl_sdk.client import NhlClient
 
 client = NhlClient()
 ```
@@ -42,8 +42,8 @@ client = NhlClient()
 Use a config object to define settings once and reuse across multiple clients, or to keep configuration separate from instantiation.
 
 ```python
-from nhl_stats.core.config import DefaultConfig
-from nhl_stats.client import NhlClient
+from nhl_sdk.core.config import DefaultConfig
+from nhl_sdk.client import NhlClient
 
 config = DefaultConfig(log_level="WARNING", log_file="/tmp/nhl.log")
 client = NhlClient(config_from_object=config)
@@ -66,7 +66,7 @@ client = NhlClient(config_from_object=config)
 Implement `BaseCache` to plug in any cache backend (Redis, file-based, etc.). Pass the instance to `NhlClient` via the `cache` kwarg.
 
 ```python
-from nhl_stats.core.cache.base_cache import BaseCache
+from nhl_sdk.core.cache.base_cache import BaseCache
 
 class MyCache(BaseCache):
     def get(self, key: str): ...

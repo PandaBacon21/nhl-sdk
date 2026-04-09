@@ -1,7 +1,7 @@
 """
 Tests for TeamSkatingSpeedResult and sub-models.
 """
-from nhl_stats.models.teams.team.edge.team_skating_speed_details.team_skating_speed_detail import (
+from nhl_sdk.models.teams.team.edge.team_skating_speed_details.team_skating_speed_detail import (
     TeamSkatingSpeedResult, TopSpeedPlayer,
     TeamTopSpeedEntry, TeamSpeedDetail,
 )

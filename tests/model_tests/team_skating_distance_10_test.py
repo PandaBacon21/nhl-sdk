@@ -1,10 +1,10 @@
 """
 Tests for TeamDistanceLeaderEntry model.
 """
-from nhl_stats.models.teams.edge.team_skating_distance_10.team_skating_distance_10_result import (
+from nhl_sdk.models.teams.edge.team_skating_distance_10.team_skating_distance_10_result import (
     TeamDistanceLeaderEntry,
 )
-from nhl_stats.models.teams.edge.team_edge_types import TeamEdgePeak, TeamEdgeOverlay
+from nhl_sdk.models.teams.edge.team_edge_types import TeamEdgePeak, TeamEdgeOverlay
 
 
 ENTRY = {

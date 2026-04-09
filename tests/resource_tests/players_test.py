@@ -1,5 +1,5 @@
-from nhl_stats.resources.api_web.players import CallNhlPlayers as PlayersTest
-from nhl_stats.core.transport import APICallWeb, APIResponse
+from nhl_sdk.resources.api_web.players import CallNhlPlayers as PlayersTest
+from nhl_sdk.core.transport import APICallWeb, APIResponse
 
 PLAYER_ID: int = 8477492
 SEASON: int = 20232024

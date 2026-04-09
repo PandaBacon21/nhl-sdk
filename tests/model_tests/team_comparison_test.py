@@ -1,7 +1,7 @@
 """
 Tests for TeamComparisonResult and sub-models.
 """
-from nhl_stats.models.teams.team.edge.team_comparison.team_comparison_result import (
+from nhl_sdk.models.teams.team.edge.team_comparison.team_comparison_result import (
     TeamComparisonResult, TeamCompShotSpeed, TeamCompSkatingSpeed,
     TeamCompTeamRef, TeamCompDistanceGame, TeamCompDistance,
     TeamCompShotLocationDetail, TeamCompShotLocationTotal,

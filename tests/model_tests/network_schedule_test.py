@@ -2,7 +2,7 @@
 Tests for games network models:
   NetworkBroadcast, NetworkScheduleResult
 """
-from nhl_stats.models.games.network.network_schedule import NetworkBroadcast, NetworkScheduleResult
+from nhl_sdk.models.games.network.network_schedule import NetworkBroadcast, NetworkScheduleResult
 
 
 LIVE_BROADCAST = {

@@ -1,5 +1,5 @@
-from nhl_stats.resources.api_web.playoffs import CallNhlPlayoffs as PlayoffTest
-from nhl_stats.core.transport import APICallWeb, APIResponse
+from nhl_sdk.resources.api_web.playoffs import CallNhlPlayoffs as PlayoffTest
+from nhl_sdk.core.transport import APICallWeb, APIResponse
 
 SEASON: int = 20232024
 SERIES_LETTER: str = "A"

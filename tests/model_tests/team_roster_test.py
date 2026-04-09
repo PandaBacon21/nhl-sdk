@@ -2,8 +2,8 @@
 Tests for team roster models:
   RosterPlayer, TeamRosterResult, Prospect, ProspectsResult
 """
-from nhl_stats.models.teams.team.team_roster.team_roster_result import RosterPlayer, TeamRosterResult
-from nhl_stats.models.teams.team.team_roster.team_prospects import Prospect, ProspectsResult
+from nhl_sdk.models.teams.team.team_roster.team_roster_result import RosterPlayer, TeamRosterResult
+from nhl_sdk.models.teams.team.team_roster.team_prospects import Prospect, ProspectsResult
 
 
 PLAYER_DATA = {

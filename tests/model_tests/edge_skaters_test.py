@@ -1,15 +1,15 @@
-from nhl_stats.models.players.player.player_stats.edge.skaters.skater_details import (
+from nhl_sdk.models.players.player.player_stats.edge.skaters.skater_details import (
     SkatingSpeed,
     SogSummary,
     SogDetail,
     ZoneTimeDetails,
     SkaterDetails,
 )
-from nhl_stats.models.players.leaders.edge.skaters.skater_distance_10 import DistanceLeaderEntry
-from nhl_stats.models.players.leaders.edge.skaters.skater_speed_10 import SpeedLeaderEntry
-from nhl_stats.models.players.leaders.edge.skaters.skater_zone_time_10 import ZoneTimeLeaderEntry
-from nhl_stats.models.players.leaders.edge.skaters.skater_shot_speed_10 import ShotSpeedLeaderEntry
-from nhl_stats.models.players.leaders.edge.skaters.skater_shot_location_10 import ShotLocationLeaderEntry
+from nhl_sdk.models.players.leaders.edge.skaters.skater_distance_10 import DistanceLeaderEntry
+from nhl_sdk.models.players.leaders.edge.skaters.skater_speed_10 import SpeedLeaderEntry
+from nhl_sdk.models.players.leaders.edge.skaters.skater_zone_time_10 import ZoneTimeLeaderEntry
+from nhl_sdk.models.players.leaders.edge.skaters.skater_shot_speed_10 import ShotSpeedLeaderEntry
+from nhl_sdk.models.players.leaders.edge.skaters.skater_shot_location_10 import ShotLocationLeaderEntry
 
 
 PLAYER_DATA = {

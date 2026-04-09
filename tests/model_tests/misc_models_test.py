@@ -1,10 +1,10 @@
-from nhl_stats.models.misc import (
+from nhl_sdk.models.misc import (
     Country, Franchise, GlossaryEntry,
     LocationResult, PostalLookupResult,
     WscPlay, WscPlayDetails,
     StatsConfig, ReportConfig, ReportContextConfig,
 )
-from nhl_stats.models.games.shifts import ShiftChart, ShiftEntry
+from nhl_sdk.models.games.shifts import ShiftChart, ShiftEntry
 
 
 # ==========================================================================

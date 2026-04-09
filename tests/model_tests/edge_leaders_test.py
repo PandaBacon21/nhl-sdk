@@ -9,10 +9,10 @@ Covers:
 """
 from unittest.mock import MagicMock
 
-from nhl_stats.models.players.leaders.edge.skaters.skater_landing import SkaterLanding
-from nhl_stats.models.players.leaders.edge.goalies.goalie_landing import GoalieLanding
-from nhl_stats.models.players.leaders.player_leaders import SkaterLeaders, GoalieLeaders
-from nhl_stats.core.transport import APIResponse
+from nhl_sdk.models.players.leaders.edge.skaters.skater_landing import SkaterLanding
+from nhl_sdk.models.players.leaders.edge.goalies.goalie_landing import GoalieLanding
+from nhl_sdk.models.players.leaders.player_leaders import SkaterLeaders, GoalieLeaders
+from nhl_sdk.core.transport import APIResponse
 
 
 # ==========================================================================

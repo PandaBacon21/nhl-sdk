@@ -2,7 +2,7 @@
 Tests for play-by-play models:
   PbpTeam, PlayDetails, Play, PlayByPlayResult
 """
-from nhl_stats.models.games.pbp.pbp_result import (
+from nhl_sdk.models.games.pbp.pbp_result import (
     PbpTeam, PlayDetails, Play, PlayByPlayResult,
 )
 

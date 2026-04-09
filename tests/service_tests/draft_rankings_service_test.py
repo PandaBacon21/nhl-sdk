@@ -1,4 +1,4 @@
-from nhl_stats.models.draft.rankings import DraftRankings, DraftRankingsResult
+from nhl_sdk.models.draft.rankings import DraftRankings, DraftRankingsResult
 
 from .conftest import ok
 

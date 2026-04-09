@@ -1,4 +1,4 @@
-from nhl_stats.models.playoffs.series import PlayoffSeriesSchedule, SeriesScheduleResult
+from nhl_sdk.models.playoffs.series import PlayoffSeriesSchedule, SeriesScheduleResult
 
 from .conftest import ok
 

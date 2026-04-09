@@ -1,7 +1,7 @@
 """
 Tests for TeamShotSpeedResult and sub-models.
 """
-from nhl_stats.models.teams.team.edge.team_shot_speed_details.team_shot_speed_detail import (
+from nhl_sdk.models.teams.team.edge.team_shot_speed_details.team_shot_speed_detail import (
     TeamShotSpeedResult, TeamHardestShotEntry, TeamShotSpeedDetail,
 )
 

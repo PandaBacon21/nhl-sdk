@@ -1,10 +1,10 @@
 """
 Tests for TeamSpeedLeaderEntry model.
 """
-from nhl_stats.models.teams.edge.team_skating_speed_10.team_skating_speed_10_result import (
+from nhl_sdk.models.teams.edge.team_skating_speed_10.team_skating_speed_10_result import (
     TeamSpeedLeaderEntry,
 )
-from nhl_stats.models.players.player.player_stats.edge.player_edge_types import EdgePeak, EdgeOverlay
+from nhl_sdk.models.players.player.player_stats.edge.player_edge_types import EdgePeak, EdgeOverlay
 
 
 ENTRY = {

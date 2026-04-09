@@ -1,5 +1,5 @@
-from nhl_stats.resources.api_web.league import CallNhlLeague as LeagueTests
-from nhl_stats.core.transport import APICallWeb, APIResponse
+from nhl_sdk.resources.api_web.league import CallNhlLeague as LeagueTests
+from nhl_sdk.core.transport import APICallWeb, APIResponse
 
 DATE: str = "2025-11-15"
 

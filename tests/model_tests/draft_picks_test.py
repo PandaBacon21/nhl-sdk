@@ -1,7 +1,7 @@
 """
 Tests for draft picks models: DraftPickEntry, DraftPicksResult
 """
-from nhl_stats.models.draft.picks.picks_result import DraftPickEntry, DraftPicksResult
+from nhl_sdk.models.draft.picks.picks_result import DraftPickEntry, DraftPicksResult
 
 
 PICK_DATA = {

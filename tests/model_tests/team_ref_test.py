@@ -1,7 +1,7 @@
 """
 Model tests for TeamRef.
 """
-from nhl_stats.models.teams.team.team_stats.team_ref import TeamRef
+from nhl_sdk.models.teams.team.team_stats.team_ref import TeamRef
 
 DATA = {
     "id": 21,

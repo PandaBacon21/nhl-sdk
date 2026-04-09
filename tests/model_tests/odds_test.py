@@ -1,7 +1,7 @@
 """
 Tests for partner odds models: OddsEntry, OddsTeam, OddsGame, PartnerOddsResult
 """
-from nhl_stats.models.games.odds.odds_result import (
+from nhl_sdk.models.games.odds.odds_result import (
     PartnerOddsResult, OddsGame, OddsTeam, OddsEntry,
 )
 

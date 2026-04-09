@@ -1,9 +1,9 @@
-from nhl_stats.models.players.player.player_stats.season.player_season_stats import SeasonStats
-from nhl_stats.models.players.player.player_stats.season.player_season_team import SeasonTeam
-from nhl_stats.models.players.player.player_stats.season.player_season import Season
-from nhl_stats.models.players.player.player_stats.season.player_featured_game_stats import FeaturedGame
-from nhl_stats.models.players.player.player_stats.player_career_stats import Career, CareerStats
-from nhl_stats.models.players.player.player_stats.player_featured_stats import Featured, FeaturedStats
+from nhl_sdk.models.players.player.player_stats.season.player_season_stats import SeasonStats
+from nhl_sdk.models.players.player.player_stats.season.player_season_team import SeasonTeam
+from nhl_sdk.models.players.player.player_stats.season.player_season import Season
+from nhl_sdk.models.players.player.player_stats.season.player_featured_game_stats import FeaturedGame
+from nhl_sdk.models.players.player.player_stats.player_career_stats import Career, CareerStats
+from nhl_sdk.models.players.player.player_stats.player_featured_stats import Featured, FeaturedStats
 
 
 STAT_DATA = {

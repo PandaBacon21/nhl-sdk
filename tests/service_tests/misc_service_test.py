@@ -1,5 +1,5 @@
-from nhl_stats.services.misc import Misc
-from nhl_stats.models.misc import (
+from nhl_sdk.services.misc import Misc
+from nhl_sdk.models.misc import (
     LocationResult, PostalLookupResult, MiscMeta,
     GameMetaResult, PlayoffSeriesMetaResult,
     GoalReplayResult, PlayReplayResult,
@@ -149,7 +149,7 @@ def test_misc_wsc_play_by_play_empty(mock_client) -> None:
 # ==========================================================================
 
 def test_misc_countries_cache_miss(mock_client) -> None:
-    mock_client._api.api_stats.call_nhl_stats_misc.get_countries.return_value = ok({
+    mock_client._api.api_stats.call_nhl_sdk_misc.get_countries.return_value = ok({
         "data": [{"id": "CA", "countryCode": "CA", "countryName": "Canada"}],
         "total": 1,
     })
@@ -159,22 +159,22 @@ def test_misc_countries_cache_miss(mock_client) -> None:
     assert len(result) == 1
     assert isinstance(result[0], Country)
     assert result[0].country_code == "CA"
-    mock_client._api.api_stats.call_nhl_stats_misc.get_countries.assert_called_once()
+    mock_client._api.api_stats.call_nhl_sdk_misc.get_countries.assert_called_once()
 
 
 def test_misc_countries_cache_hit(mock_client) -> None:
-    mock_client._api.api_stats.call_nhl_stats_misc.get_countries.return_value = ok({
+    mock_client._api.api_stats.call_nhl_sdk_misc.get_countries.return_value = ok({
         "data": [{"id": "CA", "countryCode": "CA"}],
         "total": 1,
     })
     svc = Misc(mock_client)
     _ = svc.countries
     _ = svc.countries
-    mock_client._api.api_stats.call_nhl_stats_misc.get_countries.assert_called_once()
+    mock_client._api.api_stats.call_nhl_sdk_misc.get_countries.assert_called_once()
 
 
 def test_misc_franchises_cache_miss(mock_client) -> None:
-    mock_client._api.api_stats.call_nhl_stats_teams.get_franchise.return_value = ok({
+    mock_client._api.api_stats.call_nhl_sdk_teams.get_franchise.return_value = ok({
         "data": [{"id": 1, "fullName": "Montreal Canadiens"}],
         "total": 1,
     })
@@ -184,22 +184,22 @@ def test_misc_franchises_cache_miss(mock_client) -> None:
     assert len(result) == 1
     assert isinstance(result[0], Franchise)
     assert result[0].franchise_id == 1
-    mock_client._api.api_stats.call_nhl_stats_teams.get_franchise.assert_called_once()
+    mock_client._api.api_stats.call_nhl_sdk_teams.get_franchise.assert_called_once()
 
 
 def test_misc_franchises_cache_hit(mock_client) -> None:
-    mock_client._api.api_stats.call_nhl_stats_teams.get_franchise.return_value = ok({
+    mock_client._api.api_stats.call_nhl_sdk_teams.get_franchise.return_value = ok({
         "data": [{"id": 1, "fullName": "Montreal Canadiens"}],
         "total": 1,
     })
     svc = Misc(mock_client)
     _ = svc.franchises
     _ = svc.franchises
-    mock_client._api.api_stats.call_nhl_stats_teams.get_franchise.assert_called_once()
+    mock_client._api.api_stats.call_nhl_sdk_teams.get_franchise.assert_called_once()
 
 
 def test_misc_glossary_cache_miss(mock_client) -> None:
-    mock_client._api.api_stats.call_nhl_stats_misc.get_glossary.return_value = ok({
+    mock_client._api.api_stats.call_nhl_sdk_misc.get_glossary.return_value = ok({
         "data": [{"id": 1, "abbreviation": "G", "fullName": "Goals"}],
         "total": 1,
     })
@@ -209,22 +209,22 @@ def test_misc_glossary_cache_miss(mock_client) -> None:
     assert len(result) == 1
     assert isinstance(result[0], GlossaryEntry)
     assert result[0].abbreviation == "G"
-    mock_client._api.api_stats.call_nhl_stats_misc.get_glossary.assert_called_once()
+    mock_client._api.api_stats.call_nhl_sdk_misc.get_glossary.assert_called_once()
 
 
 def test_misc_glossary_cache_hit(mock_client) -> None:
-    mock_client._api.api_stats.call_nhl_stats_misc.get_glossary.return_value = ok({
+    mock_client._api.api_stats.call_nhl_sdk_misc.get_glossary.return_value = ok({
         "data": [{"id": 1, "abbreviation": "G"}],
         "total": 1,
     })
     svc = Misc(mock_client)
     _ = svc.glossary
     _ = svc.glossary
-    mock_client._api.api_stats.call_nhl_stats_misc.get_glossary.assert_called_once()
+    mock_client._api.api_stats.call_nhl_sdk_misc.get_glossary.assert_called_once()
 
 
 def test_misc_config_cache_miss(mock_client) -> None:
-    mock_client._api.api_stats.call_nhl_stats_misc.get_config.return_value = ok({
+    mock_client._api.api_stats.call_nhl_sdk_misc.get_config.return_value = ok({
         "playerReportData": {},
         "goalieReportData": {},
         "teamReportData": {},
@@ -235,11 +235,11 @@ def test_misc_config_cache_miss(mock_client) -> None:
     result = svc.config
     assert isinstance(result, StatsConfig)
     assert result.aggregated_columns == ["goals"]
-    mock_client._api.api_stats.call_nhl_stats_misc.get_config.assert_called_once()
+    mock_client._api.api_stats.call_nhl_sdk_misc.get_config.assert_called_once()
 
 
 def test_misc_config_cache_hit(mock_client) -> None:
-    mock_client._api.api_stats.call_nhl_stats_misc.get_config.return_value = ok({
+    mock_client._api.api_stats.call_nhl_sdk_misc.get_config.return_value = ok({
         "playerReportData": {},
         "goalieReportData": {},
         "teamReportData": {},
@@ -247,20 +247,20 @@ def test_misc_config_cache_hit(mock_client) -> None:
     svc = Misc(mock_client)
     _ = svc.config
     _ = svc.config
-    mock_client._api.api_stats.call_nhl_stats_misc.get_config.assert_called_once()
+    mock_client._api.api_stats.call_nhl_sdk_misc.get_config.assert_called_once()
 
 
 def test_misc_ping_true(mock_client) -> None:
-    mock_client._api.api_stats.call_nhl_stats_misc.ping.return_value = ok({})
+    mock_client._api.api_stats.call_nhl_sdk_misc.ping.return_value = ok({})
     svc = Misc(mock_client)
     result = svc.ping()
     assert result is True
-    mock_client._api.api_stats.call_nhl_stats_misc.ping.assert_called_once()
+    mock_client._api.api_stats.call_nhl_sdk_misc.ping.assert_called_once()
 
 
 def test_misc_ping_false(mock_client) -> None:
-    from nhl_stats.core.transport import APIResponse
-    mock_client._api.api_stats.call_nhl_stats_misc.ping.return_value = APIResponse(
+    from nhl_sdk.core.transport import APIResponse
+    mock_client._api.api_stats.call_nhl_sdk_misc.ping.return_value = APIResponse(
         ok=False, data={}, status_code=503
     )
     svc = Misc(mock_client)

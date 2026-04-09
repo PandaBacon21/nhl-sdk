@@ -1,7 +1,7 @@
 """
 Tests for TeamShotSpeed10 service: get_top_10()
 """
-from nhl_stats.models.teams.edge.team_shot_speed_10 import (
+from nhl_sdk.models.teams.edge.team_shot_speed_10 import (
     TeamShotSpeed10, TeamShotSpeedLeaderEntry,
 )
 

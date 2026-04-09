@@ -1,7 +1,7 @@
 """
 Tests for TeamLanding service: get_landing()
 """
-from nhl_stats.models.teams.edge.team_landing import TeamLanding, TeamEdgeLandingResult
+from nhl_sdk.models.teams.edge.team_landing import TeamLanding, TeamEdgeLandingResult
 
 from .conftest import ok
 

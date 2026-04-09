@@ -1,7 +1,7 @@
 """
 Tests for draft tracker models: DraftPick, DraftTrackerResult
 """
-from nhl_stats.models.draft.tracker.tracker_result import DraftPick, DraftTrackerResult
+from nhl_sdk.models.draft.tracker.tracker_result import DraftPick, DraftTrackerResult
 
 
 PICK_DATA = {

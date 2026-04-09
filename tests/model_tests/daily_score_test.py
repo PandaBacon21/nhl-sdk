@@ -3,7 +3,7 @@ Tests for daily score models:
   ScoreWeekDay, OddsPartner, ScoreTeam, GameClock,
   GoalAssist, Goal, ScoreGame, DailyScoreResult
 """
-from nhl_stats.models.games.scores.daily_score import (
+from nhl_sdk.models.games.scores.daily_score import (
     ScoreWeekDay, OddsPartner, ScoreTeam, GameClock,
     GoalAssist, Goal, ScoreGame, DailyScoreResult,
 )

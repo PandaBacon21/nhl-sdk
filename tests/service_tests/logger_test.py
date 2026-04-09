@@ -1,6 +1,6 @@
 import logging
-from nhl_stats.core.logger import NhlLogger
-from nhl_stats.core.config import DefaultConfig
+from nhl_sdk.core.logger import NhlLogger
+from nhl_sdk.core.config import DefaultConfig
 
 
 def test_logger_stdout_handler() -> None:

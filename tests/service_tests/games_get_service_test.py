@@ -1,9 +1,9 @@
-from nhl_stats.models.games.game import Game
-from nhl_stats.models.games.pbp.pbp_result import PlayByPlayResult
-from nhl_stats.models.games.landing.landing_result import GameLandingResult
-from nhl_stats.models.games.boxscore.boxscore_result import GameBoxscoreResult
-from nhl_stats.models.games.story.story_result import GameStoryResult
-from nhl_stats.models.games.shifts.shift_chart import ShiftChart
+from nhl_sdk.models.games.game import Game
+from nhl_sdk.models.games.pbp.pbp_result import PlayByPlayResult
+from nhl_sdk.models.games.landing.landing_result import GameLandingResult
+from nhl_sdk.models.games.boxscore.boxscore_result import GameBoxscoreResult
+from nhl_sdk.models.games.story.story_result import GameStoryResult
+from nhl_sdk.models.games.shifts.shift_chart import ShiftChart
 
 from .conftest import ok
 
@@ -15,7 +15,7 @@ GAME_ID = 2025020417
 # ==========================================================================
 
 def test_games_get_returns_game(mock_client) -> None:
-    from nhl_stats.services.games import Games
+    from nhl_sdk.services.games import Games
     svc = Games(mock_client)
     game = svc.get(GAME_ID)
     assert isinstance(game, Game)
@@ -384,39 +384,39 @@ def test_story_result_populated(mock_client) -> None:
 # ==========================================================================
 
 def test_shifts_cache_miss(mock_client) -> None:
-    mock_client._api.api_stats.call_nhl_stats_misc.get_shift_charts.return_value = ok(
+    mock_client._api.api_stats.call_nhl_sdk_misc.get_shift_charts.return_value = ok(
         {"data": [], "total": 0}
     )
     game = Game(mock_client, GAME_ID)
     result = game.shifts()
     assert isinstance(result, ShiftChart)
     assert result.game_id == GAME_ID
-    mock_client._api.api_stats.call_nhl_stats_misc.get_shift_charts.assert_called_once_with(
+    mock_client._api.api_stats.call_nhl_sdk_misc.get_shift_charts.assert_called_once_with(
         game_id=GAME_ID
     )
 
 
 def test_shifts_cache_hit(mock_client) -> None:
-    mock_client._api.api_stats.call_nhl_stats_misc.get_shift_charts.return_value = ok(
+    mock_client._api.api_stats.call_nhl_sdk_misc.get_shift_charts.return_value = ok(
         {"data": [], "total": 0}
     )
     game = Game(mock_client, GAME_ID)
     _ = game.shifts()
     _ = game.shifts()
-    mock_client._api.api_stats.call_nhl_stats_misc.get_shift_charts.assert_called_once()
+    mock_client._api.api_stats.call_nhl_sdk_misc.get_shift_charts.assert_called_once()
 
 
 def test_shifts_different_game_ids_separate_cache_keys(mock_client) -> None:
-    mock_client._api.api_stats.call_nhl_stats_misc.get_shift_charts.return_value = ok(
+    mock_client._api.api_stats.call_nhl_sdk_misc.get_shift_charts.return_value = ok(
         {"data": [], "total": 0}
     )
     _ = Game(mock_client, GAME_ID).shifts()
     _ = Game(mock_client, GAME_ID + 1).shifts()
-    assert mock_client._api.api_stats.call_nhl_stats_misc.get_shift_charts.call_count == 2
+    assert mock_client._api.api_stats.call_nhl_sdk_misc.get_shift_charts.call_count == 2
 
 
 def test_shifts_result_populated(mock_client) -> None:
-    mock_client._api.api_stats.call_nhl_stats_misc.get_shift_charts.return_value = ok({
+    mock_client._api.api_stats.call_nhl_sdk_misc.get_shift_charts.return_value = ok({
         "total": 2,
         "data": [
             {

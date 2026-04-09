@@ -3,14 +3,14 @@ Tests for the NHL standings models:
   StandingsTeam, SplitRecord, StandingsRecord, StandingsSequences,
   StandingEntry, StandingsResult
 """
-from nhl_stats.models.teams.standings.standing_entry import (
+from nhl_sdk.models.teams.standings.standing_entry import (
     StandingsTeam,
     SplitRecord,
     StandingsRecord,
     StandingsSequences,
     StandingEntry,
 )
-from nhl_stats.models.teams.standings.standings_result import StandingsResult
+from nhl_sdk.models.teams.standings.standings_result import StandingsResult
 
 
 TEAM_DATA = {

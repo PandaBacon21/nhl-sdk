@@ -1,7 +1,7 @@
 """
 Tests for playoff series schedule models
 """
-from nhl_stats.models.playoffs.series.series_result import (
+from nhl_sdk.models.playoffs.series.series_result import (
     SeriesConference,
     SeriesScheduleSeriesTeam,
     SeriesScheduleGameTeam,

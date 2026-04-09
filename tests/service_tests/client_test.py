@@ -1,7 +1,7 @@
-from nhl_stats.client import NhlClient
-from nhl_stats.core.config import DefaultConfig
-from nhl_stats.services.players import Players
-from nhl_stats.services.teams import Teams
+from nhl_sdk.client import NhlClient
+from nhl_sdk.core.config import DefaultConfig
+from nhl_sdk.services.players import Players
+from nhl_sdk.services.teams import Teams
 
 
 def test_client_default_init() -> None:
@@ -13,7 +13,7 @@ def test_client_default_init() -> None:
 def test_client_default_config_values() -> None:
     client = NhlClient()
     assert client._config.log_name == "nhl_sdk"
-    assert client._config.log_level == "DEBUG"
+    assert client._config.log_level == "WARNING"
     assert client._config.log_file is None
 
 

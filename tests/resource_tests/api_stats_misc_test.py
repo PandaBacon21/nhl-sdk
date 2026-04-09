@@ -1,5 +1,5 @@
-from nhl_stats.resources.api_stats.misc import CallNhlStatsMisc
-from nhl_stats.core.transport import APICallStats, APIResponse
+from nhl_sdk.resources.api_stats.misc import CallNhlStatsMisc
+from nhl_sdk.core.transport import APICallStats, APIResponse
 
 GAME_ID: int = 2025020417
 

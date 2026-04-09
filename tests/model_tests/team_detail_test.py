@@ -1,12 +1,12 @@
 """
 Tests for team edge detail models: TeamDetailResult and sub-models.
 """
-from nhl_stats.models.teams.team.edge.team_details.team_details_result import (
+from nhl_sdk.models.teams.team.edge.team_details.team_details_result import (
     TeamDetailResult, TeamDetailTeam, TeamEdgeLogo,
     TeamShotSpeed, TeamSkatingSpeed, TeamDistanceSkated,
     TeamSogSummary, TeamSogDetail, TeamZoneTimeDetails,
 )
-from nhl_stats.models.teams.team.edge.team_edge_types import TeamEdgeMeasurement, TeamEdgeCount
+from nhl_sdk.models.teams.team.edge.team_edge_types import TeamEdgeMeasurement, TeamEdgeCount
 
 
 OVERLAY = {

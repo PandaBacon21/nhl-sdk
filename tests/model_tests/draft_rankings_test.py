@@ -1,7 +1,7 @@
 """
 Tests for draft rankings models: DraftCategory, DraftProspect, DraftRankingsResult
 """
-from nhl_stats.models.draft.rankings.rankings_result import DraftCategory, DraftProspect, DraftRankingsResult
+from nhl_sdk.models.draft.rankings.rankings_result import DraftCategory, DraftProspect, DraftRankingsResult
 
 
 CATEGORY_DATA = {"id": 1, "name": "North American Skater", "consumerKey": "na-skater"}

@@ -141,8 +141,8 @@ wheels = [
 ]
 
 [[package]]
-name = "nhl-stats"
-version = "0.1.0"
+name = "nhl-sdk"
+version = "0.1.1"
 source = { editable = "." }
 dependencies = [
     { name = "platformdirs" },

@@ -1,5 +1,5 @@
-from nhl_stats.models.teams.team.team_schedule.team_schedule import TeamSchedule
-from nhl_stats.models.teams.team.team_schedule.team_schedule_result import (
+from nhl_sdk.models.teams.team.team_schedule.team_schedule import TeamSchedule
+from nhl_sdk.models.teams.team.team_schedule.team_schedule_result import (
     TeamScheduleResult, TeamMonthScheduleResult, TeamWeekScheduleResult,
 )
 

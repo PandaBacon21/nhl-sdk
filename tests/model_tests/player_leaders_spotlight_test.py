@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock
-from nhl_stats.models.players.leaders.player_leaders import LeadersTeam
-from nhl_stats.models.players.leaders.player_leaders import LeaderPlayer, GoalieStatLeaders, SkaterStatLeaders
-from nhl_stats.models.players.spotlight import Spotlight
+from nhl_sdk.models.players.leaders.player_leaders import LeadersTeam
+from nhl_sdk.models.players.leaders.player_leaders import LeaderPlayer, GoalieStatLeaders, SkaterStatLeaders
+from nhl_sdk.models.players.spotlight import Spotlight
 
 
 # ==========================================================================

@@ -1,7 +1,7 @@
 """
 Tests for TeamSkatingDistance service: get_skating_distance()
 """
-from nhl_stats.models.teams.team.edge.team_skating_distance_details import (
+from nhl_sdk.models.teams.team.edge.team_skating_distance_details import (
     TeamSkatingDistance, TeamSkatingDistanceResult,
 )
 

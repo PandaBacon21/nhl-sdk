@@ -1,8 +1,8 @@
 """
 Resource tests for CallNhlStatsSeasons.
 """
-from nhl_stats.resources.api_stats.seasons import CallNhlStatsSeasons
-from nhl_stats.core.transport import APICallStats, APIResponse
+from nhl_sdk.resources.api_stats.seasons import CallNhlStatsSeasons
+from nhl_sdk.core.transport import APICallStats, APIResponse
 
 svc = CallNhlStatsSeasons(http=APICallStats())
 

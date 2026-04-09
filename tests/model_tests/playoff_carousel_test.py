@@ -1,7 +1,7 @@
 """
 Tests for playoff carousel models: PlayoffTeamSeed, PlayoffSeries, PlayoffRound, PlayoffCarouselResult
 """
-from nhl_stats.models.playoffs.carousel.carousel_result import (
+from nhl_sdk.models.playoffs.carousel.carousel_result import (
     PlayoffTeamSeed,
     PlayoffSeries,
     PlayoffRound,

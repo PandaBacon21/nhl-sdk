@@ -1,8 +1,8 @@
 import pytest
 from unittest.mock import MagicMock
-from nhl_stats.core.cache import init_cache
-from nhl_stats.core.cache.mem_cache import MemCache
-from nhl_stats.core.transport import APIResponse
+from nhl_sdk.core.cache import init_cache
+from nhl_sdk.core.cache.mem_cache import MemCache
+from nhl_sdk.core.transport import APIResponse
 
 
 @pytest.fixture(autouse=True)

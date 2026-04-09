@@ -1,6 +1,6 @@
 import pytest
-from nhl_stats.core.cache import init_cache
-from nhl_stats.core.cache.mem_cache import MemCache
+from nhl_sdk.core.cache import init_cache
+from nhl_sdk.core.cache.mem_cache import MemCache
 
 
 @pytest.fixture(autouse=True, scope="session")

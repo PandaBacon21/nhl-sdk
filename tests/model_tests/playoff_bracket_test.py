@@ -1,7 +1,7 @@
 """
 Tests for playoff bracket models: BracketTeam, BracketSeries, PlayoffBracketResult
 """
-from nhl_stats.models.playoffs.bracket.bracket_result import (
+from nhl_sdk.models.playoffs.bracket.bracket_result import (
     BracketTeam,
     BracketSeries,
     PlayoffBracketResult,

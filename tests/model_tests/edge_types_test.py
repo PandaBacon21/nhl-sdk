@@ -1,4 +1,4 @@
-from nhl_stats.models.players.player.player_stats.edge.player_edge_types import (
+from nhl_sdk.models.players.player.player_stats.edge.player_edge_types import (
     LeaderPlayer,
     EdgeLeagueAvg,
     EdgeMeasurement,

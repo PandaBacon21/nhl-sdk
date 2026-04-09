@@ -1,7 +1,7 @@
 """
 Tests for TeamSkatingSpeedDetails service: get_skating_speed()
 """
-from nhl_stats.models.teams.team.edge.team_skating_speed_details import (
+from nhl_sdk.models.teams.team.edge.team_skating_speed_details import (
     TeamSkatingSpeedDetails, TeamSkatingSpeedResult,
 )
 

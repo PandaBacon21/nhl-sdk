@@ -1,7 +1,7 @@
 """
 Tests for TeamShotSpeedDetails service: get_shot_speed()
 """
-from nhl_stats.models.teams.team.edge.team_shot_speed_details import (
+from nhl_sdk.models.teams.team.edge.team_shot_speed_details import (
     TeamShotSpeedDetails, TeamShotSpeedResult,
 )
 

@@ -1,7 +1,7 @@
 """
 Tests for TeamZoneTimeLeaderEntry model.
 """
-from nhl_stats.models.teams.edge.team_zone_time_10.team_zone_time_10_result import (
+from nhl_sdk.models.teams.edge.team_zone_time_10.team_zone_time_10_result import (
     TeamZoneTimeLeaderEntry,
 )
 

@@ -1,7 +1,7 @@
 """
 Tests for TeamZoneDetails service: get_zone_time()
 """
-from nhl_stats.models.teams.team.edge.team_zone_details import (
+from nhl_sdk.models.teams.team.edge.team_zone_details import (
     TeamZoneDetails, TeamZoneDetailResult,
 )
 

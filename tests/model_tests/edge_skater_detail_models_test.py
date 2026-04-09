@@ -2,32 +2,32 @@
 Tests for the per-player NHL Edge detail models:
   skating_distance, skating_speed, zone_time, shot_speed, shot_location, cat_skater_details
 """
-from nhl_stats.models.players.player.player_stats.edge.skaters.skating_distance import (
+from nhl_sdk.models.players.player.player_stats.edge.skaters.skating_distance import (
     SkatingDistanceGame,
     SkatingDistanceStrength,
     SkatingDistance,
 )
-from nhl_stats.models.players.player.player_stats.edge.skaters.skating_speed import (
+from nhl_sdk.models.players.player.player_stats.edge.skaters.skating_speed import (
     SkatingSpeedGame,
     SkatingSpeedSummary,
     SkatingSpeed,
 )
-from nhl_stats.models.players.player.player_stats.edge.skaters.skater_zone_time import (
+from nhl_sdk.models.players.player.player_stats.edge.skaters.skater_zone_time import (
     ZoneTimeStrength,
     ZoneStartsDetail,
     ZoneTime,
 )
-from nhl_stats.models.players.player.player_stats.edge.skaters.shot_speed import (
+from nhl_sdk.models.players.player.player_stats.edge.skaters.shot_speed import (
     ShotSpeedGame,
     ShotSpeedSummary,
     ShotSpeed,
 )
-from nhl_stats.models.players.player.player_stats.edge.skaters.shot_location import (
+from nhl_sdk.models.players.player.player_stats.edge.skaters.shot_location import (
     ShotAreaDetail,
     ShotZoneTotal,
     ShotLocation,
 )
-from nhl_stats.models.players.player.player_stats.edge.skaters.cat_skater_details import (
+from nhl_sdk.models.players.player.player_stats.edge.skaters.cat_skater_details import (
     CatPlayerSummary,
     CatSkaterDetails,
 )

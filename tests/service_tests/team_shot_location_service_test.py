@@ -1,7 +1,7 @@
 """
 Tests for TeamShotLocationDetails service: get_shot_location()
 """
-from nhl_stats.models.teams.team.edge.team_shot_location_details import (
+from nhl_sdk.models.teams.team.edge.team_shot_location_details import (
     TeamShotLocationDetails, TeamShotLocationResult,
 )
 
