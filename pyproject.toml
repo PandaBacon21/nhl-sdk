@@ -6,7 +6,6 @@ readme = "README.md"
 authors = [
     {name = "Josh Aiken", email = "josh@theloosemoose.us"},
 ]
-urls = {Homepage = "https://github.com/PandaBacon21/nhl-sdk"}
 license = {file = "LICENSE"}
 requires-python = ">=3.13"
 dependencies = [
@@ -27,6 +26,9 @@ addopts = ["-q", "-m", "not smoke"]
 markers = [
     "smoke: live API test (requires network, excluded from default run)",
 ]
+
+[project.urls]
+Homepage = "https://github.com/PandaBacon21/nhl-sdk"
 
 [build-system]
 requires = ["setuptools>=68"]
