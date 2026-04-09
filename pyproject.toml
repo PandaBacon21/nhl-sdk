@@ -7,6 +7,7 @@ authors = [
     {name = "Josh Aiken", email = "josh@theloosemoose.us"},
 ]
 urls = {Homepage = "https://github.com/PandaBacon21/nhl-sdk"}
+license = {file = "LICENSE"}
 requires-python = ">=3.13"
 dependencies = [
     "requests>=2.32",
